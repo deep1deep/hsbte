@@ -16,7 +16,6 @@
             font-family: Arial, sans-serif;
         }
 
-        /* Top Govt Header */
         .gov-header {
             background: #0b3d91;
             color: white;
@@ -26,7 +25,6 @@
         .gov-header h4 {
             margin: 0;
             font-weight: bold;
-            letter-spacing: 1px;
         }
 
         .gov-subheader {
@@ -37,7 +35,6 @@
             border-bottom: 1px solid #ddd;
         }
 
-        /* Login Box */
         .login-box {
             width: 420px;
             margin: auto;
@@ -75,7 +72,6 @@
 
         .btn-gov:hover {
             background: #e67e00;
-            color: white;
         }
 
         .error-box {
@@ -100,7 +96,7 @@
 
 <body>
 
-<!-- Govt Header -->
+<!-- Header -->
 <div class="gov-header text-center">
     <h4>Government of Technical Education Portal</h4>
 </div>
@@ -118,13 +114,15 @@
 
     <div class="login-body">
 
-        <?php
-        if($error!=""){
-            echo "<div class='error-box'>$error</div>";
-        }
-        ?>
+        {{-- ERROR FIX (Laravel way) --}}
+        @if(session('error'))
+            <div class="error-box">
+                {{ session('error') }}
+            </div>
+        @endif
 
         <form method="POST">
+            @csrf
 
             <label class="mb-1">Email Address</label>
             <input type="email" name="email" class="form-control mb-3" required>
@@ -132,10 +130,9 @@
             <label class="mb-1">Password</label>
             <input type="password" name="password" class="form-control mb-3" required>
 
-            <button type="submit" name="login" class="btn btn-gov">
+            <button type="submit" class="btn btn-gov">
                 Login
             </button>
-
         </form>
 
         <div class="footer-text">
