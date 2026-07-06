@@ -98,11 +98,11 @@
 
 <!-- Header -->
 <div class="gov-header text-center">
-    <h4>Government of Technical Education Portal</h4>
+    <h4>Haryana State Board of Technical Education</h4>
 </div>
 
 <div class="gov-subheader">
-    Ministry of Skill Development & Training | HSBTE Training System
+     Skill Development & Training | HSBTE Training System
 </div>
 
 <!-- Login Box -->
@@ -121,7 +121,7 @@
             </div>
         @endif
 
-        <form method="POST">
+        <form method="POST" >
             @csrf
 
             <label class="mb-1">Email Address</label>
