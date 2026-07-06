@@ -1,14 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>HSBTE Portal Login</title>
-</head>
+<form method="POST" action="/login">
+    @csrf
 
-<body>
+    <input type="email" name="email" placeholder="Email" required>
 
-    <h1>HSBTE Training Portal</h1>
+    <input type="password" name="password" placeholder="Password" required>
 
-    <h3>Login Page</h3>
+    <button type="submit">Login</button>
 
-</body>
-</html>
+    @if(session('error'))
+        <p style="color:red">{{ session('error') }}</p>
+    @endif
+</form>
