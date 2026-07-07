@@ -1,13 +1,27 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>HSBTE Training Portal</title>
-</head>
-<body>
+@extends('layouts.app')
 
-<h1>Welcome to HSBTE Training Portal</h1>
+@section('title', 'HSBTE Training Portal')
 
-<p>Laravel Project Started Successfully 🚀</p>
+@section('content')
 
-</body>
-</html>
+<div class="container py-5">
+
+    <div class="text-center">
+
+        <h1 class="display-4 fw-bold text-primary">
+            Welcome to HSBTE Training Portal
+        </h1>
+
+        <p class="lead mt-3">
+            Government Learning Management System for Students, Trainers and Administrators.
+        </p>
+
+        <a href="#" class="btn btn-primary btn-lg mt-3">
+            Explore Courses
+        </a>
+
+    </div>
+
+</div>
+
+@endsection
