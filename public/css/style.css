@@ -1213,3 +1213,305 @@ font-size:20px;
         padding:28px 22px;
     }
 }
+
+/*================ COURSE DETAIL =================*/
+
+.cd-banner{
+    background:#0d2a5c;
+    padding:36px 0 40px;
+}
+
+.cd-breadcrumb{
+    color:#8fa2c8;
+    font-size:13px;
+    margin-bottom:12px;
+}
+
+.cd-tags{
+    display:flex;
+    gap:8px;
+    margin-bottom:10px;
+}
+
+.cd-tag-dept{
+    background:rgba(255,255,255,.12);
+    color:#dbe4f3;
+    font-size:12px;
+    padding:3px 12px;
+    border-radius:999px;
+}
+
+.cd-tag-free{
+    background:#f0a500;
+    color:#0d2a5c;
+    font-size:12px;
+    font-weight:700;
+    padding:3px 12px;
+    border-radius:999px;
+}
+
+.cd-banner h1{
+    color:#fff;
+    font-weight:700;
+    font-size:30px;
+}
+
+.cd-banner p{
+    color:#a9b8d8;
+    font-size:15px;
+    max-width:640px;
+}
+
+.cd-stats{
+    display:flex;
+    gap:22px;
+    flex-wrap:wrap;
+    margin-top:14px;
+    font-size:13px;
+    color:#c9d5ec;
+}
+
+.cd-stats i{
+    margin-right:5px;
+}
+
+/*================ CONTENT BOXES =================*/
+
+.cd-box{
+    background:#fff;
+    border:1px solid #e8edf5;
+    border-radius:12px;
+    padding:22px;
+}
+
+.cd-box h5{
+    color:#0d2a5c;
+    font-weight:600;
+    margin-bottom:14px;
+}
+
+.cd-learn div{
+    font-size:14px;
+    color:#3d4f73;
+}
+
+.cd-learn i{
+    color:#1d9e75;
+    margin-right:8px;
+}
+
+.cd-content-head{
+    padding:16px 22px;
+    font-weight:600;
+    color:#0d2a5c;
+    border-bottom:1px solid #eef1f6;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:6px;
+}
+
+.cd-content-head span{
+    font-size:13px;
+    font-weight:400;
+    color:#8b98b3;
+}
+
+/*================ ACCORDION =================*/
+
+.cd-accordion .accordion-item{
+    border:none;
+    border-bottom:1px solid #eef1f6;
+}
+
+.cd-accordion .accordion-item:last-child{
+    border-bottom:none;
+}
+
+.cd-accordion .accordion-button{
+    font-size:15px;
+    font-weight:600;
+    color:#1f2f4d;
+    background:#fff;
+    box-shadow:none;
+    display:flex;
+    justify-content:space-between;
+}
+
+.cd-accordion .accordion-button:not(.collapsed){
+    background:#eef2fa;
+    color:#0d2a5c;
+}
+
+.cd-accordion .accordion-button:focus{
+    box-shadow:none;
+}
+
+.cd-mod-count{
+    margin-left:auto;
+    margin-right:14px;
+    font-size:13px;
+    font-weight:400;
+    color:#8b98b3;
+}
+
+.cd-lessons{
+    list-style:none;
+    margin:0;
+    padding:0;
+}
+
+.cd-lessons li{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:11px 22px 11px 40px;
+    font-size:14px;
+    color:#3d4f73;
+    border-top:1px solid #f2f5fa;
+}
+
+.cd-lessons li span:last-child{
+    color:#a5b0c6;
+    font-size:12px;
+}
+
+.cd-lessons i{
+    color:#0d2a5c;
+    margin-right:8px;
+}
+
+/*================ SIDEBAR =================*/
+
+.cd-sidebar{
+    position:sticky;
+    top:20px;
+}
+
+.cd-enroll-card{
+    background:#fff;
+    border:1px solid #e8edf5;
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 10px 30px rgba(13,42,92,.1);
+}
+
+.cd-enroll-thumb{
+    height:120px;
+    background:#1d3b73;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.cd-enroll-thumb i{
+    font-size:44px;
+    color:#f0a500;
+}
+
+.cd-enroll-body{
+    padding:20px;
+}
+
+.cd-price{
+    color:#0f6e56;
+    font-size:24px;
+    font-weight:700;
+}
+
+.cd-price-sub{
+    color:#8b98b3;
+    font-size:12px;
+}
+
+.cd-facts{
+    list-style:none;
+    padding:0;
+    margin:16px 0 0;
+}
+
+.cd-facts li{
+    font-size:13px;
+    color:#5a6b8c;
+    padding:5px 0;
+}
+
+.cd-facts i{
+    color:#0d2a5c;
+    margin-right:9px;
+}
+
+.cd-trainer{
+    background:#fff;
+    border:1px solid #e8edf5;
+    border-radius:12px;
+    padding:14px 16px;
+    margin-top:14px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.cd-trainer-avatar{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    background:#eef2fa;
+    color:#0d2a5c;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:600;
+    font-size:14px;
+    flex-shrink:0;
+}
+
+.cd-trainer h6{
+    margin:0;
+    font-size:14px;
+    font-weight:600;
+    color:#1f2f4d;
+}
+
+.cd-trainer p{
+    margin:0;
+    font-size:12px;
+    color:#8b98b3;
+}
+
+/*================ MOBILE ENROLL BAR =================*/
+
+.cd-mobile-bar{
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    background:#fff;
+    border-top:1px solid #e8edf5;
+    padding:10px 16px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    z-index:1000;
+    box-shadow:0 -4px 16px rgba(13,42,92,.08);
+}
+
+.cd-mobile-bar .cd-price{
+    font-size:18px;
+}
+
+@media(max-width:992px){
+
+    .cd-banner h1{
+        font-size:24px;
+    }
+
+    .cd-sidebar{
+        position:static;
+    }
+
+    body{
+        padding-bottom:70px;
+    }
+}

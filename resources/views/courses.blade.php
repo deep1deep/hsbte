@@ -58,7 +58,7 @@
                         </div>
                         <div class="course-foot">
                             <span class="course-free">FREE · Certificate</span>
-                            <a href="#" class="btn btn-sm btn-navy">View Course</a>
+                            <a href="/courses/cyber-security-awareness" class="btn btn-sm btn-navy">View Course</a>
                         </div>
                     </div>
                 </div>

@@ -26,3 +26,4 @@ Route::view('/courses', 'courses')->name('courses');
 Route::view('/login', 'auth.login', ['role' => 'Student'])->name('login');
 Route::view('/trainer/login', 'auth.login', ['role' => 'Trainer'])->name('trainer.login');
 Route::view('/register', 'auth.register')->name('register');
+Route::view('/courses/cyber-security-awareness', 'course-detail')->name('course.detail');
