@@ -133,8 +133,8 @@
             <div class="col-6 col-lg-3">
                 <div class="feature-item feature-item-last">
                     <i class="bi bi-briefcase"></i>
-                    <h6>Job Ready </h6>
-                    <p>Placement </p>
+                    <h6>Job Ready</h6>
+                    <p>Placement</p>
                 </div>
             </div>
         </div>
@@ -314,6 +314,98 @@
                 <p>Free for all Haryana polytechnic students.</p>
                 <a href="/register" class="btn btn-warning btn-lg">Create Free Account</a>
             </div>
+        </div>
+    </div>
+</section>
+
+<!-- ================= UPCOMING TRAINING PROGRAMMES ================= -->
+<section class="section-pad">
+    <div class="container">
+        <div class="section-head">
+            <div>
+                <h3>Upcoming Training Programmes</h3>
+                <p>Register before seats fill up</p>
+            </div>
+            <a href="#" class="btn btn-outline-navy">View Full Schedule</a>
+        </div>
+
+        <div class="row g-4">
+
+            <!-- Training 1 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="training-card">
+                    <div class="training-top">
+                        <div class="training-date">
+                            <span class="td-day">15</span>
+                            <span class="td-month">AUG</span>
+                        </div>
+                        <div>
+                            <span class="training-mode"><i class="bi bi-camera-video"></i> Online</span>
+                            <h5>Cyber Security Awareness Programme</h5>
+                        </div>
+                    </div>
+                    <ul class="training-info">
+                        <li><i class="bi bi-calendar-check"></i> Registration closes: <strong>10 Aug 2026</strong></li>
+                        <li><i class="bi bi-clock"></i> Duration: 8 weeks</li>
+                        <li><i class="bi bi-people"></i> <span class="seats-left">Only 45 seats left</span></li>
+                    </ul>
+                    <div class="training-foot">
+                        <span class="course-free">FREE · Certificate</span>
+                        <a href="#" class="btn btn-sm btn-navy">Register Now</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Training 2 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="training-card">
+                    <div class="training-top">
+                        <div class="training-date">
+                            <span class="td-day">01</span>
+                            <span class="td-month">SEP</span>
+                        </div>
+                        <div>
+                            <span class="training-mode"><i class="bi bi-camera-video"></i> Online</span>
+                            <h5>AI & Emerging Technologies Training</h5>
+                        </div>
+                    </div>
+                    <ul class="training-info">
+                        <li><i class="bi bi-calendar-check"></i> Registration closes: <strong>25 Aug 2026</strong></li>
+                        <li><i class="bi bi-clock"></i> Duration: 6 weeks</li>
+                        <li><i class="bi bi-people"></i> <span class="seats-open">Registrations open</span></li>
+                    </ul>
+                    <div class="training-foot">
+                        <span class="course-free">FREE · Certificate</span>
+                        <a href="#" class="btn btn-sm btn-navy">Register Now</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Training 3 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="training-card">
+                    <div class="training-top">
+                        <div class="training-date">
+                            <span class="td-day">10</span>
+                            <span class="td-month">SEP</span>
+                        </div>
+                        <div>
+                            <span class="training-mode"><i class="bi bi-geo-alt"></i> Hybrid</span>
+                            <h5>Digital Governance Workshop</h5>
+                        </div>
+                    </div>
+                    <ul class="training-info">
+                        <li><i class="bi bi-calendar-check"></i> Registration closes: <strong>05 Sep 2026</strong></li>
+                        <li><i class="bi bi-clock"></i> Duration: 2 weeks</li>
+                        <li><i class="bi bi-people"></i> <span class="seats-open">Registrations open</span></li>
+                    </ul>
+                    <div class="training-foot">
+                        <span class="course-free">FREE · Certificate</span>
+                        <a href="#" class="btn btn-sm btn-navy">Register Now</a>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </section>
