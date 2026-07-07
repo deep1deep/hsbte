@@ -888,3 +888,328 @@ font-size:20px;
     border-top:1px solid #eef1f6;
     padding-top:14px;
 }
+
+
+/*================ COURSES PAGE =================*/
+
+.courses-hero{
+    background:#0d2a5c;
+    padding:50px 0;
+}
+
+.courses-hero h1{
+    color:#fff;
+    font-weight:700;
+    font-size:32px;
+    margin-bottom:6px;
+}
+
+.courses-hero p{
+    color:#a9b8d8;
+    font-size:15px;
+    margin-bottom:22px;
+}
+
+.course-search{
+    background:#fff;
+    border-radius:999px;
+    max-width:520px;
+    margin:0 auto;
+    display:flex;
+    align-items:center;
+    padding:6px 6px 6px 20px;
+    gap:10px;
+}
+
+.course-search i{
+    color:#8b98b3;
+    font-size:15px;
+}
+
+.course-search input{
+    border:none;
+    outline:none;
+    flex:1;
+    font-size:14px;
+    color:#1f2f4d;
+    background:transparent;
+}
+
+.course-search-btn{
+    background:#f0a500;
+    color:#0d2a5c;
+    font-weight:600;
+    border-radius:999px;
+    padding:8px 22px;
+    font-size:14px;
+}
+
+.course-search-btn:hover{
+    background:#d99400;
+    color:#0d2a5c;
+}
+
+/*================ CHIPS BAR =================*/
+
+.chips-bar{
+    background:#fff;
+    border-bottom:1px solid #e8edf5;
+    padding:14px 0;
+}
+
+.chips-scroll{
+    display:flex;
+    gap:8px;
+    overflow-x:auto;
+    scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
+}
+
+.chips-scroll::-webkit-scrollbar{
+    display:none;
+}
+
+.chip{
+    background:#eef2fa;
+    color:#0d2a5c;
+    font-size:13px;
+    font-weight:500;
+    padding:7px 18px;
+    border-radius:999px;
+    text-decoration:none;
+    white-space:nowrap;
+    transition:background .2s;
+}
+
+.chip:hover{
+    background:#dbe4f5;
+    color:#0d2a5c;
+}
+
+.chip-active{
+    background:#0d2a5c;
+    color:#fff;
+}
+
+.chip-active:hover{
+    background:#0d2a5c;
+    color:#fff;
+}
+
+/*================ RESULTS BAR =================*/
+
+.results-bar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+    font-size:13px;
+    color:#7a8aa8;
+}
+
+/*================ EXTRA THUMB COLORS =================*/
+
+.course-thumb-coral{ background:#993c1d; }
+.course-thumb-pink{ background:#72243e; }
+.course-thumb-gray{ background:#5f5e5a; }
+
+/*================ MOBILE =================*/
+
+@media(max-width:576px){
+
+    .courses-hero h1{
+        font-size:24px;
+    }
+
+    .course-search{
+        max-width:100%;
+    }
+
+    .results-bar{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:6px;
+    }
+}
+
+/*================ AUTH PAGES =================*/
+
+.auth-wrap{
+    background:#f7f9fc;
+    padding:60px 0;
+    min-height:calc(100vh - 200px);
+    display:flex;
+    align-items:center;
+}
+
+.auth-card{
+    background:#fff;
+    border:1px solid #e8edf5;
+    border-radius:16px;
+    overflow:hidden;
+    display:grid;
+    grid-template-columns:1fr 1.2fr;
+    max-width:860px;
+    margin:0 auto;
+    box-shadow:0 10px 40px rgba(13,42,92,.08);
+}
+
+.auth-card-wide{
+    max-width:960px;
+}
+
+/* Left brand panel */
+.auth-brand{
+    background:#0d2a5c;
+    padding:44px 36px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+.auth-brand .brand-badge{
+    width:44px;
+    height:44px;
+    font-size:20px;
+}
+
+.auth-brand h2{
+    color:#fff;
+    font-size:22px;
+    font-weight:700;
+    margin-top:18px;
+    line-height:1.4;
+}
+
+.auth-brand p{
+    color:#a9b8d8;
+    font-size:14px;
+    margin-top:8px;
+}
+
+.auth-points{
+    list-style:none;
+    padding:0;
+    margin:18px 0 0;
+}
+
+.auth-points li{
+    color:#c9d5ec;
+    font-size:13px;
+    padding:5px 0;
+}
+
+.auth-points i{
+    color:#f0a500;
+    margin-right:8px;
+}
+
+/* Right form panel */
+.auth-form{
+    padding:44px 40px;
+}
+
+.auth-form h4{
+    color:#0d2a5c;
+    font-weight:700;
+    margin-bottom:2px;
+}
+
+.auth-sub{
+    color:#8b98b3;
+    font-size:13px;
+    margin-bottom:22px;
+}
+
+.auth-form .form-label{
+    font-size:13px;
+    font-weight:500;
+    color:#3d4f73;
+    margin-bottom:4px;
+}
+
+.auth-form .form-control,
+.auth-form .form-select{
+    border:1px solid #dde4f0;
+    border-radius:8px;
+    font-size:14px;
+    padding:10px 14px;
+    color:#1f2f4d;
+}
+
+.auth-form .form-control:focus,
+.auth-form .form-select:focus{
+    border-color:#0d2a5c;
+    box-shadow:0 0 0 3px rgba(13,42,92,.08);
+}
+
+.input-icon{
+    position:relative;
+}
+
+.input-icon i{
+    position:absolute;
+    left:13px;
+    top:50%;
+    transform:translateY(-50%);
+    color:#8b98b3;
+    font-size:14px;
+}
+
+.input-icon .form-control{
+    padding-left:38px;
+}
+
+.auth-row{
+    font-size:13px;
+}
+
+.auth-remember{
+    color:#3d4f73;
+    cursor:pointer;
+}
+
+.auth-remember input{
+    margin-right:5px;
+}
+
+.auth-row a{
+    color:#378add;
+    text-decoration:none;
+}
+
+.auth-links{
+    text-align:center;
+    font-size:13px;
+    color:#8b98b3;
+    margin-top:18px;
+}
+
+.auth-links a{
+    color:#378add;
+    text-decoration:none;
+    font-weight:500;
+}
+
+/*================ AUTH MOBILE =================*/
+
+@media(max-width:768px){
+
+    .auth-card{
+        grid-template-columns:1fr;
+    }
+
+    .auth-brand{
+        padding:28px 24px;
+        text-align:center;
+        align-items:center;
+    }
+
+    .auth-brand h2{
+        font-size:18px;
+    }
+
+    .auth-form{
+        padding:28px 22px;
+    }
+}

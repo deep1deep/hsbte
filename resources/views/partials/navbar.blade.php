@@ -117,7 +117,7 @@
             <ul class="navbar-nav mx-auto">
                 <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">Departments</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Courses</a></li>
+                <li class="nav-item"><a class="nav-link" href="/courses">Courses</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">Jobs</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">Notifications</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">Help</a></li>
