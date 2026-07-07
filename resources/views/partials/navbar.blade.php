@@ -1,106 +1,143 @@
-<nav class="navbar navbar-expand-lg bg-white shadow-sm py-3">
+<style>
+/* ===== Top Utility Strip ===== */
+.top-strip {
+    background: #0d2a5c;
+    color: #dbe4f3;
+    font-size: 13px;
+    padding: 6px 0;
+}
+.top-strip a {
+    color: #dbe4f3;
+    text-decoration: none;
+    margin-left: 18px;
+    transition: color .2s;
+}
+.top-strip a:hover { color: #f0a500; }
+.top-strip .ts-access a {
+    border: 1px solid #3a548a;
+    border-radius: 4px;
+    padding: 0 6px;
+    margin-left: 6px;
+    font-weight: 600;
+}
 
+/* ===== Main Navbar ===== */
+.main-navbar {
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+}
+.brand-badge {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: #0d2a5c;
+    color: #f0a500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 18px;
+}
+.brand-text {
+    font-weight: 700;
+    font-size: 18px;
+    color: #0d2a5c;
+}
+
+/* Menu links */
+.main-navbar .nav-link {
+    color: #33415c;
+    font-weight: 500;
+    margin: 0 6px;
+    padding-bottom: 6px !important;
+    border-bottom: 2px solid transparent;
+    transition: color .2s, border-color .2s;
+}
+.main-navbar .nav-link:hover { color: #0d2a5c; }
+.main-navbar .nav-link.active {
+    color: #0d2a5c;
+    font-weight: 600;
+    border-bottom: 2px solid #f0a500;
+}
+
+/* Login button */
+.login-btn {
+    background: #0d2a5c;
+    color: #fff !important;
+    font-weight: 500;
+    padding: 8px 18px;
+    border-radius: 6px;
+}
+.login-btn:hover { background: #09204a; color: #fff; }
+
+/* Mobile */
+@media (max-width: 576px) {
+    .top-strip .ts-left { font-size: 12px; }
+    .top-strip a { margin-left: 10px; }
+}
+</style>
+
+<!-- ===== Top Utility Strip ===== -->
+<div class="top-strip">
+    <div class="container d-flex justify-content-between align-items-center">
+        <span class="ts-left">
+            <i class="bi bi-geo-alt-fill"></i> Government of Haryana
+        </span>
+        <span class="ts-right">
+            <a href="#"><i class="bi bi-telephone-fill"></i> Helpline</a>
+            <a href="#"><i class="bi bi-envelope-fill"></i> Contact</a>
+            <span class="ts-access">
+                <a href="#">A+</a>
+                <a href="#">A-</a>
+            </span>
+        </span>
+    </div>
+</div>
+
+<!-- ===== Main Navbar ===== -->
+<nav class="navbar navbar-expand-lg main-navbar py-2">
     <div class="container">
 
         <!-- Logo -->
         <a class="navbar-brand d-flex align-items-center" href="/">
-
-       <!--     <img src="{{ asset('images/HSBTEb2.png') }}"
-                 width="60"
-                 class="me-2"> -->
-
-            <div>
-
-                <h5 class="mb-0 fw-bold text-primary">
-                    HSBTE Training Portal
-                </h5>
-
-           
-
-            </div>
-
+            <div class="brand-badge me-2">H</div>
+            <span class="brand-text">HSBTE Training Portal</span>
         </a>
 
         <!-- Mobile Toggle -->
-
         <button class="navbar-toggler"
                 type="button"
                 data-bs-toggle="collapse"
                 data-bs-target="#mainMenu">
-
             <span class="navbar-toggler-icon"></span>
-
         </button>
 
         <!-- Menu -->
-
         <div class="collapse navbar-collapse" id="mainMenu">
-
             <ul class="navbar-nav mx-auto">
-
-                <li class="nav-item">
-                    <a class="nav-link fw-semibold" href="/">Home</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link fw-semibold" href="#">Departments</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link fw-semibold" href="#">Courses</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link fw-semibold" href="#">Jobs</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link fw-semibold" href="#">Notifications</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link fw-semibold" href="#">Help</a>
-                </li>
-
+                <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Departments</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Courses</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Jobs</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Notifications</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Help</a></li>
             </ul>
 
             <!-- Login Dropdown -->
-
             <ul class="navbar-nav">
-
                 <li class="nav-item dropdown">
-
-                    <a class="btn btn-primary dropdown-toggle"
+                    <a class="btn login-btn dropdown-toggle"
                        href="#"
                        role="button"
                        data-bs-toggle="dropdown">
-
                         Login
-
                     </a>
-
                     <ul class="dropdown-menu dropdown-menu-end">
-
-                        <li>
-                            <a class="dropdown-item" href="/login">
-                                👨‍🎓 Student Login
-                            </a>
-                        </li>
-
-                        <li>
-                            <a class="dropdown-item" href="/trainer/login">
-                                👨‍🏫 Trainer Login
-                            </a>
-                        </li>
-
+                        <li><a class="dropdown-item" href="/login">👨‍🎓 Student Login</a></li>
+                        <li><a class="dropdown-item" href="/trainer/login">👨‍🏫 Trainer Login</a></li>
                     </ul>
-
                 </li>
-
             </ul>
-
         </div>
-
     </div>
-
 </nav>

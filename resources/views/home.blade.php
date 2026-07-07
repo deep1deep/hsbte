@@ -7,31 +7,32 @@
 <!-- Announcement Bar -->
 
 <div class="marquee-container">
+    <div class="marquee-label">📢 Latest Updates</div>
+    <div class="marquee-track">
+        <div class="ticker">
+            <span>AI & Emerging Technologies Training registrations are now open.</span>
+            <span class="dot">•</span>
+            <span>Cyber Security Awareness Programme starts from 15 August.</span>
+            <span class="dot">•</span>
+            <span>Students can now download course completion certificates online.</span>
+            <span class="dot">•</span>
+            <span>Trainer onboarding portal is now live.</span>
+            <span class="dot">•</span>
 
-    <div class="ticker">
-
-        <span>📢 AI & Emerging Technologies Training registrations are now open.</span>
-
-        <span>📢 Cyber Security Awareness Programme starts from 15 August.</span>
-
-        <span>📢 Students can now download course completion certificates online.</span>
-
-        <span>📢 Trainer onboarding portal is now live.</span>
-
-        <!-- Duplicate -->
-        <span>📢 AI & Emerging Technologies Training registrations are now open.</span>
-
-        <span>📢 Cyber Security Awareness Programme starts from 15 August.</span>
-
-        <span>📢 Students can now download course completion certificates online.</span>
-
-        <span>📢 Trainer onboarding portal is now live.</span>
-
+            <!-- Duplicate for seamless loop -->
+            <span>AI & Emerging Technologies Training registrations are now open.</span>
+            <span class="dot">•</span>
+            <span>Cyber Security Awareness Programme starts from 15 August.</span>
+            <span class="dot">•</span>
+            <span>Students can now download course completion certificates online.</span>
+            <span class="dot">•</span>
+            <span>Trainer onboarding portal is now live.</span>
+            <span class="dot">•</span>
+        </div>
     </div>
-
 </div>
+<!-- Announcement end -->
 
-<!-- Annoucement end -->
 
 
 
