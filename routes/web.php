@@ -3,16 +3,17 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 
-// show login page
-Route::get('/', [AuthController::class, 'showLogin']);
+// Home Page
+Route::get('/', [AuthController::class, 'home']);
 
-// process login
+// Login
+Route::get('/login', [AuthController::class, 'showLogin']);
 Route::post('/login', [AuthController::class, 'login']);
 
-// logout
+// Logout
 Route::get('/logout', [AuthController::class, 'logout']);
 
-// dashboards (temporary)
+// Temporary Dashboards
 Route::get('/admin/dashboard', function () {
     return "Admin Dashboard";
 });

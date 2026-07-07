@@ -1,48 +1,100 @@
-<nav class="navbar navbar-expand-lg navbar-dark shadow-sm" style="background:#0B3D91;">
+<nav class="navbar navbar-expand-lg bg-white shadow-sm py-3">
 
     <div class="container">
 
-        <a class="navbar-brand fw-bold" href="/">
-            🎓 HSBTE Portal
+        <!-- Logo -->
+        <a class="navbar-brand d-flex align-items-center" href="/">
+
+       <!--     <img src="{{ asset('images/HSBTEb2.png') }}"
+                 width="60"
+                 class="me-2"> -->
+
+            <div>
+
+                <h5 class="mb-0 fw-bold text-primary">
+                    HSBTE Training Portal
+                </h5>
+
+           
+
+            </div>
+
         </a>
+
+        <!-- Mobile Toggle -->
 
         <button class="navbar-toggler"
                 type="button"
                 data-bs-toggle="collapse"
-                data-bs-target="#navbar">
+                data-bs-target="#mainMenu">
 
             <span class="navbar-toggler-icon"></span>
 
         </button>
 
-        <div class="collapse navbar-collapse" id="navbar">
+        <!-- Menu -->
 
-            <ul class="navbar-nav ms-auto">
+        <div class="collapse navbar-collapse" id="mainMenu">
+
+            <ul class="navbar-nav mx-auto">
 
                 <li class="nav-item">
-                    <a class="nav-link" href="/">Home</a>
+                    <a class="nav-link fw-semibold" href="/">Home</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Courses</a>
+                    <a class="nav-link fw-semibold" href="#">Departments</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Departments</a>
+                    <a class="nav-link fw-semibold" href="#">Courses</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
+                    <a class="nav-link fw-semibold" href="#">Jobs</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Contact</a>
+                    <a class="nav-link fw-semibold" href="#">Notifications</a>
                 </li>
 
-                <li class="nav-item ms-2">
-                    <a href="#" class="btn btn-warning">
+                <li class="nav-item">
+                    <a class="nav-link fw-semibold" href="#">Help</a>
+                </li>
+
+            </ul>
+
+            <!-- Login Dropdown -->
+
+            <ul class="navbar-nav">
+
+                <li class="nav-item dropdown">
+
+                    <a class="btn btn-primary dropdown-toggle"
+                       href="#"
+                       role="button"
+                       data-bs-toggle="dropdown">
+
                         Login
+
                     </a>
+
+                    <ul class="dropdown-menu dropdown-menu-end">
+
+                        <li>
+                            <a class="dropdown-item" href="/login">
+                                👨‍🎓 Student Login
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item" href="/trainer/login">
+                                👨‍🏫 Trainer Login
+                            </a>
+                        </li>
+
+                    </ul>
+
                 </li>
 
             </ul>

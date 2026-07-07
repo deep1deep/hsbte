@@ -14,9 +14,18 @@
     <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
+       
+
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
+        <link href="bootstrap.css">
+
+<link rel="stylesheet" href="{{ asset('css/style.css') }}">
+
+<link href="bootstrap-icons.css">
+
+<link href="google-font.css">
 
     <style>
 
@@ -24,6 +33,7 @@
             font-family:'Poppins',sans-serif;
             background:#f5f7fa;
         }
+    
 
     </style>
 
