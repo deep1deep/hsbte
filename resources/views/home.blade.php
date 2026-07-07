@@ -6,57 +6,34 @@
 
 <!-- Announcement Bar -->
 
-<section class="announcement-bar">
+<div class="marquee-container">
 
-    <div class="container-fluid">
+    <div class="ticker">
 
-        <div class="d-flex align-items-center">
+        <span>📢 AI & Emerging Technologies Training registrations are now open.</span>
 
-            <div class="announce-title">
+        <span>📢 Cyber Security Awareness Programme starts from 15 August.</span>
 
-                <i class="bi bi-megaphone-fill me-2"></i>
+        <span>📢 Students can now download course completion certificates online.</span>
 
-                Latest Updates
+        <span>📢 Trainer onboarding portal is now live.</span>
 
-            </div>
+        <!-- Duplicate -->
+        <span>📢 AI & Emerging Technologies Training registrations are now open.</span>
 
-            <div class="marquee-container">
+        <span>📢 Cyber Security Awareness Programme starts from 15 August.</span>
 
-                <marquee behavior="scroll"
-                         direction="left"
-                         scrollamount="5"
-                         onmouseover="this.stop();"
-                         onmouseout="this.start();">
+        <span>📢 Students can now download course completion certificates online.</span>
 
-                    <span class="me-5">
-                        📢 AI & Emerging Technologies Training registrations are now open.
-                    </span>
-
-                    <span class="me-5">
-                        📢 Cyber Security Awareness Programme starts from 15 August.
-                    </span>
-
-                    <span class="me-5">
-                        📢 Students can now download course completion certificates online.
-                    </span>
-
-                    <span>
-                        📢 Trainer onboarding portal is now live.
-                    </span>
-
-                </marquee>
-
-            </div>
-
-        </div>
+        <span>📢 Trainer onboarding portal is now live.</span>
 
     </div>
 
-</section>
+</div>
 
 <!-- Annoucement end -->
 
-<!-- ================= HERO SECTION ================= -->
+
 
 <!-- ================= HERO SLIDER ================= -->
 

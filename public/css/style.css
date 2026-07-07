@@ -17,11 +17,45 @@ body{
                 ANNOUNCEMENT BAR
 ====================================================*/
 
+/*=====================================
+    Announcement Bar
+======================================*/
+
 .announcement-bar{
 
     background:#18479B;
+    height:48px;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
 
+}
+
+.announce-title{
+
+    background:#123A82;
     color:#fff;
+    padding:0 25px;
+    height:48px;
+
+    display:flex;
+    align-items:center;
+
+    font-weight:600;
+
+    white-space:nowrap;
+
+    z-index:5;
+
+}
+
+.marquee-container{
+
+    flex:1;
+
+    overflow:hidden;
+
+    position:relative;
 
     height:48px;
 
@@ -29,47 +63,57 @@ body{
 
     align-items:center;
 
-    overflow:hidden;
-
 }
 
-.announce-title{
+.ticker{
 
-    background:#123A82;
+    display:flex;
 
-    padding:12px 22px;
-
-    font-weight:600;
+    align-items:center;
 
     white-space:nowrap;
 
+    animation:scrollTicker 35s linear infinite;
+
+}
+
+.ticker span{
+
+    color:#fff;
+
+    margin-right:80px;
+
     font-size:15px;
 
-}
-
-.marquee-container{
-
-    width:100%;
-
-    padding-left:15px;
-
-    font-size:15px;
+    font-weight:500;
 
 }
 
-.marquee-container span{
+.ticker:hover{
 
-    margin-right:60px;
+    animation-play-state:paused;
 
 }
+
+@keyframes scrollTicker{
+
+    0%{
+
+        transform:translateX(100%);
+
+    }
+
+    100%{
+
+        transform:translateX(-100%);
+
+    }
+
+}
+
+/* Mobile */
 
 @media(max-width:768px){
-
-.announcement-bar{
-
-height:42px;
-
-}
 
 .announce-title{
 
@@ -79,9 +123,15 @@ display:none;
 
 .marquee-container{
 
+height:42px;
+
+}
+
+.ticker span{
+
 font-size:13px;
 
-padding-left:10px;
+margin-right:40px;
 
 }
 
@@ -96,8 +146,8 @@ padding-left:10px;
 
 .hero-slide{
     position:relative;
-    height:75vh;
-    min-height:650px;
+    height:68vh;
+    min-height:600px;
     overflow:hidden;
 }
 
@@ -125,7 +175,7 @@ padding-left:10px;
     z-index:10;
     max-width:720px;
     color:#fff;
-    padding-top:150px;
+    padding-top:70px;
 }
 
 .hero-tag{
