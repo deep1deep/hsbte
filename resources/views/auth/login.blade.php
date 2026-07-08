@@ -25,14 +25,21 @@
                 <h4>{{ $role }} Login</h4>
                 <p class="auth-sub">Enter your registered email and password</p>
 
-                <form method="POST" action="#">
+                @if ($errors->any())
+                    <div class="alert alert-danger py-2 small">
+                        {{ $errors->first() }}
+                    </div>
+                @endif
+
+                <form method="POST" action="{{ route('login.attempt') }}">
                     @csrf
 
                     <div class="mb-3">
                         <label class="form-label">Email address</label>
                         <div class="input-icon">
                             <i class="bi bi-envelope"></i>
-                            <input type="email" class="form-control" placeholder="you@example.com" required>
+                            <input type="email" name="email" value="{{ old('email') }}"
+                                   class="form-control" placeholder="you@example.com" required>
                         </div>
                     </div>
 
@@ -40,13 +47,14 @@
                         <label class="form-label">Password</label>
                         <div class="input-icon">
                             <i class="bi bi-lock"></i>
-                            <input type="password" class="form-control" placeholder="Enter password" required>
+                            <input type="password" name="password"
+                                   class="form-control" placeholder="Enter password" required>
                         </div>
                     </div>
 
                     <div class="d-flex justify-content-between align-items-center mb-3 auth-row">
                         <label class="auth-remember">
-                            <input type="checkbox"> Remember me
+                            <input type="checkbox" name="remember"> Remember me
                         </label>
                         <a href="#">Forgot password?</a>
                     </div>

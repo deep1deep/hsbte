@@ -70,6 +70,20 @@
 }
 .login-btn:hover { background: #09204a; color: #fff; }
 
+/* Logout button inside dropdown — look like a normal item */
+.dropdown-item-btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    padding: 4px 16px;
+    color: #33415c;
+    font-size: 14px;
+    cursor: pointer;
+}
+.dropdown-item-btn:hover { background: #eef2fa; color: #0d2a5c; }
+
 /* Mobile */
 @media (max-width: 576px) {
     .top-strip .ts-left { font-size: 12px; }
@@ -123,19 +137,54 @@
                 <li class="nav-item"><a class="nav-link" href="#">Help</a></li>
             </ul>
 
-            <!-- Login Dropdown -->
+            <!-- Auth Dropdown -->
             <ul class="navbar-nav">
                 <li class="nav-item dropdown">
-                    <a class="btn login-btn dropdown-toggle"
-                       href="#"
-                       role="button"
-                       data-bs-toggle="dropdown">
-                        Login
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="/login">👨‍🎓 Student Login</a></li>
-                        <li><a class="dropdown-item" href="/trainer/login">👨‍🏫 Trainer Login</a></li>
-                    </ul>
+
+                    @guest
+                        {{-- Logged OUT: show Login options --}}
+                        <a class="btn login-btn dropdown-toggle"
+                           href="#"
+                           role="button"
+                           data-bs-toggle="dropdown">
+                            Login
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{{ route('login') }}">👨‍🎓 Student Login</a></li>
+                            <li><a class="dropdown-item" href="{{ route('trainer.login') }}">👨‍🏫 Trainer Login</a></li>
+                        </ul>
+                    @endguest
+
+                    @auth
+                        {{-- Logged IN: show name + dashboard + logout --}}
+                        <a class="btn login-btn dropdown-toggle"
+                           href="#"
+                           role="button"
+                           data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle"></i> {{ auth()->user()->name }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            @if(auth()->user()->isAdmin())
+                                <li><a class="dropdown-item" href="{{ route('admin.dashboard') }}"><i class="bi bi-speedometer2"></i> Admin Dashboard</a></li>
+                            @elseif(auth()->user()->isTrainer())
+                                <li><a class="dropdown-item" href="{{ route('trainer.dashboard') }}"><i class="bi bi-speedometer2"></i> Trainer Dashboard</a></li>
+                            @else
+                                <li><a class="dropdown-item" href="{{ route('student.dashboard') }}"><i class="bi bi-speedometer2"></i> My Dashboard</a></li>
+                            @endif
+
+                            <li><hr class="dropdown-divider"></li>
+
+                            <li>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="dropdown-item-btn">
+                                        <i class="bi bi-box-arrow-right"></i> Logout
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    @endauth
+
                 </li>
             </ul>
         </div>

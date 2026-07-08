@@ -5,6 +5,8 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -19,16 +21,19 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-    'name',
-    'email',
-    'password',
-    'role',
-    'phone',
-    'department',
-    'designation',
-    'profile_photo',
-    'is_active',
-];
+        'name',
+        'email',
+        'password',
+        'role',
+        'phone',
+        'is_active',
+        'enrollment_no',
+        'institute',
+        'semester',
+        'department_id',
+        'designation',
+        'qualification',
+    ];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -46,9 +51,47 @@ class User extends Authenticatable
      * @return array<string, string>
      */
     protected function casts(): array
-{
-    return [
-        'password' => 'hashed',
-    ];
-}
+    {
+        return [
+            'password'  => 'hashed',
+            'is_active' => 'boolean',
+        ];
+    }
+
+    /* ---------------- RELATIONSHIPS ---------------- */
+
+    // Student/trainer belongs to a department (via department_id)
+    public function department(): BelongsTo
+    {
+        return $this->belongsTo(Department::class);
+    }
+
+    // Courses this user teaches (trainer_id on courses points here)
+    public function courses(): HasMany
+    {
+        return $this->hasMany(Course::class, 'trainer_id');
+    }
+
+    // Enrollments this user has as a student
+    public function enrollments(): HasMany
+    {
+        return $this->hasMany(Enrollment::class);
+    }
+
+    /* ---------------- ROLE HELPERS ---------------- */
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isTrainer(): bool
+    {
+        return $this->role === 'trainer';
+    }
+
+    public function isStudent(): bool
+    {
+        return $this->role === 'student';
+    }
 }

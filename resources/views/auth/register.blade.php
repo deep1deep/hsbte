@@ -25,52 +25,65 @@
                 <h4>Create Student Account</h4>
                 <p class="auth-sub">Fill in your details to get started</p>
 
-                <form method="POST" action="#">
+                @if ($errors->any())
+                    <div class="alert alert-danger py-2 small">
+                        {{ $errors->first() }}
+                    </div>
+                @endif
+
+                <form method="POST" action="{{ route('register.attempt') }}">
                     @csrf
 
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label">Full name</label>
-                            <input type="text" class="form-control" placeholder="Rahul Sharma" required>
+                            <input type="text" name="name" value="{{ old('name') }}"
+                                   class="form-control" placeholder="Rahul Sharma" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Enrollment number</label>
-                            <input type="text" class="form-control" placeholder="210012345678" required>
+                            <input type="text" name="enrollment_no" value="{{ old('enrollment_no') }}"
+                                   class="form-control" placeholder="210012345678" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Email address</label>
-                            <input type="email" class="form-control" placeholder="you@example.com" required>
+                            <input type="email" name="email" value="{{ old('email') }}"
+                                   class="form-control" placeholder="you@example.com" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Phone</label>
-                            <input type="tel" class="form-control" placeholder="98XXXXXXXX">
+                            <input type="tel" name="phone" value="{{ old('phone') }}"
+                                   class="form-control" placeholder="98XXXXXXXX">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Department</label>
-                            <select class="form-select" required>
+                            <select name="department_id" class="form-select" required>
                                 <option value="">Select department</option>
-                                <option>Computer Science</option>
-                                <option>Electronics</option>
-                                <option>Mechanical</option>
-                                <option>Civil</option>
-                                <option>Electrical</option>
+                                @foreach($departments as $dept)
+                                    <option value="{{ $dept->id }}" @selected(old('department_id') == $dept->id)>
+                                        {{ $dept->name }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Semester</label>
-                            <select class="form-select" required>
+                            <select name="semester" class="form-select" required>
                                 <option value="">Select semester</option>
-                                <option>1st</option><option>2nd</option><option>3rd</option>
-                                <option>4th</option><option>5th</option><option>6th</option>
+                                @foreach(['1st','2nd','3rd','4th','5th','6th'] as $sem)
+                                    <option value="{{ $sem }}" @selected(old('semester') == $sem)>{{ $sem }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Institute</label>
-                            <input type="text" class="form-control" placeholder="GP Nilokheri">
+                            <input type="text" name="institute" value="{{ old('institute') }}"
+                                   class="form-control" placeholder="GP Nilokheri">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Password</label>
-                            <input type="password" class="form-control" placeholder="Min. 8 characters" required>
+                            <input type="password" name="password"
+                                   class="form-control" placeholder="Min. 8 characters" required>
                         </div>
                     </div>
 
