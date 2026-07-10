@@ -27,7 +27,11 @@
 
                 @if ($errors->any())
                     <div class="alert alert-danger py-2 small">
-                        {{ $errors->first() }}
+                        <ul class="mb-0 ps-3">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
                     </div>
                 @endif
 
@@ -40,11 +44,11 @@
                             <input type="text" name="name" value="{{ old('name') }}"
                                    class="form-control" placeholder="Rahul Sharma" required>
                         </div>
-                        <div class="col-md-6">
+                   <!--     <div class="col-md-6">
                             <label class="form-label">Enrollment number</label>
                             <input type="text" name="enrollment_no" value="{{ old('enrollment_no') }}"
-                                   class="form-control" placeholder="210012345678" required>
-                        </div>
+                                   class="form-control" placeholder="210012345678" >
+                        </div> -->
                         <div class="col-md-6">
                             <label class="form-label">Email address</label>
                             <input type="email" name="email" value="{{ old('email') }}"
@@ -53,7 +57,8 @@
                         <div class="col-md-6">
                             <label class="form-label">Phone</label>
                             <input type="tel" name="phone" value="{{ old('phone') }}"
-                                   class="form-control" placeholder="98XXXXXXXX">
+                                   class="form-control" placeholder="98XXXXXXXX"
+                                   maxlength="10" inputmode="numeric" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Department</label>
@@ -81,9 +86,35 @@
                                    class="form-control" placeholder="GP Nilokheri">
                         </div>
                         <div class="col-md-6">
+                            <label class="form-label">Aadhaar number</label>
+                            <input type="text" name="aadhaar" value="{{ old('aadhaar') }}"
+                                   class="form-control" placeholder="12-digit number"
+                                   maxlength="12" inputmode="numeric" required>
+                            <small class="text-muted d-block mt-1">
+                                
+                            </small>
+                        </div>
+                        <div class="col-md-6">
                             <label class="form-label">Password</label>
-                            <input type="password" name="password"
-                                   class="form-control" placeholder="Min. 8 characters" required>
+                            <div class="input-group">
+                                <input type="password" name="password" id="password"
+                                       class="form-control" placeholder="Min. 8 characters" required>
+                                <button class="btn btn-outline-navy" type="button"
+                                        tabindex="-1" onclick="togglePw('password', this)">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Confirm password</label>
+                            <div class="input-group">
+                                <input type="password" name="password_confirmation" id="password_confirmation"
+                                       class="form-control" placeholder="Re-enter password" required>
+                                <button class="btn btn-outline-navy" type="button"
+                                        tabindex="-1" onclick="togglePw('password_confirmation', this)">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
 
@@ -98,5 +129,19 @@
         </div>
     </div>
 </section>
+
+<script>
+    function togglePw(id, btn) {
+        const input = document.getElementById(id);
+        const icon  = btn.querySelector('i');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.className = 'bi bi-eye-slash';
+        } else {
+            input.type = 'password';
+            icon.className = 'bi bi-eye';
+        }
+    }
+</script>
 
 @endsection

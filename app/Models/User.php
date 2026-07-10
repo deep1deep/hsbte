@@ -33,6 +33,7 @@ class User extends Authenticatable
         'department_id',
         'designation',
         'qualification',
+        'aadhaar_hash',
     ];
 
     /**
@@ -43,6 +44,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'aadhaar_hash',
     ];
 
     /**
