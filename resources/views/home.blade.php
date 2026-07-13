@@ -5,31 +5,24 @@
 @section('content')
 
 <!-- ================= ANNOUNCEMENT BAR ================= -->
+@if($announcements->count())
 <div class="marquee-container">
     <div class="marquee-label">📢 Latest Updates</div>
     <div class="marquee-track">
         <div class="ticker">
-            <span>AI & Emerging Technologies Training registrations are now open.</span>
-            <span class="dot">•</span>
-            <span>Cyber Security Awareness Programme starts from 15 August.</span>
-            <span class="dot">•</span>
-            <span>Students can now download course completion certificates online.</span>
-            <span class="dot">•</span>
-            <span>Trainer onboarding portal is now live.</span>
-            <span class="dot">•</span>
-
-            <!-- Duplicate for seamless loop -->
-            <span>AI & Emerging Technologies Training registrations are now open.</span>
-            <span class="dot">•</span>
-            <span>Cyber Security Awareness Programme starts from 15 August.</span>
-            <span class="dot">•</span>
-            <span>Students can now download course completion certificates online.</span>
-            <span class="dot">•</span>
-            <span>Trainer onboarding portal is now live.</span>
-            <span class="dot">•</span>
+            @foreach($announcements as $a)
+                <span>{{ $a->title }}</span>
+                <span class="dot">•</span>
+            @endforeach
+            {{-- Duplicate for seamless loop --}}
+            @foreach($announcements as $a)
+                <span>{{ $a->title }}</span>
+                <span class="dot">•</span>
+            @endforeach
         </div>
     </div>
 </div>
+@endif
 
 <!-- ================= HERO SLIDER ================= -->
 <section class="hero-slider">
@@ -48,8 +41,8 @@
                             <h2>Empowering Technical Education Through Digital Learning</h2>
                             <p>Government Learning Management System for Students, Teachers and Technical Institutions.</p>
                             <div class="mt-4">
-                                <a href="#featured-courses" class="btn btn-warning btn-lg">Explore Courses</a>
-                                <a href="/login" class="btn btn-light btn-lg ms-2">Student Login</a>
+                                <a href="{{ route('courses') }}" class="btn btn-warning btn-lg">Explore Courses</a>
+                                <a href="{{ route('login') }}" class="btn btn-light btn-lg ms-2">Student Login</a>
                             </div>
                         </div>
                     </div>
@@ -68,7 +61,7 @@
                             <h2>Cyber Security, Artificial Intelligence, Digital Governance</h2>
                             <p>Interactive video lectures, study material, assessments and certification.</p>
                             <div class="mt-4">
-                                <a href="#featured-courses" class="btn btn-warning btn-lg">Browse Courses</a>
+                                <a href="{{ route('courses') }}" class="btn btn-warning btn-lg">Browse Courses</a>
                             </div>
                         </div>
                     </div>
@@ -87,7 +80,7 @@
                             <h2>Start Learning Today</h2>
                             <p>Watch videos, download notes, track progress and earn certificates.</p>
                             <div class="mt-4">
-                                <a href="#" class="btn btn-warning btn-lg">Get Started</a>
+                                <a href="{{ route('courses') }}" class="btn btn-warning btn-lg">Get Started</a>
                             </div>
                         </div>
                     </div>
@@ -154,22 +147,16 @@
                         <a href="#">View All</a>
                     </div>
                     <ul class="notice-list">
-                        <li>
-                            <a href="#">AI & Emerging Technologies Training registrations are now open</a>
-                            <span class="badge-new">NEW</span>
-                        </li>
-                        <li>
-                            <a href="#">Cyber Security Awareness Programme starts from 15 August</a>
-                        </li>
-                        <li>
-                            <a href="#">Students can now download course completion certificates online</a>
-                        </li>
-                        <li>
-                            <a href="#">Trainer onboarding portal is now live</a>
-                        </li>
-                        <li>
-                            <a href="#">Semester assessment schedule released for all departments</a>
-                        </li>
+                        @forelse($announcements as $a)
+                            <li>
+                                <a href="#">{{ $a->title }}</a>
+                                @if($loop->first)
+                                    <span class="badge-new">NEW</span>
+                                @endif
+                            </li>
+                        @empty
+                            <li><a href="#">No notices yet. Check back soon.</a></li>
+                        @endforelse
                     </ul>
                 </div>
             </div>
@@ -177,7 +164,7 @@
             <!-- Quick Links -->
             <div class="col-lg-5">
                 <div class="d-flex flex-column gap-3 h-100">
-                    <a href="/register" class="quick-card">
+                    <a href="{{ route('register') }}" class="quick-card">
                         <i class="bi bi-person-plus-fill"></i>
                         <div>
                             <h6>Student Registration</h6>
@@ -185,7 +172,7 @@
                         </div>
                         <i class="bi bi-chevron-right quick-arrow"></i>
                     </a>
-                    <a href="#" class="quick-card">
+                    <a href="{{ route('certificate.verify') }}" class="quick-card">
                         <i class="bi bi-patch-check-fill"></i>
                         <div>
                             <h6>Verify Certificate</h6>
@@ -193,7 +180,7 @@
                         </div>
                         <i class="bi bi-chevron-right quick-arrow"></i>
                     </a>
-                    <a href="/trainer/login" class="quick-card">
+                    <a href="{{ route('trainer.login') }}" class="quick-card">
                         <i class="bi bi-mortarboard-fill"></i>
                         <div>
                             <h6>Trainer Login</h6>
@@ -216,74 +203,48 @@
                 <h3>Featured Courses</h3>
                 <p>Most enrolled programmes this month</p>
             </div>
-            <a href="#" class="btn btn-outline-navy">View All Courses</a>
+            <a href="{{ route('courses') }}" class="btn btn-outline-navy">View All Courses</a>
         </div>
 
+        @php
+            $thumbs = ['course-thumb-navy','course-thumb-purple','course-thumb-teal'];
+            $icons  = ['bi-shield-lock','bi-cpu','bi-code-slash'];
+        @endphp
+
         <div class="row g-4">
-            <div class="col-md-6 col-lg-4">
-                <div class="course-card">
-                    <div class="course-thumb course-thumb-navy">
-                        <i class="bi bi-shield-lock"></i>
-                    </div>
-                    <div class="course-body">
-                        <span class="course-dept">Computer Science</span>
-                        <h5>Cyber Security Awareness</h5>
-                        <div class="course-meta">
-                            <span><i class="bi bi-clock"></i> 8 weeks</span>
-                            <span><i class="bi bi-people"></i> 2,340 enrolled</span>
+            @forelse($courses as $course)
+                <div class="col-md-6 col-lg-4">
+                    <div class="course-card">
+                        <div class="course-thumb {{ $thumbs[$loop->index % 3] }}">
+                            <i class="bi {{ $icons[$loop->index % 3] }}"></i>
                         </div>
-                        <div class="course-foot">
-                            <span class="course-free">FREE · Certificate</span>
-                            <a href="#" class="btn btn-sm btn-navy">Enroll</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-lg-4">
-                <div class="course-card">
-                    <div class="course-thumb course-thumb-purple">
-                        <i class="bi bi-cpu"></i>
-                    </div>
-                    <div class="course-body">
-                        <span class="course-dept">Emerging Technologies</span>
-                        <h5>AI & Emerging Technologies</h5>
-                        <div class="course-meta">
-                            <span><i class="bi bi-clock"></i> 6 weeks</span>
-                            <span><i class="bi bi-people"></i> 1,890 enrolled</span>
-                        </div>
-                        <div class="course-foot">
-                            <span class="course-free">FREE · Certificate</span>
-                            <a href="#" class="btn btn-sm btn-navy">Enroll</a>
+                        <div class="course-body">
+                            <span class="course-dept">{{ $course->department->name ?? 'General' }}</span>
+                            <h5>{{ $course->title }}</h5>
+                            <div class="course-meta">
+                                <span><i class="bi bi-clock"></i> {{ $course->duration_weeks ? $course->duration_weeks.' weeks' : 'Self-paced' }}</span>
+                                <span><i class="bi bi-people"></i> {{ $course->enrollments_count }} enrolled</span>
+                            </div>
+                            <div class="course-foot">
+                                <span class="course-free">{{ $course->is_paid ? '₹'.number_format($course->price / 100) : 'FREE' }} · Certificate</span>
+                                <a href="{{ route('course.detail', $course) }}" class="btn btn-sm btn-navy">View</a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="col-md-6 col-lg-4">
-                <div class="course-card">
-                    <div class="course-thumb course-thumb-teal">
-                        <i class="bi bi-code-slash"></i>
-                    </div>
-                    <div class="course-body">
-                        <span class="course-dept">Computer Science</span>
-                        <h5>Web Development Fundamentals</h5>
-                        <div class="course-meta">
-                            <span><i class="bi bi-clock"></i> 10 weeks</span>
-                            <span><i class="bi bi-people"></i> 3,105 enrolled</span>
-                        </div>
-                        <div class="course-foot">
-                            <span class="course-free">FREE · Certificate</span>
-                            <a href="#" class="btn btn-sm btn-navy">Enroll</a>
+            @empty
+                <div class="col-12">
+                    <div class="admin-card">
+                        <div class="admin-card-body text-center text-muted py-5">
+                            <i class="bi bi-journal-x" style="font-size:32px;color:#a5b0c6;"></i>
+                            <p class="mt-2 mb-0">No published courses yet. Check back soon.</p>
                         </div>
                     </div>
                 </div>
-            </div>
+            @endforelse
         </div>
     </div>
 </section>
-
-
 
 <!-- ================= STATS + CTA ================= -->
 <section class="cta-band">
@@ -292,33 +253,33 @@
             <div class="col-lg-7">
                 <div class="row text-center g-3">
                     <div class="col-3">
-                        <div class="stat-num">10,000+</div>
+                        <div class="stat-num">{{ $stats['students'] }}</div>
                         <div class="stat-label">Students</div>
                     </div>
                     <div class="col-3">
-                        <div class="stat-num">120+</div>
+                        <div class="stat-num">{{ $stats['courses'] }}</div>
                         <div class="stat-label">Courses</div>
                     </div>
                     <div class="col-3">
-                        <div class="stat-num">300+</div>
+                        <div class="stat-num">{{ $stats['trainers'] }}</div>
                         <div class="stat-label">Trainers</div>
                     </div>
                     <div class="col-3">
-                        <div class="stat-num">40+</div>
-                        <div class="stat-label">Institutes</div>
+                        <div class="stat-num">{{ $stats['departments'] }}</div>
+                        <div class="stat-label">Departments</div>
                     </div>
                 </div>
             </div>
             <div class="col-lg-5 text-lg-end text-center">
                 <h4>Start your journey today</h4>
                 <p>Free for all Haryana polytechnic students.</p>
-                <a href="/register" class="btn btn-warning btn-lg">Create Free Account</a>
+                <a href="{{ route('register') }}" class="btn btn-warning btn-lg">Create Free Account</a>
             </div>
         </div>
     </div>
 </section>
 
-<!-- ================= UPCOMING TRAINING PROGRAMMES ================= -->
+<!-- ================= UPCOMING TRAINING PROGRAMMES (abhi STATIC — trainings table Phase 3) ================= -->
 <section class="section-pad">
     <div class="container">
         <div class="section-head">

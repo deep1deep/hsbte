@@ -10,7 +10,7 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\CertificateController;
 
 /* ---------------- PUBLIC PAGES ---------------- */
-Route::view('/', 'home')->name('home');
+Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/courses', [CourseController::class, 'index'])->name('courses');
 
 // dynamic course detail — koi bhi published course slug se khulega
