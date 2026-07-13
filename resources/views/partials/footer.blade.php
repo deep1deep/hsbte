@@ -1,4 +1,4 @@
-<footer class="mt-5" style="background:#0B3D91; color:white;">
+<footer class="mt-5" style="background:#0d2a5c; color:white;">
 
     <div class="container py-5">
 
@@ -27,7 +27,7 @@
 
                     <li><a href="/" class="text-white text-decoration-none">Home</a></li>
 
-                    <li><a href="#" class="text-white text-decoration-none">Courses</a></li>
+                    <li><a href="{{ route('courses') }}" class="text-white text-decoration-none">Courses</a></li>
 
                     <li><a href="#" class="text-white text-decoration-none">About</a></li>
 
@@ -58,7 +58,7 @@
 
         </div>
 
-        <hr>
+        <hr style="border-color: rgba(255,255,255,.25);">
 
         <div class="text-center">
 
