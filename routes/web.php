@@ -69,3 +69,10 @@ Route::middleware(['auth','role:trainer'])->group(function () {
     Route::patch('/trainer/lessons/{lesson}',        [TrainerController::class, 'updateLesson'])->name('trainer.lessons.update');
     Route::delete('/trainer/lessons/{lesson}',       [TrainerController::class, 'destroyLesson'])->name('trainer.lessons.destroy');
 });
+
+Route::get('/notices', [\App\Http\Controllers\NoticeController::class, 'index'])->name('notices');
+
+Route::get('/admin/announcements',                 [\App\Http\Controllers\Admin\AnnouncementController::class, 'index'])->name('admin.announcements');
+    Route::post('/admin/announcements',                [\App\Http\Controllers\Admin\AnnouncementController::class, 'store'])->name('admin.announcements.store');
+    Route::patch('/admin/announcements/{announcement}', [\App\Http\Controllers\Admin\AnnouncementController::class, 'update'])->name('admin.announcements.update');
+    Route::delete('/admin/announcements/{announcement}',[\App\Http\Controllers\Admin\AnnouncementController::class, 'destroy'])->name('admin.announcements.destroy');

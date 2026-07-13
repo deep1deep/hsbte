@@ -129,12 +129,24 @@
         <!-- Menu -->
         <div class="collapse navbar-collapse" id="mainMenu">
             <ul class="navbar-nav mx-auto">
-                <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Departments</a></li>
-                <li class="nav-item"><a class="nav-link" href="/courses">Courses</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Jobs</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Notifications</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Help</a></li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Departments</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('courses') || request()->routeIs('course.detail') ? 'active' : '' }}" href="/courses">Courses</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Jobs</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->is('notices') ? 'active' : '' }}" href="{{ url('/notices') }}">Notifications</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Help</a>
+                </li>
             </ul>
 
             <!-- Auth Dropdown -->
@@ -183,6 +195,7 @@
                                 </form>
                             </li>
                         </ul>
+                    </li>
                     @endauth
 
                 </li>

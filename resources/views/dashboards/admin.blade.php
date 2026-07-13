@@ -12,10 +12,15 @@
                 <h2 class="mb-1">Admin Dashboard</h2>
                 <p class="text-muted mb-0">Welcome back, {{ auth()->user()->name }}</p>
             </div>
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button class="btn btn-outline-navy btn-sm">Logout</button>
-            </form>
+            <div class="d-flex gap-2">
+                <a href="{{ route('admin.announcements') }}" class="btn btn-navy btn-sm">
+                    <i class="bi bi-megaphone"></i> Manage Notices
+                </a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button class="btn btn-outline-navy btn-sm">Logout</button>
+                </form>
+            </div>
         </div>
 
         {{-- Success message after adding trainer --}}

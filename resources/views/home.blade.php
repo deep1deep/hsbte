@@ -287,7 +287,7 @@
                 <h3>Upcoming Training Programmes</h3>
                 <p>Register before seats fill up</p>
             </div>
-            <a href="#" class="btn btn-outline-navy">View Full Schedule</a>
+            <a href="/courses" class="btn btn-outline-navy">View Full Schedule</a>
         </div>
 
         <div class="row g-4">
@@ -312,7 +312,7 @@
                     </ul>
                     <div class="training-foot">
                         <span class="course-free">FREE · Certificate</span>
-                        <a href="#" class="btn btn-sm btn-navy">Register Now</a>
+                        <a href="/courses" class="btn btn-sm btn-navy">Register Now</a>
                     </div>
                 </div>
             </div>
@@ -337,7 +337,7 @@
                     </ul>
                     <div class="training-foot">
                         <span class="course-free">FREE · Certificate</span>
-                        <a href="#" class="btn btn-sm btn-navy">Register Now</a>
+                        <a href="/courses" class="btn btn-sm btn-navy">Register Now</a>
                     </div>
                 </div>
             </div>
@@ -362,7 +362,7 @@
                     </ul>
                     <div class="training-foot">
                         <span class="course-free">FREE · Certificate</span>
-                        <a href="#" class="btn btn-sm btn-navy">Register Now</a>
+                        <a href="/courses" class="btn btn-sm btn-navy">Register Now</a>
                     </div>
                 </div>
             </div>
