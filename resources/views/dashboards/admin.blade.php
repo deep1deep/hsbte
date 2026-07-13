@@ -121,7 +121,13 @@
                     <div class="admin-card-body">
 
                         @if($errors->any())
-                            <div class="alert alert-danger py-2 small">{{ $errors->first() }}</div>
+                            <div class="alert alert-danger py-2 small">
+                                <ul class="mb-0 ps-3">
+                                    @foreach($errors->all() as $err)
+                                        <li>{{ $err }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
                         @endif
 
                         <form method="POST" action="{{ route('admin.trainers.store') }}">

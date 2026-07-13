@@ -55,11 +55,14 @@ class AdminController extends Controller
         $validated = $request->validate([
             'name'          => ['required', 'string', 'max:255'],
             'email'         => ['required', 'email', 'unique:users,email'],
-            'phone'         => ['nullable', 'string', 'max:15'],
+            'phone'         => ['nullable', 'string', 'max:15', 'unique:users,phone'],
             'department_id' => ['required', 'exists:departments,id'],
             'designation'   => ['nullable', 'string', 'max:255'],
             'qualification' => ['nullable', 'string', 'max:255'],
             'password'      => ['required', 'string', 'min:8'],
+        ], [
+            'email.unique' => 'This email is already registered.',
+            'phone.unique' => 'This phone number is already registered.',
         ]);
 
         User::create([

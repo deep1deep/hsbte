@@ -144,12 +144,12 @@
                 <div class="notice-board">
                     <div class="notice-head">
                         <span><i class="bi bi-megaphone-fill me-2"></i>Notices & Circulars</span>
-                        <a href="#">View All</a>
+                        <a href="/notices">View All</a>
                     </div>
                     <ul class="notice-list">
                         @forelse($announcements as $a)
                             <li>
-                                <a href="#">{{ $a->title }}</a>
+                                <a href="/notices">{{ $a->title }}</a>
                                 @if($loop->first)
                                     <span class="badge-new">NEW</span>
                                 @endif
