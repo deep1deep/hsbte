@@ -70,7 +70,12 @@
                     <tbody>
                         @forelse($courses as $course)
                             <tr>
-                                <td style="font-weight:600;color:#1f2f4d;">{{ $course->title }}</td>
+                                <td>
+    <a href="{{ route('trainer.courses.manage', $course) }}"
+       class="text-decoration-none" style="font-weight:600;color:#1f2f4d;">
+        {{ $course->title }}
+    </a>
+</td>
                                 <td>
                                     @if($course->department)
                                         <span class="badge-dept">{{ $course->department->code }}</span>
@@ -91,7 +96,7 @@
                                 </td>
                                 <td class="text-end">
                                     {{-- T3 me wire hoga --}}
-                                    <a href="#" class="btn btn-sm btn-outline-navy">Manage</a>
+                                    <a href="{{ route('trainer.courses.manage', $course) }}" class="btn btn-sm btn-outline-navy">Manage</a>
                                 </td>
                             </tr>
                         @empty
