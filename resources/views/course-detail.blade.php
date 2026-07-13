@@ -1,187 +1,139 @@
 @extends('layouts.app')
 
-@section('title', 'Cyber Security Awareness - HSBTE Training Portal')
+@section('title', $course->title . ' - HSBTE')
 
 @section('content')
 
-<!-- ================= COURSE BANNER ================= -->
-<section class="cd-banner">
+{{-- ===== NAVY BANNER ===== --}}
+<section style="background:#0d2a5c;color:#fff;padding:48px 0;">
     <div class="container">
-        <div class="cd-breadcrumb">Home / Courses / Cyber Security Awareness</div>
-
-        <div class="cd-tags">
-            <span class="cd-tag-dept">Computer Science</span>
-            <span class="cd-tag-free">FREE</span>
+        <div class="mb-2">
+            <a href="{{ route('courses') }}" class="text-decoration-none" style="color:#a5b0c6;font-size:14px;">
+                <i class="bi bi-arrow-left"></i> All courses
+            </a>
         </div>
-
-        <h1>Cyber Security Awareness</h1>
-        <p>Learn to protect yourself and organisations from digital threats. Certificate on completion.</p>
-
-        <div class="cd-stats">
-            <span><i class="bi bi-clock"></i> 8 weeks</span>
-            <span><i class="bi bi-people"></i> 2,340 enrolled</span>
-            <span><i class="bi bi-collection-play"></i> 24 lessons</span>
-            <span><i class="bi bi-person"></i> Dr. A. Kumar</span>
+        <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+            @if($course->department)
+                <span class="badge" style="background:#f0a500;color:#0d2a5c;">{{ $course->department->name }}</span>
+            @endif
+            @if(!$course->is_paid)
+                <span class="badge" style="background:#0f6e56;">Free</span>
+            @endif
+        </div>
+        <h1 class="mb-2" style="font-weight:700;">{{ $course->title }}</h1>
+        <p class="mb-3" style="color:#cdd6e8;max-width:680px;">{{ $course->description }}</p>
+        <div class="d-flex gap-4 flex-wrap" style="color:#a5b0c6;font-size:14px;">
+            <span><i class="bi bi-collection-play"></i> {{ $lessonCount }} {{ $lessonCount === 1 ? 'lesson' : 'lessons' }}</span>
+            <span><i class="bi bi-diagram-3"></i> {{ $course->modules->count() }} modules</span>
+            @if($course->duration_weeks)
+                <span><i class="bi bi-clock"></i> {{ $course->duration_weeks }} weeks</span>
+            @endif
+            @if($course->trainer)
+                <span><i class="bi bi-person-circle"></i> {{ $course->trainer->name }}</span>
+            @endif
         </div>
     </div>
 </section>
 
-<!-- ================= COURSE BODY ================= -->
+{{-- ===== BODY ===== --}}
 <section class="section-pad">
     <div class="container">
+        @if(session('success'))
+            <div class="alert alert-success py-2">{{ session('success') }}</div>
+        @endif
+
         <div class="row g-4">
 
-            <!-- LEFT: content -->
+            {{-- LEFT: content --}}
             <div class="col-lg-8">
+                <h4 class="mb-3" style="color:#1f2f4d;">Course content</h4>
 
-                <!-- What you'll learn -->
-                <div class="cd-box mb-4">
-                    <h5>What you'll learn</h5>
-                    <div class="row g-2 cd-learn">
-                        <div class="col-md-6"><i class="bi bi-check-circle-fill"></i> Password & account safety</div>
-                        <div class="col-md-6"><i class="bi bi-check-circle-fill"></i> Phishing detection</div>
-                        <div class="col-md-6"><i class="bi bi-check-circle-fill"></i> Safe browsing habits</div>
-                        <div class="col-md-6"><i class="bi bi-check-circle-fill"></i> Data protection basics</div>
-                        <div class="col-md-6"><i class="bi bi-check-circle-fill"></i> Social engineering awareness</div>
-                        <div class="col-md-6"><i class="bi bi-check-circle-fill"></i> Reporting cyber crime</div>
+                @forelse($course->modules as $module)
+                    <div class="admin-card mb-3">
+                        <div class="admin-card-head d-flex justify-content-between align-items-center">
+                            <span>{{ $module->title }}</span>
+                            <span class="text-muted small">
+                                {{ $module->lessons->count() }} {{ $module->lessons->count() === 1 ? 'lesson' : 'lessons' }}
+                            </span>
+                        </div>
+                        <div class="admin-card-body">
+                            @forelse($module->lessons as $lesson)
+                                <div class="d-flex align-items-center gap-2 py-2 {{ !$loop->last ? 'border-bottom' : '' }}">
+                                    <i class="bi {{ $lesson->isVideo() ? 'bi-play-circle' : 'bi-file-earmark-text' }}" style="color:#0d2a5c;"></i>
+                                    <span class="flex-grow-1" style="color:#3d4f73;">{{ $lesson->title }}</span>
+                                    @if($lesson->duration_minutes)
+                                        <span class="text-muted small">{{ $lesson->duration_minutes }} min</span>
+                                    @endif
+                                    <i class="bi bi-lock text-muted small" title="Enroll to watch"></i>
+                                </div>
+                            @empty
+                                <p class="text-muted small mb-0">Lessons coming soon.</p>
+                            @endforelse
+                        </div>
                     </div>
-                </div>
-
-                <!-- Course content accordion -->
-                <div class="cd-box p-0">
-                    <div class="cd-content-head">
-                        Course content <span>4 modules · 24 lessons · 6h 20m total</span>
+                @empty
+                    <div class="admin-card">
+                        <div class="admin-card-body text-center text-muted py-4">
+                            Course content will be added soon.
+                        </div>
                     </div>
-
-                    <div class="accordion cd-accordion" id="courseContent">
-
-                        <!-- Module 1 (open) -->
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#mod1">
-                                    Week 1: Introduction to Cyber Security
-                                    <span class="cd-mod-count">6 lessons</span>
-                                </button>
-                            </h2>
-                            <div id="mod1" class="accordion-collapse collapse show" data-bs-parent="#courseContent">
-                                <div class="accordion-body p-0">
-                                    <ul class="cd-lessons">
-                                        <li><span><i class="bi bi-play-circle"></i> What is cyber security?</span><span>12:40</span></li>
-                                        <li><span><i class="bi bi-play-circle"></i> Why it matters for everyone</span><span>09:15</span></li>
-                                        <li><span><i class="bi bi-play-circle"></i> Types of cyber threats</span><span>14:30</span></li>
-                                        <li><span><i class="bi bi-file-earmark-pdf"></i> Course handbook (PDF)</span><span>Notes</span></li>
-                                        <li><span><i class="bi bi-play-circle"></i> The CIA triad explained</span><span>11:05</span></li>
-                                        <li><span><i class="bi bi-play-circle"></i> Week 1 recap</span><span>06:20</span></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Module 2 -->
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mod2">
-                                    Week 2: Threats & Attacks
-                                    <span class="cd-mod-count">6 lessons</span>
-                                </button>
-                            </h2>
-                            <div id="mod2" class="accordion-collapse collapse" data-bs-parent="#courseContent">
-                                <div class="accordion-body p-0">
-                                    <ul class="cd-lessons">
-                                        <li><span><i class="bi bi-play-circle"></i> Phishing attacks in depth</span><span>15:10</span></li>
-                                        <li><span><i class="bi bi-play-circle"></i> Malware & ransomware</span><span>13:45</span></li>
-                                        <li><span><i class="bi bi-file-earmark-pdf"></i> Threat examples (PDF)</span><span>Notes</span></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Module 3 -->
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mod3">
-                                    Week 3: Protection in Practice
-                                    <span class="cd-mod-count">7 lessons</span>
-                                </button>
-                            </h2>
-                            <div id="mod3" class="accordion-collapse collapse" data-bs-parent="#courseContent">
-                                <div class="accordion-body p-0">
-                                    <ul class="cd-lessons">
-                                        <li><span><i class="bi bi-play-circle"></i> Strong passwords & 2FA</span><span>10:30</span></li>
-                                        <li><span><i class="bi bi-play-circle"></i> Securing your devices</span><span>12:00</span></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Module 4 -->
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mod4">
-                                    Week 4: Assessment & Certification
-                                    <span class="cd-mod-count">5 lessons</span>
-                                </button>
-                            </h2>
-                            <div id="mod4" class="accordion-collapse collapse" data-bs-parent="#courseContent">
-                                <div class="accordion-body p-0">
-                                    <ul class="cd-lessons">
-                                        <li><span><i class="bi bi-play-circle"></i> Full course revision</span><span>18:00</span></li>
-                                        <li><span><i class="bi bi-ui-checks"></i> Final assessment</span><span>Quiz</span></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
+                @endforelse
             </div>
 
-            <!-- RIGHT: enroll card -->
+            {{-- RIGHT: sticky enroll card --}}
             <div class="col-lg-4">
-                <div class="cd-sidebar">
+                <div class="admin-card" style="position:sticky;top:90px;">
+                    <div class="admin-card-body text-center">
 
-                    <div class="cd-enroll-card">
-                        <div class="cd-enroll-thumb">
-                            <i class="bi bi-shield-lock"></i>
+                        <div style="font-size:28px;font-weight:700;color:#0f6e56;" class="mb-1">
+                            {{ $course->is_paid ? '₹' . number_format($course->price / 100) : 'Free' }}
                         </div>
-                        <div class="cd-enroll-body">
-                            <div class="cd-price">FREE</div>
-                            <div class="cd-price-sub">for Haryana polytechnic students</div>
+                        <p class="text-muted small mb-3">Full lifetime access</p>
 
-                            <a href="/register" class="btn btn-navy w-100 mt-3">Enroll Now</a>
+                        @auth
+                            @if(auth()->user()->isStudent())
+                                @if($isEnrolled)
+                                    <a href="{{ route('student.course.show', $course) }}" class="btn btn-navy w-100 mb-2">
+                                        <i class="bi bi-play-fill"></i> Go to course
+                                    </a>
+                                    <p class="text-success small mb-0"><i class="bi bi-check-circle"></i> You're enrolled</p>
+                                @else
+                                    <form method="POST" action="{{ route('student.enroll', $course) }}">
+                                        @csrf
+                                        <button class="btn w-100 mb-2" style="background:#f0a500;color:#0d2a5c;font-weight:600;">
+                                            Enroll now
+                                        </button>
+                                    </form>
+                                    <p class="text-muted small mb-0">Enroll to unlock all lessons</p>
+                                @endif
+                            @else
+                                <p class="text-muted small mb-0">Log in as a student to enroll.</p>
+                            @endif
+                        @else
+                            {{-- GUEST: Enroll button dikhe, dabate hi login pe jaayega, login ke baad wapas isi course pe --}}
+                            <form method="POST" action="{{ route('student.enroll', $course) }}">
+                                @csrf
+                                <button class="btn w-100 mb-2" style="background:#f0a500;color:#0d2a5c;font-weight:600;">
+                                    Enroll now
+                                </button>
+                            </form>
+                            <p class="text-muted small mb-0">You'll be asked to log in first</p>
+                        @endauth
 
-                            <ul class="cd-facts">
-                                <li><i class="bi bi-clock"></i> 8 weeks · self paced</li>
-                                <li><i class="bi bi-phone"></i> Learn on any device</li>
-                                <li><i class="bi bi-award"></i> Government certificate</li>
-                                <li><i class="bi bi-arrow-repeat"></i> Lifetime access</li>
-                            </ul>
+                        <hr>
+                        <div class="text-start small text-muted">
+                            <div class="mb-1"><i class="bi bi-collection-play"></i> {{ $lessonCount }} lessons</div>
+                            <div class="mb-1"><i class="bi bi-diagram-3"></i> {{ $course->modules->count() }} modules</div>
+                            @if($course->trainer)
+                                <div><i class="bi bi-person-circle"></i> By {{ $course->trainer->name }}</div>
+                            @endif
                         </div>
+
                     </div>
-
-                    <div class="cd-trainer">
-                        <div class="cd-trainer-avatar">AK</div>
-                        <div>
-                            <h6>Dr. A. Kumar</h6>
-                            <p>HOD, Computer Science</p>
-                        </div>
-                    </div>
-
                 </div>
             </div>
 
         </div>
     </div>
 </section>
-
-<!-- Mobile fixed enroll bar -->
-<div class="cd-mobile-bar d-lg-none">
-    <div>
-        <div class="cd-price">FREE</div>
-        <div class="cd-price-sub">Certificate included</div>
-    </div>
-    <a href="/register" class="btn btn-navy">Enroll Now</a>
-</div>
-
 @endsection

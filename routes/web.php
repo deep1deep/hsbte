@@ -5,11 +5,19 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Trainer\TrainerController;
+use App\Http\Controllers\Student\StudentController;
+use App\Http\Controllers\CourseController;
+use App\Http\Controllers\CertificateController;
 
 /* ---------------- PUBLIC PAGES ---------------- */
 Route::view('/', 'home')->name('home');
-Route::view('/courses', 'courses')->name('courses');
-Route::view('/courses/cyber-security-awareness', 'course-detail')->name('course.detail');
+Route::get('/courses', [CourseController::class, 'index'])->name('courses');
+
+// dynamic course detail — koi bhi published course slug se khulega
+Route::get('/courses/{course:slug}', [CourseController::class, 'show'])->name('course.detail');
+
+// public certificate verify (bina login — employer/koi bhi number daal ke check kare)
+Route::get('/verify', [CertificateController::class, 'verify'])->name('certificate.verify');
 
 /* ---------------- AUTH: REGISTER / LOGIN / LOGOUT ---------------- */
 Route::get('/register',  [RegisterController::class, 'show'])->name('register');
@@ -19,9 +27,18 @@ Route::get('/trainer/login', [LoginController::class, 'showTrainer'])->name('tra
 Route::post('/login',        [LoginController::class, 'login'])->name('login.attempt');
 Route::post('/logout',       [LoginController::class, 'logout'])->name('logout');
 
-/* ---------------- STUDENT (abhi placeholder) ---------------- */
+/* ---------------- ENROLL (auth only — guest ko login pe bhejta hai, wapas course pe laata hai) ---------------- */
+Route::post('/courses/{course}/enroll', [StudentController::class, 'enroll'])
+    ->middleware('auth')->name('student.enroll');
+
+/* ---------------- STUDENT ---------------- */
 Route::middleware(['auth', 'role:student'])->group(function () {
-    Route::view('/student/dashboard', 'dashboards.student')->name('student.dashboard');
+    Route::get('/student/dashboard',                   [StudentController::class, 'dashboard'])->name('student.dashboard');
+    Route::get('/student/courses/{course}',            [StudentController::class, 'showCourse'])->name('student.course.show');
+    Route::post('/student/lessons/{lesson}/complete',  [StudentController::class, 'markComplete'])->name('student.lessons.complete');
+
+    // certificate download (sirf apna)
+    Route::get('/certificates/{certificate}/download', [CertificateController::class, 'download'])->name('certificate.download');
 });
 
 /* ---------------- ADMIN ---------------- */

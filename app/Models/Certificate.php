@@ -18,9 +18,7 @@ class Certificate extends Model
         'issued_at' => 'datetime',
     ];
 
-    /* ---------------- RELATIONSHIPS ---------------- */
-
-    // Certificate belongs to one completed enrollment
+    // Certificate belongs to an enrollment
     public function enrollment(): BelongsTo
     {
         return $this->belongsTo(Enrollment::class);
