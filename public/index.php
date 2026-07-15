@@ -1,7 +1,11 @@
 <?php
 
-use Illuminate\Foundation\Application;
+
 use Illuminate\Http\Request;
+
+use Illuminate\Foundation\Application;
+
+ini_set('memory_limit', '512M');
 
 define('LARAVEL_START', microtime(true));
 

@@ -17,6 +17,7 @@ class Course extends Model
         'thumbnail',
         'duration_weeks',
         'status',
+        'cert_mode',
         'is_paid',
         'price',
     ];
@@ -50,6 +51,20 @@ class Course extends Model
     public function enrollments(): HasMany
     {
         return $this->hasMany(Enrollment::class);
+    }
+
+    /* ---------------- CERTIFICATE MODE ---------------- */
+
+    // manual = trainer har student ka file upload karega
+    public function usesManualCertificates(): bool
+    {
+        return $this->cert_mode === 'manual';
+    }
+
+    // auto = trainer ke HTML template se apne aap banega
+    public function usesAutoCertificates(): bool
+    {
+        return $this->cert_mode === 'auto';
     }
 
     /* ---------------- ROUTE MODEL BINDING ---------------- */

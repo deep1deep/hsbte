@@ -19,6 +19,9 @@ Route::get('/courses/{course:slug}', [CourseController::class, 'show'])->name('c
 // public certificate verify (bina login — employer/koi bhi number daal ke check kare)
 Route::get('/verify', [CertificateController::class, 'verify'])->name('certificate.verify');
 
+// public notices
+Route::get('/notices', [\App\Http\Controllers\NoticeController::class, 'index'])->name('notices');
+
 /* ---------------- AUTH: REGISTER / LOGIN / LOGOUT ---------------- */
 Route::get('/register',  [RegisterController::class, 'show'])->name('register');
 Route::post('/register', [RegisterController::class, 'register'])->name('register.attempt');
@@ -45,6 +48,12 @@ Route::middleware(['auth', 'role:student'])->group(function () {
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::post('/admin/trainers', [AdminController::class, 'storeTrainer'])->name('admin.trainers.store');
+
+    // notices / announcements CRUD — ADMIN ONLY
+    Route::get('/admin/announcements',                  [\App\Http\Controllers\Admin\AnnouncementController::class, 'index'])->name('admin.announcements');
+    Route::post('/admin/announcements',                 [\App\Http\Controllers\Admin\AnnouncementController::class, 'store'])->name('admin.announcements.store');
+    Route::patch('/admin/announcements/{announcement}', [\App\Http\Controllers\Admin\AnnouncementController::class, 'update'])->name('admin.announcements.update');
+    Route::delete('/admin/announcements/{announcement}',[\App\Http\Controllers\Admin\AnnouncementController::class, 'destroy'])->name('admin.announcements.destroy');
 });
 
 /* ---------------- TRAINER ---------------- */
@@ -68,11 +77,9 @@ Route::middleware(['auth','role:trainer'])->group(function () {
     Route::post('/trainer/modules/{module}/lessons', [TrainerController::class, 'storeLesson'])->name('trainer.lessons.store');
     Route::patch('/trainer/lessons/{lesson}',        [TrainerController::class, 'updateLesson'])->name('trainer.lessons.update');
     Route::delete('/trainer/lessons/{lesson}',       [TrainerController::class, 'destroyLesson'])->name('trainer.lessons.destroy');
+    Route::get('/trainer/certificate-design',  [TrainerController::class, 'certificateDesign'])->name('trainer.certificate.design');
+    Route::post('/trainer/certificate-design', [TrainerController::class, 'saveCertificateDesign'])->name('trainer.certificate.design.save');
+    // certificates (manual upload)
+    Route::get('/trainer/certificates',                        [TrainerController::class, 'certificates'])->name('trainer.certificates');
+    Route::post('/trainer/certificates/{certificate}/upload',  [TrainerController::class, 'uploadCertificate'])->name('trainer.certificates.upload');
 });
-
-Route::get('/notices', [\App\Http\Controllers\NoticeController::class, 'index'])->name('notices');
-
-Route::get('/admin/announcements',                 [\App\Http\Controllers\Admin\AnnouncementController::class, 'index'])->name('admin.announcements');
-    Route::post('/admin/announcements',                [\App\Http\Controllers\Admin\AnnouncementController::class, 'store'])->name('admin.announcements.store');
-    Route::patch('/admin/announcements/{announcement}', [\App\Http\Controllers\Admin\AnnouncementController::class, 'update'])->name('admin.announcements.update');
-    Route::delete('/admin/announcements/{announcement}',[\App\Http\Controllers\Admin\AnnouncementController::class, 'destroy'])->name('admin.announcements.destroy');

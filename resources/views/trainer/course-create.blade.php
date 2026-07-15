@@ -63,6 +63,25 @@
                         </select>
                     </div>
 
+                    <div class="mb-3">
+                        <label class="form-label">Certificate mode</label>
+                        <select name="cert_mode" id="certMode" class="form-select" required onchange="toggleDesignWarn()">
+                            <option value="auto" @selected(old('cert_mode','auto')=='auto')>Auto — generated from my certificate design</option>
+                            <option value="manual" @selected(old('cert_mode')=='manual')>Manual — I will upload each student's certificate</option>
+                        </select>
+                        <div class="text-muted mt-1" style="font-size:.8rem;">
+                            You can change this later. It only affects certificates issued from now on.
+                        </div>
+
+                        @if(! $hasDesign)
+                            <div class="alert alert-warning py-2 mt-2 mb-0" id="designWarn" style="font-size:.85rem;">
+                                <i class="bi bi-exclamation-triangle me-1"></i>
+                                You haven't saved a certificate design yet — students will get the default HSBTE certificate.
+                                <a href="{{ route('trainer.certificate.design') }}" class="alert-link">Set up design</a>
+                            </div>
+                        @endif
+                    </div>
+
                     <button type="submit" class="btn btn-navy w-100 mt-2">Create Course</button>
                 </form>
 
@@ -71,4 +90,14 @@
 
     </div>
 </section>
+
+@if(! $hasDesign)
+<script>
+function toggleDesignWarn() {
+    const warn = document.getElementById('designWarn');
+    if (warn) warn.style.display = document.getElementById('certMode').value === 'auto' ? '' : 'none';
+}
+toggleDesignWarn();
+</script>
+@endif
 @endsection

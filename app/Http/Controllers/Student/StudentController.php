@@ -106,10 +106,14 @@ class StudentController extends Controller
         if ($totalLessons > 0 && $doneLessons >= $totalLessons) {
             $enrollment->update(['status' => 'completed', 'completed_at' => now()]);
 
-            // 🎓 course complete → certificate auto-generate (na ho to banega)
-            CertificateController::generateFor($enrollment);
+            // 🎓 course complete → certificate (auto = ready | manual = pending)
+            $certificate = CertificateController::generateFor($enrollment);
 
-            return back()->with('success', 'Course completed! Your certificate is ready. 🎉');
+            $msg = $certificate->isPending()
+                ? 'Course completed! 🎉 Your certificate is with the trainer for approval — you will be able to download it soon.'
+                : 'Course completed! Your certificate is ready. 🎉';
+
+            return back()->with('success', $msg);
         }
 
         return back()->with('success', 'Lesson marked complete.');

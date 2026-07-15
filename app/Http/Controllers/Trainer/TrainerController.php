@@ -8,6 +8,9 @@ use App\Models\Module;
 use App\Models\Lesson;
 use App\Models\Enrollment;
 use App\Models\Department;
+use App\Models\Certificate;
+use App\Models\CertificateTemplate;
+use App\Support\HtmlSanitizer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -31,6 +34,9 @@ class TrainerController extends Controller
             'students'  => Enrollment::whereIn('course_id', $courseIds)
                                 ->distinct('user_id')
                                 ->count('user_id'),
+            'pending'   => Certificate::where('status', 'pending')
+                                ->whereHas('enrollment', fn ($q) => $q->whereIn('course_id', $courseIds))
+                                ->count(),
         ];
 
         return view('dashboards.trainer', compact('courses', 'stats'));
@@ -39,7 +45,9 @@ class TrainerController extends Controller
     public function createCourse()
     {
         $departments = Department::where('is_active', true)->orderBy('name')->get();
-        return view('trainer.course-create', compact('departments'));
+        $hasDesign   = CertificateTemplate::where('trainer_id', auth()->id())->exists();
+
+        return view('trainer.course-create', compact('departments', 'hasDesign'));
     }
 
     public function storeCourse(Request $request)
@@ -50,6 +58,7 @@ class TrainerController extends Controller
             'department_id'  => ['required', 'exists:departments,id'],
             'duration_weeks' => ['nullable', 'integer', 'min:1', 'max:104'],
             'status'         => ['required', 'in:draft,published'],
+            'cert_mode'      => ['required', 'in:manual,auto'],
         ]);
 
         $baseSlug = Str::slug($validated['title']);
@@ -68,6 +77,7 @@ class TrainerController extends Controller
             'description'    => $validated['description'] ?? null,
             'duration_weeks' => $validated['duration_weeks'] ?? null,
             'status'         => $validated['status'],
+            'cert_mode'      => $validated['cert_mode'],
             'is_paid'        => false,
             'price'          => 0,
         ]);
@@ -89,15 +99,18 @@ class TrainerController extends Controller
         return view('trainer.course-manage', compact('course'));
     }
 
-    // ---------- NAYA: Edit course (form) ----------
+    // ---------- Edit course (form) ----------
     public function editCourse(Course $course)
     {
         abort_unless($course->trainer_id === auth()->id(), 403);
+
         $departments = Department::where('is_active', true)->orderBy('name')->get();
-        return view('trainer.course-edit', compact('course', 'departments'));
+        $hasDesign   = CertificateTemplate::where('trainer_id', auth()->id())->exists();
+
+        return view('trainer.course-edit', compact('course', 'departments', 'hasDesign'));
     }
 
-    // ---------- NAYA: Update course ----------
+    // ---------- Update course ----------
     public function updateCourse(Request $request, Course $course)
     {
         abort_unless($course->trainer_id === auth()->id(), 403);
@@ -108,15 +121,18 @@ class TrainerController extends Controller
             'department_id'  => ['required', 'exists:departments,id'],
             'duration_weeks' => ['nullable', 'integer', 'min:1', 'max:104'],
             'status'         => ['required', 'in:draft,published'],
+            'cert_mode'      => ['required', 'in:manual,auto'],
         ]);
 
         // slug jaanbujhkar NAHI badla — purane links/bookmarks na tooten
+        // NOTE: cert_mode badalne se purane certificates par asar nahi — wo frozen hain
         $course->update([
             'title'          => $validated['title'],
             'description'    => $validated['description'] ?? null,
             'department_id'  => $validated['department_id'],
             'duration_weeks' => $validated['duration_weeks'] ?? null,
             'status'         => $validated['status'],
+            'cert_mode'      => $validated['cert_mode'],
         ]);
 
         return redirect()->route('trainer.courses.manage', $course)
@@ -141,7 +157,7 @@ class TrainerController extends Controller
         return back()->with('success', 'Module added.');
     }
 
-    // ---------- NAYA: Module update ----------
+    // ---------- Module update ----------
     public function updateModule(Request $request, Module $module)
     {
         abort_unless($module->course->trainer_id === auth()->id(), 403);
@@ -187,7 +203,7 @@ class TrainerController extends Controller
         return back()->with('success', 'Lesson added.');
     }
 
-    // ---------- NAYA: Lesson update (title/duration + optional file replace) ----------
+    // ---------- Lesson update (title/duration + optional file replace) ----------
     public function updateLesson(Request $request, Lesson $lesson)
     {
         abort_unless($lesson->module->course->trainer_id === auth()->id(), 403);
@@ -276,5 +292,110 @@ class TrainerController extends Controller
             : 'Course unpublished — hidden from students.';
 
         return back()->with('success', $msg);
+    }
+
+    // ==========================================================
+    //  CERTIFICATES (manual upload)
+    // ==========================================================
+
+    /**
+     * Pending + issued certificates — sirf mere courses ke.
+     */
+    public function certificates()
+    {
+        $courseIds = Course::where('trainer_id', auth()->id())->pluck('id');
+
+        $pending = Certificate::where('status', 'pending')
+            ->whereHas('enrollment', fn ($q) => $q->whereIn('course_id', $courseIds))
+            ->with(['enrollment.user', 'enrollment.course'])
+            ->oldest('issued_at')          // sabse purana pehle — wahi sabse zyada wait kar raha hai
+            ->get();
+
+        $issued = Certificate::where('status', 'issued')
+            ->whereHas('enrollment', fn ($q) => $q->whereIn('course_id', $courseIds))
+            ->with(['enrollment.user', 'enrollment.course'])
+            ->latest('issued_at')
+            ->get();
+
+        return view('trainer.certificates', compact('pending', 'issued'));
+    }
+
+    /**
+     * Certificate file upload — DB me base64 (disk pe NAHI, Render disk ephemeral hai).
+     */
+    public function uploadCertificate(Request $request, Certificate $certificate)
+    {
+        $enrollment = $certificate->enrollment;
+
+        // security: sirf apne course ka certificate
+        abort_unless($enrollment->course->trainer_id === auth()->id(), 403);
+
+        $request->validate([
+            // SVG jaanbujhkar allowed nahi — usme script chhup sakti hai
+            'file' => ['required', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
+        ], [
+            'file.max'   => 'The file must be smaller than 5MB.',
+            'file.mimes' => 'Only PDF, JPG or PNG files are allowed.',
+        ]);
+
+        $file = $request->file('file');
+
+        $certificate->update([
+            'status'      => 'issued',
+            'source'      => 'manual',
+            'file_blob'   => base64_encode(file_get_contents($file->getRealPath())),
+            'file_mime'   => $file->getMimeType(),
+            'uploaded_by' => auth()->id(),
+            'issued_at'   => now(),
+        ]);
+
+        return back()->with('success', 'Certificate issued — the student can download it now.');
+    }
+
+    // ==========================================================
+    //  CERTIFICATE DESIGN (auto mode ka HTML template)
+    // ==========================================================
+
+    public function certificateDesign()
+    {
+        $template = CertificateTemplate::where('trainer_id', auth()->id())->first();
+
+        // is trainer ke kitne course auto mode pe hain
+        $autoCourses = Course::where('trainer_id', auth()->id())
+            ->where('cert_mode', 'auto')
+            ->pluck('title');
+
+        return view('trainer.certificate-design', [
+            'template'     => $template,
+            'placeholders' => HtmlSanitizer::placeholders(),
+            'autoCourses'  => $autoCourses,
+        ]);
+    }
+
+    public function saveCertificateDesign(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'html' => ['required', 'string', 'max:512000'],   // ~500KB
+        ], [
+            'html.max'      => 'The design must be smaller than 500KB.',
+            'html.required' => 'HTML cannot be empty.',
+        ]);
+
+        // 🔒 sanitize — script/iframe/php sab nikal do
+        $clean = HtmlSanitizer::clean($validated['html']);
+
+        abort_if($clean === '', 422, 'Nothing left after sanitizing the HTML.');
+
+        CertificateTemplate::updateOrCreate(
+            ['trainer_id' => auth()->id()],
+            [
+                'name'      => $validated['name'],
+                'html'      => $clean,
+                'is_active' => true,
+            ]
+        );
+
+        return back()->with('success', 'Certificate design saved. Auto-mode courses will use it from now on.');
     }
 }

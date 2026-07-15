@@ -7,6 +7,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -78,6 +79,12 @@ class User extends Authenticatable
     public function enrollments(): HasMany
     {
         return $this->hasMany(Enrollment::class);
+    }
+
+    // Trainer ka certificate HTML design (auto mode ke liye)
+    public function certificateTemplate(): HasOne
+    {
+        return $this->hasOne(CertificateTemplate::class, 'trainer_id')->where('is_active', true);
     }
 
     /* ---------------- ROLE HELPERS ---------------- */

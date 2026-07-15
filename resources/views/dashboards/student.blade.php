@@ -26,6 +26,9 @@
         @if(session('success'))
             <div class="alert alert-success py-2">{{ session('success') }}</div>
         @endif
+        @if(session('error'))
+            <div class="alert alert-warning py-2">{{ session('error') }}</div>
+        @endif
 
         {{-- STAT CARDS --}}
         <div class="row g-3 mb-4">
@@ -49,29 +52,61 @@
             </div>
         </div>
 
-        {{-- ===== MY CERTIFICATES (direct download) ===== --}}
-        @php($certified = $enrollments->filter(fn($e) => $e->certificate))
+        {{-- ===== MY CERTIFICATES ===== --}}
+        @php
+            $certified = $enrollments->filter(fn($e) => $e->certificate);
+            $pendingCerts = $certified->filter(fn($e) => $e->certificate->isPending());
+        @endphp
+
         @if($certified->count())
             <h5 class="mb-3" style="color:#1f2f4d;"><i class="bi bi-award-fill" style="color:#f0a500;"></i> My Certificates</h5>
+
+            @if($pendingCerts->count())
+                <div class="alert alert-info py-2">
+                    <i class="bi bi-info-circle me-1"></i>
+                    {{ $pendingCerts->count() == 1 ? 'Ek certificate' : $pendingCerts->count() . ' certificates' }}
+                    trainer ke paas approval ke liye hai. Issue hote hi download link yahin aa jaayega.
+                </div>
+            @endif
+
             <div class="row g-3 mb-4">
                 @foreach($certified as $enrollment)
+                    @php($cert = $enrollment->certificate)
                     <div class="col-md-6 col-lg-4">
-                        <div class="admin-card h-100" style="border-top:3px solid #f0a500;">
+                        <div class="admin-card h-100"
+                             style="border-top:3px solid {{ $cert->isPending() ? '#a5b0c6' : '#f0a500' }};">
                             <div class="admin-card-body d-flex flex-column">
                                 <div class="d-flex align-items-center gap-2 mb-2">
-                                    <i class="bi bi-patch-check-fill" style="color:#0f6e56;font-size:20px;"></i>
+                                    @if($cert->isPending())
+                                        <i class="bi bi-clock-history" style="color:#7a8aa8;font-size:20px;"></i>
+                                    @else
+                                        <i class="bi bi-patch-check-fill" style="color:#0f6e56;font-size:20px;"></i>
+                                    @endif
                                     <span style="font-weight:600;color:#1f2f4d;">{{ $enrollment->course->title }}</span>
                                 </div>
+
                                 <div class="text-muted small mb-1">
-                                    No: {{ $enrollment->certificate->certificate_no }}
+                                    No: {{ $cert->certificate_no }}
                                 </div>
-                                <div class="text-muted small mb-3">
-                                    Issued: {{ $enrollment->certificate->issued_at->format('d M Y') }}
-                                </div>
-                                <a href="{{ route('certificate.download', $enrollment->certificate) }}"
-                                   class="btn btn-sm mt-auto" style="background:#f0a500;color:#0d2a5c;font-weight:600;">
-                                    <i class="bi bi-download"></i> Download Certificate
-                                </a>
+
+                                @if($cert->isPending())
+                                    <div class="text-muted small mb-3">
+                                        Course completed —
+                                        {{ $enrollment->completed_at ? $enrollment->completed_at->format('d M Y') : '—' }}
+                                    </div>
+                                    <button class="btn btn-sm mt-auto" disabled
+                                            style="background:#eef2fa;color:#7a8aa8;font-weight:600;border:1px solid #dde4f0;">
+                                        <i class="bi bi-hourglass-split"></i> Pending with trainer
+                                    </button>
+                                @else
+                                    <div class="text-muted small mb-3">
+                                        Issued: {{ $cert->issued_at ? $cert->issued_at->format('d M Y') : '—' }}
+                                    </div>
+                                    <a href="{{ route('certificate.download', $cert) }}"
+                                       class="btn btn-sm mt-auto" style="background:#f0a500;color:#0d2a5c;font-weight:600;">
+                                        <i class="bi bi-download"></i> Download Certificate
+                                    </a>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -82,7 +117,7 @@
         {{-- MY COURSES --}}
         <h5 class="mb-3" style="color:#1f2f4d;">My Courses</h5>
 
-        @forelse($enrollments as $enrollment)
+        @foreach($enrollments as $enrollment)
             @php($pct = round($enrollment->progressPercent()))
             <div class="admin-card mb-3">
                 <div class="admin-card-body">
@@ -96,10 +131,16 @@
                                 @if($enrollment->status === 'completed')
                                     <span class="badge text-bg-success">Completed</span>
                                     @if($enrollment->certificate)
-                                        <a href="{{ route('certificate.download', $enrollment->certificate) }}"
-                                           class="small text-decoration-none" style="color:#f0a500;font-weight:600;">
-                                            <i class="bi bi-award"></i> Certificate
-                                        </a>
+                                        @if($enrollment->certificate->isPending())
+                                            <span class="small" style="color:#7a8aa8;font-weight:600;">
+                                                <i class="bi bi-clock-history"></i> Certificate pending
+                                            </span>
+                                        @else
+                                            <a href="{{ route('certificate.download', $enrollment->certificate) }}"
+                                               class="small text-decoration-none" style="color:#f0a500;font-weight:600;">
+                                                <i class="bi bi-award"></i> Certificate
+                                            </a>
+                                        @endif
                                     @endif
                                 @endif
                             </div>
@@ -127,7 +168,9 @@
                     </div>
                 </div>
             </div>
-        @empty
+        @endforeach
+
+        @if($enrollments->isEmpty())
             <div class="admin-card">
                 <div class="admin-card-body text-center text-muted py-5">
                     <i class="bi bi-journal-x" style="font-size:32px;color:#a5b0c6;"></i>
@@ -135,7 +178,7 @@
                     <a href="{{ route('courses') }}" class="btn btn-navy">Browse courses</a>
                 </div>
             </div>
-        @endforelse
+        @endif
 
     </div>
 </section>
