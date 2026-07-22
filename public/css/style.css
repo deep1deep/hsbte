@@ -1529,7 +1529,7 @@ font-size:20px;
 .admin-table{width:100%;font-size:.9rem;}
 .admin-table th{text-align:left;color:#7a8aa8;font-weight:600;padding:8px 10px;font-size:.72rem;text-transform:uppercase;letter-spacing:.03em;}
 .admin-table td{padding:11px 10px;border-top:1px solid #f2f5fa;color:#3d4f73;}
-.badge-dept{background:#eef2fa;color:#0d2a5c;padding:3px 10px;border-radius:20px;font-size:.72rem;font-weight:600;}
+
 /*====================================================
                 DIGNITARIES / LEADERSHIP
 ====================================================*/
@@ -1539,58 +1539,58 @@ font-size:20px;
 }
 
 .dignitary-head{
-    text-align:center;
-    margin-bottom:48px;
+    margin-bottom:40px;
 }
 
 .dignitary-head h3{
     color:#0d2a5c;
     font-weight:700;
-    letter-spacing:-.01em;
+    font-size:1.6rem;
+    letter-spacing:-.02em;
     margin:0;
 }
 
-/* small gold rule under the heading — the only place gold is used here,
-   because #f0a500 on white fails AA contrast for actual text */
-.dignitary-rule{
-    display:block;
-    width:56px;
-    height:3px;
-    margin:12px auto 0;
-    background:#f0a500;
-    border-radius:2px;
+.dignitary-head p{
+    color:#7a8aa8;
+    font-size:.92rem;
+    margin:6px 0 0;
 }
 
-/* auto-fit: 4 across on desktop, then 2, then 1 — no media queries needed */
+/* auto-fit: 4 across, then 2, then 1 — no media queries needed.
+   Cards are capped so the source photos (some only ~130px wide) are never
+   blown up far past their native size and turned soft. */
 .dignitary-grid{
     list-style:none;
     margin:0;
     padding:0;
     display:grid;
-    gap:32px 24px;
-    grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+    gap:24px;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
 }
 
 .dignitary-item{
-    text-align:center;
-    padding:8px 4px;
+    position:relative;
+    background:#fff;
+    border:1px solid #e8edf5;
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 1px 2px rgba(13,42,92,.04);
+    transition:box-shadow 250ms cubic-bezier(.4,0,.2,1),
+               transform  250ms cubic-bezier(.4,0,.2,1),
+               border-color 250ms cubic-bezier(.4,0,.2,1);
+}
+
+.dignitary-item:hover{
+    transform:translateY(-4px);
+    border-color:#d8e2f2;
+    box-shadow:0 12px 28px rgba(13,42,92,.13);
 }
 
 .dignitary-photo{
-    width:150px;
-    height:150px;
-    margin:0 auto 20px;
-    border-radius:50%;
-    overflow:hidden;
+    position:relative;
+    aspect-ratio:4 / 5;
     background:#eef2fa;
-    box-shadow:0 0 0 4px #ffffff, 0 0 0 5px #e8edf5, 0 6px 18px rgba(13,42,92,.10);
-    transition:box-shadow 250ms cubic-bezier(.4,0,.2,1),
-               transform  250ms cubic-bezier(.4,0,.2,1);
-}
-
-.dignitary-item:hover .dignitary-photo{
-    transform:translateY(-4px);
-    box-shadow:0 0 0 4px #ffffff, 0 0 0 5px #f0a500, 0 12px 26px rgba(13,42,92,.18);
+    overflow:hidden;
 }
 
 .dignitary-photo img{
@@ -1599,6 +1599,17 @@ font-size:20px;
     object-fit:cover;
     object-position:center top;   /* faces sit high in portraits */
     display:block;
+}
+
+/* soft scrim at the base of the photo so it meets the text block cleanly
+   instead of ending in a hard line */
+.dignitary-photo::after{
+    content:"";
+    position:absolute;
+    inset:auto 0 0 0;
+    height:38%;
+    background:linear-gradient(to bottom,rgba(13,42,92,0),rgba(13,42,92,.28));
+    pointer-events:none;
 }
 
 /* shown when no photo file has been uploaded yet */
@@ -1610,33 +1621,40 @@ font-size:20px;
     height:100%;
     background:linear-gradient(145deg,#0d2a5c,#1f3f7a);
     color:#f0a500;
-    font-size:42px;
+    font-size:44px;
     font-weight:700;
-    letter-spacing:.02em;
+}
+
+.dignitary-body{
+    padding:16px 16px 18px;
+    border-top:3px solid #f0a500;   /* gold rule ties it to the portal theme */
 }
 
 .dignitary-role{
-    color:#1f2f4d;
+    color:#0d2a5c;
     font-weight:600;
-    font-size:15px;
+    font-size:.9rem;
     line-height:1.35;
-    margin:0 0 6px;
+    margin:0 0 4px;
 }
 
 .dignitary-name{
     color:#14509b;
-    font-size:14px;
+    font-size:.85rem;
     line-height:1.4;
     margin:0;
 }
 
 @media (max-width:575.98px){
-    .dignitary-photo{width:120px;height:120px;}
-    .dignitary-initials{font-size:34px;}
-    .dignitary-head{margin-bottom:32px;}
+    .dignitary-grid{grid-template-columns:repeat(2,1fr);gap:16px;}
+    .dignitary-body{padding:12px 12px 14px;}
+    .dignitary-role{font-size:.82rem;}
+    .dignitary-name{font-size:.78rem;}
+    .dignitary-head{margin-bottom:28px;}
+    .dignitary-head h3{font-size:1.35rem;}
 }
 
 @media (prefers-reduced-motion:reduce){
-    .dignitary-photo{transition:none;}
-    .dignitary-item:hover .dignitary-photo{transform:none;}
+    .dignitary-item{transition:none;}
+    .dignitary-item:hover{transform:none;}
 }

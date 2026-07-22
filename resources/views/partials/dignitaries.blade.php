@@ -8,7 +8,7 @@
 
         <div class="dignitary-head">
             <h3 id="dignitaries-heading">Under the Guidance of</h3>
-            <span class="dignitary-rule" aria-hidden="true"></span>
+            <p>Leadership of the {{ config('portal.org') }}</p>
         </div>
 
         <ul class="dignitary-grid">
@@ -33,15 +33,17 @@
                         @if($hasPhoto)
                             <img src="{{ $photoUrl }}"
                                  alt="{{ $person['name'] }}, {{ $person['designation'] }}"
-                                 loading="lazy" width="150" height="150">
+                                 loading="lazy" width="240" height="300">
                         @else
                             <span class="dignitary-initials" role="img"
                                   aria-label="{{ $person['name'] }}">{{ $initials }}</span>
                         @endif
                     </div>
 
-                    <p class="dignitary-role">{{ $person['designation'] }}</p>
-                    <p class="dignitary-name">{{ $person['name'] }}</p>
+                    <div class="dignitary-body">
+                        <p class="dignitary-role">{{ $person['designation'] }}</p>
+                        <p class="dignitary-name">{{ $person['name'] }}</p>
+                    </div>
                 </li>
             @endforeach
         </ul>
