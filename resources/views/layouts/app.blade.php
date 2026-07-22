@@ -21,7 +21,17 @@
         rel="stylesheet">
         <link href="bootstrap.css">
 
-<link rel="stylesheet" href="{{ asset('css/style.css') }}">
+{{-- ?v=<file modified time> — cache busting.
+     nginx CSS ko 30 din cache karta hai (performance ke liye sahi hai), lekin
+     bina version ke browser purani CSS pakde rehta hai aur naya design dikhta
+     hi nahi. File badalne pe ye number apne aap badal jaata hai, to browser
+     turant nayi copy le leta hai. --}}
+@php
+    $stylePath    = public_path('css/style.css');
+    $styleVersion = file_exists($stylePath) ? filemtime($stylePath) : null;
+@endphp
+<link rel="stylesheet"
+      href="{{ asset('css/style.css') }}{{ $styleVersion ? '?v=' . $styleVersion : '' }}">
 
 <link href="bootstrap-icons.css">
 

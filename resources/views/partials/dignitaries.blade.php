@@ -15,7 +15,12 @@
             @foreach($dignitaries as $person)
                 @php
                     $file      = $person['photo'] ?? null;
-                    $hasPhoto  = $file && file_exists(public_path('images/dignitaries/' . $file));
+                    $photoPath = $file ? public_path('images/dignitaries/' . $file) : null;
+                    $hasPhoto  = $photoPath && file_exists($photoPath);
+                    // photo replace hone pe browser purani wali na dikhaye
+                    $photoUrl  = $hasPhoto
+                        ? asset('images/dignitaries/' . $file) . '?v=' . filemtime($photoPath)
+                        : null;
 
                     // "Sh. Nayab Singh Saini" -> "NS"  (honorific/suffix hata ke)
                     $words = preg_split('/\s+/', preg_replace('/,.*$/', '', $person['name']));
@@ -26,7 +31,7 @@
                 <li class="dignitary-item">
                     <div class="dignitary-photo">
                         @if($hasPhoto)
-                            <img src="{{ asset('images/dignitaries/' . $file) }}"
+                            <img src="{{ $photoUrl }}"
                                  alt="{{ $person['name'] }}, {{ $person['designation'] }}"
                                  loading="lazy" width="150" height="150">
                         @else
