@@ -137,9 +137,6 @@
 <!-- ================= DIGNITARIES / LEADERSHIP ================= -->
 @include('partials.dignitaries')
 
-<!-- ================= HOW IT WORKS ================= -->
-@include('partials.process')
-
 <!-- ================= NOTICES + QUICK LINKS ================= -->
 <section class="section-pad">
     <div class="container">
@@ -252,6 +249,9 @@
         </div>
     </div>
 </section>
+
+<!-- ================= HOW IT WORKS ================= -->
+@include('partials.process')
 
 <!-- ================= STATS + CTA ================= -->
 <section class="cta-band">

@@ -1651,8 +1651,10 @@ font-size:20px;
        gradient version usse alag dikhta hai */
     background:
         radial-gradient(900px 420px at 12% -10%, rgba(240,165,0,.16), transparent 62%),
-        radial-gradient(760px 420px at 88% 110%, rgba(70,135,235,.20), transparent 62%),
-        linear-gradient(158deg,#0a2150 0%,#0d2a5c 55%,#10306c 100%);
+        radial-gradient(760px 420px at 88% 55%, rgba(70,135,235,.18), transparent 62%),
+        /* neeche cta-band (#0d2a5c) hai — gradient wahi rang pe khatam hota hai
+           taaki dono navy sections ke beech line na dikhe, ek hi flow lage */
+        linear-gradient(158deg,#0a2150 0%,#10306c 45%,#0d2a5c 100%);
     overflow:hidden;
 }
 
