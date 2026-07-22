@@ -16,7 +16,16 @@ class StudentController extends Controller
     public function dashboard()
     {
         $enrollments = Enrollment::where('user_id', auth()->id())
-            ->with(['course.department', 'certificate'])
+            ->with([
+                // lessons_count → progressPercent() bina extra query ke chalega
+                'course' => fn ($q) => $q->withCount('lessons'),
+                'course.department',
+                // blob (base64 PDF, ~6.7MB) list page pe kabhi chahiye hi nahi
+                'certificate' => fn ($q) => $q->withoutBlob(),
+            ])
+            ->withCount([
+                'lessonProgress as completed_lessons_count' => fn ($q) => $q->where('status', 'completed'),
+            ])
             ->latest()
             ->get();
 
@@ -64,7 +73,13 @@ class StudentController extends Controller
         // enrolled hai ya nahi — na ho to 403
         $enrollment = Enrollment::where('user_id', auth()->id())
             ->where('course_id', $course->id)
-            ->with('certificate')
+            ->with([
+                'course' => fn ($q) => $q->withCount('lessons'),
+                'certificate' => fn ($q) => $q->withoutBlob(),
+            ])
+            ->withCount([
+                'lessonProgress as completed_lessons_count' => fn ($q) => $q->where('status', 'completed'),
+            ])
             ->first();
 
         abort_unless($enrollment, 403, 'You are not enrolled in this course.');
@@ -99,7 +114,8 @@ class StudentController extends Controller
         );
 
         // saare lessons complete ho gaye? to course bhi completed + CERTIFICATE
-        $totalLessons = $course->modules()->withCount('lessons')->get()->sum('lessons_count');
+        // ek query — pehle har module fetch karke PHP me sum karta tha
+        $totalLessons = $course->lessons()->count();
         $doneLessons  = LessonProgress::where('enrollment_id', $enrollment->id)
             ->where('status', 'completed')->count();
 

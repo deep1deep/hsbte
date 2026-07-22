@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Enrollment;
 use App\Models\Certificate;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Database\UniqueConstraintViolationException;
 
 class CertificateController extends Controller
 {
@@ -27,24 +28,42 @@ class CertificateController extends Controller
         $enrollment->loadMissing('course');
         $isManual = $enrollment->course->usesManualCertificates();
 
-        // unique number: HSBTE-2026-000001
-        $year   = now()->year;
-        $count  = Certificate::whereYear('issued_at', $year)->count() + 1;
-        $number = sprintf('HSBTE-%d-%06d', $year, $count);
+        $year = now()->year;
 
-        // agar kabhi collision ho (race) to +1 karke bacho
-        while (Certificate::where('certificate_no', $number)->exists()) {
-            $count++;
+        // Number nikalna aur insert karna EK saath retry hota hai.
+        // Pehle count() se number nikal ke alag se insert hota tha — do students ek
+        // saath course complete karein to dono ko same number milta tha aur ek ko
+        // 500 error. Ab collision pe DB rok deta hai aur hum agla number le lete hain.
+        for ($attempt = 0; $attempt < 5; $attempt++) {
+            $count  = Certificate::whereYear('issued_at', $year)->count() + 1 + $attempt;
             $number = sprintf('HSBTE-%d-%06d', $year, $count);
+
+            while (Certificate::where('certificate_no', $number)->exists()) {
+                $count++;
+                $number = sprintf('HSBTE-%d-%06d', $year, $count);
+            }
+
+            try {
+                return Certificate::create([
+                    'enrollment_id'  => $enrollment->id,
+                    'certificate_no' => $number,
+                    'status'         => $isManual ? 'pending' : 'issued',
+                    'source'         => $isManual ? 'manual' : 'auto',
+                    'issued_at'      => now(),   // number reserve hone ka time
+                ]);
+            } catch (UniqueConstraintViolationException $e) {
+                // Do possibilities:
+                //  - enrollment_id clash → student ne double-click kiya, cert ban chuka
+                //  - certificate_no clash → koi aur student wahi number le gaya, retry
+                $existing = $enrollment->fresh()->certificate;
+
+                if ($existing) {
+                    return $existing;
+                }
+            }
         }
 
-        return Certificate::create([
-            'enrollment_id'  => $enrollment->id,
-            'certificate_no' => $number,
-            'status'         => $isManual ? 'pending' : 'issued',
-            'source'         => $isManual ? 'manual' : 'auto',
-            'issued_at'      => now(),   // number reserve hone ka time
-        ]);
+        throw new \RuntimeException('Could not allocate a unique certificate number after 5 attempts.');
     }
 
     /**
@@ -107,7 +126,9 @@ class CertificateController extends Controller
 
         if ($number !== '') {
             $searched = true;
-            $certificate = Certificate::where('certificate_no', $number)
+            // public endpoint — blob yahan kabhi chahiye nahi, isliye SELECT se bahar
+            $certificate = Certificate::withoutBlob()
+                ->where('certificate_no', $number)
                 ->where('status', 'issued')
                 ->with(['enrollment.user', 'enrollment.course'])
                 ->first();

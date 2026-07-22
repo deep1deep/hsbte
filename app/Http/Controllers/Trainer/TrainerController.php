@@ -305,13 +305,17 @@ class TrainerController extends Controller
     {
         $courseIds = Course::where('trainer_id', auth()->id())->pluck('id');
 
-        $pending = Certificate::where('status', 'pending')
+        // withoutBlob() zaroori hai — warna har row ka base64 PDF (~6.7MB) memory me
+        // aata hai aur ~40 certificates pe hi page memory limit tod deta hai
+        $pending = Certificate::withoutBlob()
+            ->where('status', 'pending')
             ->whereHas('enrollment', fn ($q) => $q->whereIn('course_id', $courseIds))
             ->with(['enrollment.user', 'enrollment.course'])
             ->oldest('issued_at')          // sabse purana pehle — wahi sabse zyada wait kar raha hai
             ->get();
 
-        $issued = Certificate::where('status', 'issued')
+        $issued = Certificate::withoutBlob()
+            ->where('status', 'issued')
             ->whereHas('enrollment', fn ($q) => $q->whereIn('course_id', $courseIds))
             ->with(['enrollment.user', 'enrollment.course'])
             ->latest('issued_at')

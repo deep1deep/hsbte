@@ -56,22 +56,36 @@ class Enrollment extends Model
     }
 
     // Progress % — CALCULATED, never stored (our locked design principle)
+    //
+    // Ye view me har enrollment ke liye loop me call hota hai. Agar controller ne
+    // counts pehle se load kar diye (withCount) to yahan ZERO query lagti hai.
+    // Warna purana behaviour — query karke nikal lega, taaki kahin bhi safe rahe.
     public function progressPercent(): int
     {
-        $totalLessons = $this->course
-            ->modules()
-            ->withCount('lessons')
-            ->get()
-            ->sum('lessons_count');
+        $totalLessons = $this->preloadedTotalLessons() ?? $this->course->lessons()->count();
 
         if ($totalLessons === 0) {
             return 0;
         }
 
-        $completed = $this->lessonProgress()
-            ->where('status', 'completed')
-            ->count();
+        $completed = $this->completed_lessons_count
+            ?? $this->lessonProgress()->where('status', 'completed')->count();
 
         return (int) round(($completed / $totalLessons) * 100);
+    }
+
+    /**
+     * Controller ne `course` ko withCount('lessons') ke saath load kiya hai?
+     * Ho to wahi count use karo — na ho to null, caller query kar lega.
+     */
+    private function preloadedTotalLessons(): ?int
+    {
+        if (! $this->relationLoaded('course') || $this->course === null) {
+            return null;
+        }
+
+        return isset($this->course->lessons_count)
+            ? (int) $this->course->lessons_count
+            : null;
     }
 }

@@ -23,11 +23,18 @@ Route::get('/verify', [CertificateController::class, 'verify'])->name('certifica
 Route::get('/notices', [\App\Http\Controllers\NoticeController::class, 'index'])->name('notices');
 
 /* ---------------- AUTH: REGISTER / LOGIN / LOGOUT ---------------- */
+// throttle sirf POST pe — page kholne pe koi limit nahi.
+// Limits jaanbujhkar dheeli hain: normal user kabhi nahi tokrayega,
+// automated password-guessing turant ruk jaayega.
 Route::get('/register',  [RegisterController::class, 'show'])->name('register');
-Route::post('/register', [RegisterController::class, 'register'])->name('register.attempt');
+Route::post('/register', [RegisterController::class, 'register'])
+    ->middleware('throttle:10,1')->name('register.attempt');
+
 Route::get('/login',         [LoginController::class, 'showStudent'])->name('login');
 Route::get('/trainer/login', [LoginController::class, 'showTrainer'])->name('trainer.login');
-Route::post('/login',        [LoginController::class, 'login'])->name('login.attempt');
+Route::post('/login',        [LoginController::class, 'login'])
+    ->middleware('throttle:20,1')->name('login.attempt');
+
 Route::post('/logout',       [LoginController::class, 'logout'])->name('logout');
 
 /* ---------------- ENROLL (auth only — guest ko login pe bhejta hai, wapas course pe laata hai) ---------------- */
