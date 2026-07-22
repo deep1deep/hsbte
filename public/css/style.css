@@ -1646,30 +1646,36 @@ font-size:20px;
 ====================================================*/
 
 .process-section{
-    background:linear-gradient(180deg,#ffffff 0%,#f2f6fc 100%);
-    border-top:1px solid #e8edf5;
-    border-bottom:1px solid #e8edf5;
-    overflow:hidden;             /* reveal ke waqt horizontal scrollbar na aaye */
+    position:relative;
+    /* deep navy band + two soft glows — cta-band flat navy hai, isliye ye
+       gradient version usse alag dikhta hai */
+    background:
+        radial-gradient(900px 420px at 12% -10%, rgba(240,165,0,.16), transparent 62%),
+        radial-gradient(760px 420px at 88% 110%, rgba(70,135,235,.20), transparent 62%),
+        linear-gradient(158deg,#0a2150 0%,#0d2a5c 55%,#10306c 100%);
+    overflow:hidden;
 }
 
 .process-head{
     text-align:center;
-    max-width:620px;
-    margin:0 auto 56px;
+    max-width:640px;
+    margin:0 auto 64px;
+    position:relative;
+    z-index:1;
 }
 
 .process-head h3{
-    color:#0d2a5c;
+    color:#ffffff;
     font-weight:700;
-    font-size:1.75rem;
-    letter-spacing:-.02em;
+    font-size:2.1rem;
+    letter-spacing:-.025em;
     margin:0;
 }
 
 .process-head p{
-    color:#7a8aa8;
-    font-size:.95rem;
-    margin:10px 0 0;
+    color:#b9c7e2;
+    font-size:1rem;
+    margin:12px 0 0;
 }
 
 .process-track{
@@ -1677,28 +1683,45 @@ font-size:20px;
     margin:0;
     padding:0;
     position:relative;
+    z-index:1;
     display:grid;
-    gap:32px 20px;
+    gap:36px 20px;
     grid-template-columns:repeat(4,1fr);
 }
 
-/* connector line sits behind the icon row */
+/* connector line behind the icon row */
 .process-line{
     position:absolute;
-    top:38px;
+    top:50px;
     left:12.5%;
     width:75%;
-    height:3px;
-    background:linear-gradient(90deg,#f0a500,#ffc94d);
-    border-radius:2px;
+    height:2px;
+    background:linear-gradient(90deg,rgba(240,165,0,.25),rgba(240,165,0,.85),rgba(240,165,0,.25));
     transform:scaleX(0);
     transform-origin:left center;
-    transition:transform 1100ms cubic-bezier(.4,0,.2,1) 200ms;
+    transition:transform 1200ms cubic-bezier(.4,0,.2,1) 200ms;
     z-index:0;
 }
 
 .process-section.is-visible .process-line{
     transform:scaleX(1);
+}
+
+/* travelling glow along the line.
+   background-position animate hota hai, layout nahi — isliye smooth rehta hai */
+.process-line::after{
+    content:"";
+    position:absolute;
+    inset:-7px 0;
+    background:radial-gradient(circle,rgba(255,255,255,.95) 0%,rgba(240,165,0,.65) 38%,transparent 72%);
+    background-size:44px 100%;
+    background-repeat:no-repeat;
+    background-position:-44px center;
+    animation:processTravel 3.8s linear infinite 1200ms;
+}
+
+@keyframes processTravel{
+    to{ background-position:calc(100% + 44px) center; }
 }
 
 .process-step{
@@ -1707,12 +1730,11 @@ font-size:20px;
     text-align:center;
     padding:0 6px;
 
-    /* reveal: har step thoda late aata hai (--i blade se aata hai) */
     opacity:0;
-    transform:translateY(26px);
-    transition:opacity 600ms cubic-bezier(.4,0,.2,1),
-               transform 600ms cubic-bezier(.4,0,.2,1);
-    transition-delay:calc(var(--i) * 130ms);
+    transform:translateY(30px);
+    transition:opacity 650ms cubic-bezier(.4,0,.2,1),
+               transform 650ms cubic-bezier(.4,0,.2,1);
+    transition-delay:calc(var(--i) * 140ms);
 }
 
 .process-section.is-visible .process-step{
@@ -1722,80 +1744,96 @@ font-size:20px;
 
 .process-icon{
     position:relative;
-    width:76px;
-    height:76px;
-    margin:0 auto 18px;
+    width:100px;
+    height:100px;
+    margin:0 auto 22px;
     border-radius:50%;
-    background:#ffffff;
-    border:2px solid #e8edf5;
+    background:linear-gradient(160deg,rgba(255,255,255,.14),rgba(255,255,255,.04));
+    border:2px solid rgba(240,165,0,.55);
     display:flex;
     align-items:center;
     justify-content:center;
-    box-shadow:0 4px 14px rgba(13,42,92,.08);
+    box-shadow:0 0 0 10px rgba(255,255,255,.03),
+               0 14px 34px rgba(0,0,0,.28);
     transition:border-color 250ms ease, box-shadow 250ms ease, transform 250ms ease;
 }
 
 .process-icon i{
-    font-size:29px;
-    color:#0d2a5c;
+    font-size:38px;
+    color:#f0a500;
     line-height:1;
 }
 
-/* gentle float — steps stagger so the row breathes rather than pulsing in unison */
-.process-section.is-visible .process-icon{
-    animation:processFloat 3.6s ease-in-out infinite;
-    animation-delay:calc(var(--i) * 400ms);
+/* radar pulse — har step alag time pe, taaki row ek saath na dhadke */
+.process-icon::before{
+    content:"";
+    position:absolute;
+    inset:-8px;
+    border-radius:50%;
+    border:2px solid rgba(240,165,0,.5);
+    opacity:0;
+    pointer-events:none;
 }
 
-@keyframes processFloat{
-    0%,100%{ transform:translateY(0); }
-    50%    { transform:translateY(-6px); }
+.process-section.is-visible .process-icon::before{
+    animation:processPulse 3s ease-out infinite;
+    animation-delay:calc(1200ms + var(--i) * 480ms);
+}
+
+@keyframes processPulse{
+    0%  { transform:scale(1);    opacity:.75; }
+    70% { transform:scale(1.42); opacity:0;   }
+    100%{ transform:scale(1.42); opacity:0;   }
 }
 
 .process-step:hover .process-icon{
     border-color:#f0a500;
-    box-shadow:0 10px 24px rgba(13,42,92,.16);
+    transform:translateY(-5px);
+    box-shadow:0 0 0 10px rgba(240,165,0,.08),
+               0 20px 42px rgba(0,0,0,.36);
 }
 
 .process-num{
     position:absolute;
-    top:-4px;
-    right:-4px;
-    width:26px;
-    height:26px;
+    top:-2px;
+    right:-2px;
+    width:30px;
+    height:30px;
     border-radius:50%;
-    background:#0d2a5c;
-    color:#f0a500;
-    font-size:.78rem;
+    background:#f0a500;
+    color:#0a2150;
+    font-size:.85rem;
     font-weight:700;
     display:flex;
     align-items:center;
     justify-content:center;
-    border:2px solid #fff;
+    border:3px solid #0d2a5c;
 }
 
 .process-title{
-    color:#0d2a5c;
+    color:#ffffff;
     font-weight:600;
-    font-size:1.02rem;
-    margin:0 0 6px;
+    font-size:1.12rem;
+    letter-spacing:-.01em;
+    margin:0 0 8px;
 }
 
 .process-text{
-    color:#5a6b8c;
-    font-size:.86rem;
-    line-height:1.55;
-    margin:0;
-    max-width:230px;
-    margin-inline:auto;
+    color:#a9b8d8;
+    font-size:.88rem;
+    line-height:1.6;
+    margin:0 auto;
+    max-width:235px;
 }
 
 .process-cta{
     text-align:center;
-    margin-top:48px;
+    margin-top:56px;
+    position:relative;
+    z-index:1;
     opacity:0;
-    transform:translateY(14px);
-    transition:opacity 600ms ease 700ms, transform 600ms ease 700ms;
+    transform:translateY(16px);
+    transition:opacity 650ms ease 780ms, transform 650ms ease 780ms;
 }
 
 .process-section.is-visible .process-cta{
@@ -1803,22 +1841,52 @@ font-size:20px;
     transform:translateY(0);
 }
 
+/* navy band pe btn-navy invisible ho jaata — gold button chahiye */
+.process-btn{
+    display:inline-block;
+    background:#f0a500;
+    color:#0a2150;
+    font-weight:600;
+    padding:12px 30px;
+    border:none;
+    border-radius:8px;
+    text-decoration:none;
+    box-shadow:0 8px 22px rgba(240,165,0,.28);
+    transition:background 200ms ease, transform 200ms ease, box-shadow 200ms ease;
+}
+
+.process-btn:hover{
+    background:#ffb81f;
+    color:#0a2150;
+    transform:translateY(-2px);
+    box-shadow:0 12px 28px rgba(240,165,0,.38);
+}
+
+.process-btn:focus-visible{
+    outline:3px solid #fff;
+    outline-offset:3px;
+}
+
 @media (max-width:991.98px){
-    .process-track{grid-template-columns:repeat(2,1fr);gap:36px 20px;}
-    .process-line{display:none;}          /* line sirf single row me sense banti hai */
+    .process-track{grid-template-columns:repeat(2,1fr);gap:40px 20px;}
+    .process-line{display:none;}          /* wrapped rows me line align nahi hoti */
+    .process-head h3{font-size:1.8rem;}
 }
 
 @media (max-width:575.98px){
-    .process-track{grid-template-columns:1fr;gap:28px;}
-    .process-head{margin-bottom:36px;}
-    .process-head h3{font-size:1.4rem;}
-    .process-icon{width:64px;height:64px;}
-    .process-icon i{font-size:25px;}
+    .process-track{grid-template-columns:1fr;gap:32px;}
+    .process-head{margin-bottom:40px;}
+    .process-head h3{font-size:1.5rem;}
+    .process-icon{width:84px;height:84px;}
+    .process-icon i{font-size:32px;}
 }
 
 @media (prefers-reduced-motion:reduce){
     .process-step,
     .process-line,
-    .process-cta{transition:none;}
-    .process-section.is-visible .process-icon{animation:none;}
+    .process-cta,
+    .process-btn{transition:none;}
+    .process-line::after,
+    .process-section.is-visible .process-icon::before{animation:none;}
+    .process-step:hover .process-icon{transform:none;}
 }

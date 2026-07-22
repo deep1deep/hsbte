@@ -46,9 +46,9 @@
 
         <div class="process-cta">
             @guest
-                <a href="{{ route('register') }}" class="btn btn-navy">Get Started — it's free</a>
+                <a href="{{ route('register') }}" class="process-btn">Get Started — it's free</a>
             @else
-                <a href="{{ route('courses') }}" class="btn btn-navy">Browse Courses</a>
+                <a href="{{ route('courses') }}" class="process-btn">Browse Courses</a>
             @endguest
         </div>
 
