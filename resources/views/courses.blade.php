@@ -16,8 +16,52 @@
 <section class="section-pad">
     <div class="container">
 
-        <div class="results-bar">
-            <span>Showing {{ $courses->count() }} {{ $courses->count() === 1 ? 'course' : 'courses' }}</span>
+        {{-- ---------- SEARCH + DEPARTMENT FILTER ---------- --}}
+        {{-- GET form: filters URL me rehte hain, so link share/bookmark ho sakta hai --}}
+        <form method="GET" action="{{ route('courses') }}" class="row g-2 align-items-center mb-4">
+            <div class="col-12 col-md-6">
+                <label for="q" class="visually-hidden">Search courses</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+                    <input type="search" class="form-control" id="q" name="q"
+                           value="{{ $search }}"
+                           placeholder="Search by course name or description">
+                </div>
+            </div>
+
+            <div class="col-8 col-md-4">
+                <label for="department" class="visually-hidden">Filter by department</label>
+                <select class="form-select" id="department" name="department">
+                    <option value="">All departments</option>
+                    @foreach($departments as $department)
+                        <option value="{{ $department->id }}"
+                            @selected($departmentId === $department->id)>
+                            {{ $department->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="col-4 col-md-2 d-grid">
+                <button type="submit" class="btn btn-navy">Search</button>
+            </div>
+        </form>
+
+        <div class="results-bar d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <span>
+                @if($courses->total() > 0)
+                    Showing {{ $courses->firstItem() }}–{{ $courses->lastItem() }}
+                    of {{ $courses->total() }} {{ $courses->total() === 1 ? 'course' : 'courses' }}
+                @else
+                    No courses found
+                @endif
+            </span>
+
+            @if($search !== '' || $departmentId)
+                <a href="{{ route('courses') }}" class="btn btn-sm btn-outline-secondary">
+                    <i class="bi bi-x-lg"></i> Clear filters
+                </a>
+            @endif
         </div>
 
         <div class="row g-4">
@@ -55,11 +99,25 @@
                 <div class="col-12">
                     <div class="text-center text-muted py-5">
                         <i class="bi bi-journal-x" style="font-size:32px;color:#a5b0c6;"></i>
-                        <p class="mt-2 mb-0">No published courses yet. Check back soon.</p>
+                        @if($search !== '' || $departmentId)
+                            <p class="mt-2 mb-2">No courses match your search.</p>
+                            <a href="{{ route('courses') }}" class="btn btn-sm btn-outline-navy">
+                                Show all courses
+                            </a>
+                        @else
+                            <p class="mt-2 mb-0">No published courses yet. Check back soon.</p>
+                        @endif
                     </div>
                 </div>
             @endforelse
         </div>
+
+        {{-- ---------- PAGINATION (6 per page) ---------- --}}
+        @if($courses->hasPages())
+            <div class="d-flex justify-content-center mt-5">
+                {{ $courses->links('pagination::bootstrap-5') }}
+            </div>
+        @endif
 
     </div>
 </section>

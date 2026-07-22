@@ -5,21 +5,38 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use App\Models\Department;
 use App\Models\Enrollment;
+use Illuminate\Http\Request;
 
 class CourseController extends Controller
 {
-    // Public courses listing — saare published courses
-    public function index()
+    // Public courses listing — search + department filter + 6 per page
+    public function index(Request $request)
     {
+        $search       = trim((string) $request->query('q', ''));
+        $departmentId = $request->query('department');
+
+        // department sirf tabhi maano jab valid id ho — warna filter ignore
+        $departmentId = is_numeric($departmentId) ? (int) $departmentId : null;
+
         $courses = Course::where('status', 'published')
             ->with(['department', 'trainer'])
             ->withCount('modules')
+            ->when($search !== '', function ($query) use ($search) {
+                // bracket zaroori hai — warna orWhere upar wale status filter ko
+                // bhi bypass kar deta aur draft courses public me dikh jaate
+                $query->where(function ($sub) use ($search) {
+                    $sub->where('title', 'like', '%' . $search . '%')
+                        ->orWhere('description', 'like', '%' . $search . '%');
+                });
+            })
+            ->when($departmentId, fn ($query) => $query->where('department_id', $departmentId))
             ->latest()
-            ->get();
+            ->paginate(6)
+            ->withQueryString();   // page 2 pe bhi search/filter bane rahen
 
         $departments = Department::where('is_active', true)->orderBy('name')->get();
 
-        return view('courses', compact('courses', 'departments'));
+        return view('courses', compact('courses', 'departments', 'search', 'departmentId'));
     }
 
     // Public course detail page — koi bhi published course slug se khulega
