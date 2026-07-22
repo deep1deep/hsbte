@@ -250,9 +250,6 @@
     </div>
 </section>
 
-<!-- ================= HOW IT WORKS ================= -->
-@include('partials.process')
-
 <!-- ================= STATS + CTA ================= -->
 <section class="cta-band">
     <div class="container">
@@ -377,5 +374,9 @@
         </div>
     </div>
 </section>
+
+
+<!-- ================= HOW IT WORKS ================= -->
+@include('partials.process')
 
 @endsection
