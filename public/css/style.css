@@ -1640,3 +1640,185 @@ font-size:20px;
     .dignitary-photo{transition:none;}
     .dignitary-item:hover .dignitary-photo{transform:none;}
 }
+
+/*====================================================
+                HOW IT WORKS / PROCESS
+====================================================*/
+
+.process-section{
+    background:linear-gradient(180deg,#ffffff 0%,#f2f6fc 100%);
+    border-top:1px solid #e8edf5;
+    border-bottom:1px solid #e8edf5;
+    overflow:hidden;             /* reveal ke waqt horizontal scrollbar na aaye */
+}
+
+.process-head{
+    text-align:center;
+    max-width:620px;
+    margin:0 auto 56px;
+}
+
+.process-head h3{
+    color:#0d2a5c;
+    font-weight:700;
+    font-size:1.75rem;
+    letter-spacing:-.02em;
+    margin:0;
+}
+
+.process-head p{
+    color:#7a8aa8;
+    font-size:.95rem;
+    margin:10px 0 0;
+}
+
+.process-track{
+    list-style:none;
+    margin:0;
+    padding:0;
+    position:relative;
+    display:grid;
+    gap:32px 20px;
+    grid-template-columns:repeat(4,1fr);
+}
+
+/* connector line sits behind the icon row */
+.process-line{
+    position:absolute;
+    top:38px;
+    left:12.5%;
+    width:75%;
+    height:3px;
+    background:linear-gradient(90deg,#f0a500,#ffc94d);
+    border-radius:2px;
+    transform:scaleX(0);
+    transform-origin:left center;
+    transition:transform 1100ms cubic-bezier(.4,0,.2,1) 200ms;
+    z-index:0;
+}
+
+.process-section.is-visible .process-line{
+    transform:scaleX(1);
+}
+
+.process-step{
+    position:relative;
+    z-index:1;
+    text-align:center;
+    padding:0 6px;
+
+    /* reveal: har step thoda late aata hai (--i blade se aata hai) */
+    opacity:0;
+    transform:translateY(26px);
+    transition:opacity 600ms cubic-bezier(.4,0,.2,1),
+               transform 600ms cubic-bezier(.4,0,.2,1);
+    transition-delay:calc(var(--i) * 130ms);
+}
+
+.process-section.is-visible .process-step{
+    opacity:1;
+    transform:translateY(0);
+}
+
+.process-icon{
+    position:relative;
+    width:76px;
+    height:76px;
+    margin:0 auto 18px;
+    border-radius:50%;
+    background:#ffffff;
+    border:2px solid #e8edf5;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 4px 14px rgba(13,42,92,.08);
+    transition:border-color 250ms ease, box-shadow 250ms ease, transform 250ms ease;
+}
+
+.process-icon i{
+    font-size:29px;
+    color:#0d2a5c;
+    line-height:1;
+}
+
+/* gentle float — steps stagger so the row breathes rather than pulsing in unison */
+.process-section.is-visible .process-icon{
+    animation:processFloat 3.6s ease-in-out infinite;
+    animation-delay:calc(var(--i) * 400ms);
+}
+
+@keyframes processFloat{
+    0%,100%{ transform:translateY(0); }
+    50%    { transform:translateY(-6px); }
+}
+
+.process-step:hover .process-icon{
+    border-color:#f0a500;
+    box-shadow:0 10px 24px rgba(13,42,92,.16);
+}
+
+.process-num{
+    position:absolute;
+    top:-4px;
+    right:-4px;
+    width:26px;
+    height:26px;
+    border-radius:50%;
+    background:#0d2a5c;
+    color:#f0a500;
+    font-size:.78rem;
+    font-weight:700;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border:2px solid #fff;
+}
+
+.process-title{
+    color:#0d2a5c;
+    font-weight:600;
+    font-size:1.02rem;
+    margin:0 0 6px;
+}
+
+.process-text{
+    color:#5a6b8c;
+    font-size:.86rem;
+    line-height:1.55;
+    margin:0;
+    max-width:230px;
+    margin-inline:auto;
+}
+
+.process-cta{
+    text-align:center;
+    margin-top:48px;
+    opacity:0;
+    transform:translateY(14px);
+    transition:opacity 600ms ease 700ms, transform 600ms ease 700ms;
+}
+
+.process-section.is-visible .process-cta{
+    opacity:1;
+    transform:translateY(0);
+}
+
+@media (max-width:991.98px){
+    .process-track{grid-template-columns:repeat(2,1fr);gap:36px 20px;}
+    .process-line{display:none;}          /* line sirf single row me sense banti hai */
+}
+
+@media (max-width:575.98px){
+    .process-track{grid-template-columns:1fr;gap:28px;}
+    .process-head{margin-bottom:36px;}
+    .process-head h3{font-size:1.4rem;}
+    .process-icon{width:64px;height:64px;}
+    .process-icon i{font-size:25px;}
+}
+
+@media (prefers-reduced-motion:reduce){
+    .process-step,
+    .process-line,
+    .process-cta{transition:none;}
+    .process-section.is-visible .process-icon{animation:none;}
+}
