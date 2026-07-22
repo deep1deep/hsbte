@@ -1,0 +1,87 @@
+user  www-data;
+worker_processes  auto;
+error_log  /dev/stderr  warn;
+pid        /run/nginx.pid;
+
+events {
+    worker_connections  2048;
+}
+
+http {
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+    access_log    /dev/stdout;
+
+    # sendfile lets the kernel stream files straight to the socket —
+    # this is what keeps big lesson videos off the PHP workers entirely
+    sendfile        on;
+    tcp_nopush      on;
+    tcp_nodelay     on;
+    keepalive_timeout  65;
+
+    # lesson video uploads (php.ini is matched to this)
+    client_max_body_size  512M;
+    client_body_timeout   300s;
+
+    gzip              on;
+    gzip_comp_level   5;
+    gzip_min_length   256;
+    gzip_proxied      any;
+    gzip_types        text/plain text/css application/javascript application/json image/svg+xml;
+
+    server {
+        # Render injects PORT at runtime; entrypoint.sh substitutes it
+        listen       ${PORT} default_server;
+        server_name  _;
+
+        root   /var/www/public;
+        index  index.php;
+
+        charset utf-8;
+
+        location / {
+            try_files $uri $uri/ /index.php?$query_string;
+        }
+
+        # ---- static lesson media: served by nginx, PHP never involved ----
+        # accept-ranges is on by default, so video seeking/scrubbing works
+        location ^~ /storage/ {
+            expires 30d;
+            add_header Cache-Control "public";
+            try_files $uri =404;
+        }
+
+        location ~* \.(css|js|jpg|jpeg|png|gif|ico|svg|woff2?)$ {
+            expires 30d;
+            add_header Cache-Control "public";
+            access_log off;
+            try_files $uri =404;
+        }
+
+        location ~ \.php$ {
+            # refuse to hand a non-existent path to php-fpm (path-traversal guard).
+            # note the /storage/ block above uses ^~, which outranks this regex —
+            # so a file uploaded as "x.php" is served as bytes, never executed
+            try_files $uri =404;
+
+            fastcgi_pass   127.0.0.1:9000;
+            fastcgi_index  index.php;
+            include        fastcgi_params;
+            fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
+
+            # certificate PDF generation can be slow
+            fastcgi_read_timeout  300;
+            fastcgi_buffers       16 16k;
+            fastcgi_buffer_size   32k;
+        }
+
+        location = /favicon.ico { access_log off; log_not_found off; }
+        location = /robots.txt  { access_log off; log_not_found off; }
+
+        # never serve dotfiles (.env, .git, ...) — except ACME challenges
+        location ~ /\.well-known/ { allow all; }
+        location ~ /\. {
+            deny all;
+        }
+    }
+}
