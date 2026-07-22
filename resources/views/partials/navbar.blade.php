@@ -104,11 +104,15 @@
             <i class="bi bi-geo-alt-fill"></i> Government of Haryana
         </span>
         <span class="ts-right">
-            <a href="#"><i class="bi bi-telephone-fill"></i> Helpline</a>
-            <a href="#"><i class="bi bi-envelope-fill"></i> Contact</a>
+            <a href="tel:{{ preg_replace('/[^0-9+]/', '', config('portal.contact.phone')) }}">
+                <i class="bi bi-telephone-fill"></i> Helpline
+            </a>
+            <a href="{{ route('contact') }}"><i class="bi bi-envelope-fill"></i> Contact</a>
             <span class="ts-access">
-                <a href="#">A+</a>
-                <a href="#">A-</a>
+                {{-- text resize — GIGW accessibility requirement --}}
+                <a href="#" data-font-scale="up"    role="button" aria-label="Increase text size">A+</a>
+                <a href="#" data-font-scale="reset" role="button" aria-label="Reset text size">A</a>
+                <a href="#" data-font-scale="down"  role="button" aria-label="Decrease text size">A-</a>
             </span>
         </span>
     </div>
@@ -139,19 +143,22 @@
                     <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="/">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Departments</a>
+                    {{-- alag departments page nahi hai — courses page pe department filter hai --}}
+                    <a class="nav-link" href="{{ route('courses') }}">Departments</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('courses') || request()->routeIs('course.detail') ? 'active' : '' }}" href="/courses">Courses</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Jobs</a>
-                </li>
+                {{-- "Jobs" hata diya — portal me aisa koi feature hai hi nahi, link kahin
+                     nahi jaata tha. Feature banega to wapas add kar dena. --}}
                 <li class="nav-item">
                     <a class="nav-link {{ request()->is('notices') ? 'active' : '' }}" href="{{ url('/notices') }}">Notifications</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Help</a>
+                    <a class="nav-link {{ request()->routeIs('help') ? 'active' : '' }}" href="{{ route('help') }}">Help</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('about') ? 'active' : '' }}" href="{{ route('about') }}">About</a>
                 </li>
             </ul>
 
@@ -209,3 +216,40 @@
         </div>
     </div>
 </nav>
+
+{{-- Text resize (A+ / A / A-). Bootstrap rem par bana hai, isliye root font-size
+     badalne se poora page proportionally scale hota hai. Choice localStorage me
+     save hoti hai taaki har page pe yaad rahe. --}}
+<script>
+(function () {
+    var KEY = 'hsbte-font-scale', MIN = 90, MAX = 130, STEP = 10, DEFAULT = 100;
+
+    function apply(value) {
+        document.documentElement.style.fontSize = value + '%';
+    }
+
+    var current = parseInt(localStorage.getItem(KEY), 10);
+    if (isNaN(current) || current < MIN || current > MAX) {
+        current = DEFAULT;
+    }
+    if (current !== DEFAULT) {
+        apply(current);
+    }
+
+    document.addEventListener('click', function (event) {
+        var control = event.target.closest('[data-font-scale]');
+        if (!control) return;
+
+        event.preventDefault();
+
+        var direction = control.getAttribute('data-font-scale');
+        if (direction === 'up')         current = Math.min(MAX, current + STEP);
+        else if (direction === 'down')  current = Math.max(MIN, current - STEP);
+        else                            current = DEFAULT;
+
+        apply(current);
+
+        try { localStorage.setItem(KEY, current); } catch (e) { /* private mode */ }
+    });
+})();
+</script>

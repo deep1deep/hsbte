@@ -155,7 +155,8 @@
                                 @endif
                             </li>
                         @empty
-                            <li><a href="#">No notices yet. Check back soon.</a></li>
+                            {{-- link nahi — kahin jaata hi nahi tha, ab plain text --}}
+                            <li><span class="text-muted">No notices yet. Check back soon.</span></li>
                         @endforelse
                     </ul>
                 </div>

@@ -22,6 +22,16 @@ Route::get('/verify', [CertificateController::class, 'verify'])->name('certifica
 // public notices
 Route::get('/notices', [\App\Http\Controllers\NoticeController::class, 'index'])->name('notices');
 
+/* ---------------- INFORMATION PAGES (GIGW ke liye expected) ---------------- */
+Route::controller(\App\Http\Controllers\PageController::class)->group(function () {
+    Route::get('/about',         'about')->name('about');
+    Route::get('/contact',       'contact')->name('contact');
+    Route::get('/privacy',       'privacy')->name('privacy');
+    Route::get('/terms',         'terms')->name('terms');
+    Route::get('/accessibility', 'accessibility')->name('accessibility');
+    Route::get('/help',          'help')->name('help');
+});
+
 /* ---------------- AUTH: REGISTER / LOGIN / LOGOUT ---------------- */
 // throttle sirf POST pe — page kholne pe koi limit nahi.
 // Limits jaanbujhkar dheeli hain: normal user kabhi nahi tokrayega,
@@ -36,6 +46,19 @@ Route::post('/login',        [LoginController::class, 'login'])
     ->middleware('throttle:20,1')->name('login.attempt');
 
 Route::post('/logout',       [LoginController::class, 'logout'])->name('logout');
+
+/* ---------------- PASSWORD RESET ---------------- */
+// Route names Laravel ke conventions se match karte hain — reset email ka link
+// route('password.reset') se banta hai, isliye naam badalna mat.
+Route::controller(\App\Http\Controllers\Auth\PasswordResetController::class)->group(function () {
+    Route::get('/forgot-password',  'showLinkRequestForm')->name('password.request');
+    Route::post('/forgot-password', 'sendResetLink')
+        ->middleware('throttle:6,1')->name('password.email');   // email bombing rokne ke liye
+
+    Route::get('/reset-password/{token}', 'showResetForm')->name('password.reset');
+    Route::post('/reset-password',        'reset')
+        ->middleware('throttle:6,1')->name('password.update');
+});
 
 /* ---------------- ENROLL (auth only — guest ko login pe bhejta hai, wapas course pe laata hai) ---------------- */
 Route::post('/courses/{course}/enroll', [StudentController::class, 'enroll'])
