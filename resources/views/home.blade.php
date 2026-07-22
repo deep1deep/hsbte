@@ -134,6 +134,9 @@
     </div>
 </section>
 
+<!-- ================= DIGNITARIES / LEADERSHIP ================= -->
+@include('partials.dignitaries')
+
 <!-- ================= NOTICES + QUICK LINKS ================= -->
 <section class="section-pad">
     <div class="container">

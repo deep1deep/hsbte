@@ -36,4 +36,42 @@ return [
     // Content review date — GIGW ke liye "last updated" dikhana hota hai
     'last_reviewed' => env('PORTAL_LAST_REVIEWED', '22 July 2026'),
 
+    /*
+    |----------------------------------------------------------------------
+    | Dignitaries (home page leadership section)
+    |----------------------------------------------------------------------
+    |
+    | ⚠️  Ye REAL public officials hain. Post badalte rehte hain — koi bhi
+    |     transfer/election ke baad ye list turant update karni hogi, warna
+    |     government portal pe galat naam dikhega.
+    |
+    | 'photo' => public/images/dignitaries/ me file ka naam.
+    |            File na ho to apne aap initials wala avatar dikh jaayega,
+    |            layout tootega nahi.
+    |
+    */
+    'dignitaries' => [
+        [
+            'name'        => 'Sh. Nayab Singh Saini',
+            'designation' => "Hon'ble Chief Minister, Haryana",
+            'photo'       => 'chief-minister.jpg',
+        ],
+        [
+            'name'        => 'Sh. Mahipal Dhanda',
+            'designation' => "Hon'ble Education Minister, Haryana",
+            'photo'       => 'education-minister.jpg',
+        ],
+        [
+            'name'        => 'Sh. Apoorva Kumar Singh, IAS',
+            'designation' => 'Additional Chief Secretary & Chairman, HSBTE',
+            'photo'       => 'chairman.jpg',
+        ],
+        [
+            'name'        => 'Sh. Rajesh Goel',
+            'designation' => 'Secretary, HSBTE',
+            // .png — source file PNG hai, bhale hi hsbte.org.in pe .jpg naam se pada tha
+            'photo'       => 'secretary.png',
+        ],
+    ],
+
 ];
