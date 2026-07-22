@@ -41,6 +41,14 @@ return [
     | Dignitaries (home page leadership section)
     |----------------------------------------------------------------------
     |
+    | ON/OFF: 'show_dignitaries' — abhi false hai, isliye section home page pe
+    | dikh nahi raha. Wapas chalu karne ke do tarike:
+    |   1. yahan false ko true kar do, ya
+    |   2. Render ke Environment me PORTAL_SHOW_DIGNITARIES=true set kar do
+    |      (code touch kiye bina)
+    |
+    | Photos, naam, CSS — sab already jagah pe hain, sirf render nahi ho raha.
+    |
     | ⚠️  Ye REAL public officials hain. Post badalte rehte hain — koi bhi
     |     transfer/election ke baad ye list turant update karni hogi, warna
     |     government portal pe galat naam dikhega.
@@ -50,6 +58,8 @@ return [
     |            layout tootega nahi.
     |
     */
+    'show_dignitaries' => env('PORTAL_SHOW_DIGNITARIES', false),
+
     'dignitaries' => [
         [
             'name'        => 'Sh. Nayab Singh Saini',

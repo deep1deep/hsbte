@@ -2,7 +2,9 @@
      Photo missing ho to initials wala avatar dikhta hai, layout kabhi tootta nahi. --}}
 @php $dignitaries = config('portal.dignitaries', []); @endphp
 
-@if(count($dignitaries))
+{{-- config/portal.php me 'show_dignitaries' => true karne se (ya Render me
+     PORTAL_SHOW_DIGNITARIES=true set karne se) ye section wapas aa jaayega. --}}
+@if(config('portal.show_dignitaries') && count($dignitaries))
 <section class="section-pad dignitary-section" aria-labelledby="dignitaries-heading">
     <div class="container">
 
