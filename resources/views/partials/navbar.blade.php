@@ -25,7 +25,7 @@
 .navbar {
     position: sticky;
     top: 0;
-    z-index: 1030; /* course-card hover-lift aur dropdowns ke upar rahe */
+    z-index: 1030; /* stays above the course-card hover-lift and the dropdowns */
 }
 
 .main-navbar {
@@ -143,14 +143,14 @@
                     <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="/">Home</a>
                 </li>
                 <li class="nav-item">
-                    {{-- alag departments page nahi hai — courses page pe department filter hai --}}
+                    {{-- there's no separate departments page — the department filter is on the courses page --}}
                     <a class="nav-link" href="{{ route('courses') }}">Departments</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('courses') || request()->routeIs('course.detail') ? 'active' : '' }}" href="/courses">Courses</a>
                 </li>
-                {{-- "Jobs" hata diya — portal me aisa koi feature hai hi nahi, link kahin
-                     nahi jaata tha. Feature banega to wapas add kar dena. --}}
+                {{-- Removed "Jobs" — there's no such feature in the portal and the link
+                     didn't go anywhere. Add it back once the feature is built. --}}
                 <li class="nav-item">
                     <a class="nav-link {{ request()->is('notices') ? 'active' : '' }}" href="{{ url('/notices') }}">Notifications</a>
                 </li>
@@ -217,9 +217,9 @@
     </div>
 </nav>
 
-{{-- Text resize (A+ / A / A-). Bootstrap rem par bana hai, isliye root font-size
-     badalne se poora page proportionally scale hota hai. Choice localStorage me
-     save hoti hai taaki har page pe yaad rahe. --}}
+{{-- Text resize (A+ / A / A-). Bootstrap is built on rem, so changing the root
+     font-size scales the whole page proportionally. The choice is saved in
+     localStorage so it's remembered on every page. --}}
 <script>
 (function () {
     var KEY = 'hsbte-font-scale', MIN = 90, MAX = 130, STEP = 10, DEFAULT = 100;

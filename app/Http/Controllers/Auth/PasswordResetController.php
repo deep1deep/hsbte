@@ -17,12 +17,12 @@ class PasswordResetController extends Controller
     }
 
     /**
-     * Reset link bhejo.
+     * Send the reset link.
      *
-     * Note: response HAMESHA same rehta hai — chahe email registered ho ya na ho.
-     * Warna koi bhi is page se pata kar sakta hai ki kaun-kaunsi email is portal
-     * pe registered hai (user enumeration). Login page bhi yahi approach follow
-     * karta hai — "These credentials do not match our records."
+     * Note: the response is ALWAYS the same — whether or not the email is registered.
+     * Otherwise anyone could use this page to find out which emails are registered on
+     * this portal (user enumeration). The login page follows the same approach —
+     * "These credentials do not match our records."
      */
     public function sendResetLink(Request $request)
     {
@@ -39,7 +39,7 @@ class PasswordResetController extends Controller
         );
     }
 
-    // Reset form (email me bheje gaye link se khulta hai)
+    // Reset form (opened via the link sent by email)
     public function showResetForm(Request $request, string $token)
     {
         return view('auth.reset-password', [
@@ -48,7 +48,7 @@ class PasswordResetController extends Controller
         ]);
     }
 
-    // Naya password set karo
+    // Set the new password
     public function reset(Request $request)
     {
         $request->validate([
@@ -63,7 +63,7 @@ class PasswordResetController extends Controller
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function ($user, $password) {
-                // User model ka 'hashed' cast isse apne aap hash kar dega
+                // The User model's 'hashed' cast will hash this automatically
                 $user->forceFill(['password' => $password])
                      ->setRememberToken(Str::random(60));
 
@@ -78,7 +78,7 @@ class PasswordResetController extends Controller
                 ->with('success', 'Your password has been changed. Please log in with your new password.');
         }
 
-        // token expire/galat, ya email match nahi hui
+        // token expired/invalid, or the email did not match
         return back()->withErrors([
             'email' => 'This password reset link is invalid or has expired. Please request a new one.',
         ]);

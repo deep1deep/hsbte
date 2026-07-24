@@ -158,7 +158,7 @@
                                 @endif
                             </li>
                         @empty
-                            {{-- link nahi — kahin jaata hi nahi tha, ab plain text --}}
+                            {{-- no link — it didn't go anywhere, so it's now plain text --}}
                             <li><span class="text-muted">No notices yet. Check back soon.</span></li>
                         @endforelse
                     </ul>
@@ -283,7 +283,7 @@
     </div>
 </section>
 
-<!-- ================= UPCOMING TRAINING PROGRAMMES (abhi STATIC — trainings table Phase 3) ================= -->
+<!-- ================= UPCOMING TRAINING PROGRAMMES (STATIC for now — trainings table in Phase 3) ================= -->
 <section class="section-pad">
     <div class="container">
         <div class="section-head">

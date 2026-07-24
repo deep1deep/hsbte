@@ -10,30 +10,30 @@ use Illuminate\Database\UniqueConstraintViolationException;
 class CertificateController extends Controller
 {
     /**
-     * Ek enrollment ke liye certificate ensure karo (na ho to banao).
-     * Ye StudentController se course-complete pe call hoga.
+     * Ensure a certificate exists for an enrollment (create one if missing).
+     * This is called from StudentController on course completion.
      *
-     * Trainer ka cert_mode decide karta hai:
-     *   manual -> row banegi PENDING (number reserve, PDF nahi) — trainer upload karega
-     *   auto   -> row banegi ISSUED (dompdf download pe render hoga)
+     * The trainer's cert_mode decides the behaviour:
+     *   manual -> row is created PENDING (number reserved, no PDF) — trainer uploads it
+     *   auto   -> row is created ISSUED (dompdf renders on download)
      */
     public static function generateFor(Enrollment $enrollment): Certificate
     {
-        // pehle se hai to wahi wapas (double na bane)
+        // If one already exists, return it (avoid duplicates)
         if ($enrollment->certificate) {
             return $enrollment->certificate;
         }
 
-        // is course ka trainer kaun hai
+        // Determine which trainer owns this course
         $enrollment->loadMissing('course');
         $isManual = $enrollment->course->usesManualCertificates();
 
         $year = now()->year;
 
-        // Number nikalna aur insert karna EK saath retry hota hai.
-        // Pehle count() se number nikal ke alag se insert hota tha — do students ek
-        // saath course complete karein to dono ko same number milta tha aur ek ko
-        // 500 error. Ab collision pe DB rok deta hai aur hum agla number le lete hain.
+        // Deriving the number and inserting are retried together as one unit.
+        // Previously the number was derived with count() and inserted separately — if two
+        // students completed a course at the same time, both received the same number and one
+        // got a 500 error. Now the DB blocks the collision and we take the next number.
         for ($attempt = 0; $attempt < 5; $attempt++) {
             $count  = Certificate::whereYear('issued_at', $year)->count() + 1 + $attempt;
             $number = sprintf('HSBTE-%d-%06d', $year, $count);
@@ -49,12 +49,12 @@ class CertificateController extends Controller
                     'certificate_no' => $number,
                     'status'         => $isManual ? 'pending' : 'issued',
                     'source'         => $isManual ? 'manual' : 'auto',
-                    'issued_at'      => now(),   // number reserve hone ka time
+                    'issued_at'      => now(),   // time the number was reserved
                 ]);
             } catch (UniqueConstraintViolationException $e) {
-                // Do possibilities:
-                //  - enrollment_id clash → student ne double-click kiya, cert ban chuka
-                //  - certificate_no clash → koi aur student wahi number le gaya, retry
+                // Two possibilities:
+                //  - enrollment_id clash → student double-clicked, the cert already exists
+                //  - certificate_no clash → another student took the same number, retry
                 $existing = $enrollment->fresh()->certificate;
 
                 if ($existing) {
@@ -67,25 +67,25 @@ class CertificateController extends Controller
     }
 
     /**
-     * Download certificate (sirf apna certificate).
-     *   manual -> DB me rakha base64 PDF stream hoga
-     *   auto   -> dompdf live render karega
+     * Download certificate (only your own certificate).
+     *   manual -> streams the base64 PDF stored in the DB
+     *   auto   -> dompdf renders it live
      */
     public function download(Certificate $certificate)
     {
         $enrollment = $certificate->enrollment;
 
-        // security: sirf jiska certificate hai wahi download kare
+        // security: only the owner may download their certificate
         abort_unless($enrollment->user_id === auth()->id(), 403);
 
-        // trainer ne abhi issue nahi kiya
+        // trainer has not issued it yet
         if ($certificate->isPending()) {
-            return back()->with('error', 'Aapka certificate abhi trainer ke paas pending hai. Issue hote hi download link aa jaayega.');
+            return back()->with('error', 'Your certificate is currently pending with the trainer. The download link will be available as soon as it is issued.');
         }
 
-        // MANUAL — trainer ka upload kiya file
+        // MANUAL — the file uploaded by the trainer
         if ($certificate->isManual()) {
-            abort_if(empty($certificate->file_blob), 404, 'Certificate file nahi mili.');
+            abort_if(empty($certificate->file_blob), 404, 'Certificate file not found.');
 
             $mime   = $certificate->file_mime ?: 'application/pdf';
             $ext    = match ($mime) {
@@ -102,7 +102,7 @@ class CertificateController extends Controller
             ]);
         }
 
-        // AUTO — abhi wala dompdf flow
+        // AUTO — the current dompdf flow
         $enrollment->load(['user', 'course']);
 
         $pdf = Pdf::loadView('certificates.pdf', [
@@ -115,8 +115,8 @@ class CertificateController extends Controller
     }
 
     /**
-     * Public verify page — koi bhi (bina login) number daal ke check kare.
-     * Sirf ISSUED certificate verify hote hain — pending wale nahi.
+     * Public verify page — anyone (without login) can enter a number to check.
+     * Only ISSUED certificates are verifiable — not pending ones.
      */
     public function verify(\Illuminate\Http\Request $request)
     {
@@ -126,7 +126,7 @@ class CertificateController extends Controller
 
         if ($number !== '') {
             $searched = true;
-            // public endpoint — blob yahan kabhi chahiye nahi, isliye SELECT se bahar
+            // public endpoint — the blob is never needed here, so it's excluded from the SELECT
             $certificate = Certificate::withoutBlob()
                 ->where('certificate_no', $number)
                 ->where('status', 'issued')

@@ -17,7 +17,7 @@
     <div class="container">
 
         {{-- ---------- SEARCH + DEPARTMENT FILTER ---------- --}}
-        {{-- GET form: filters URL me rehte hain, so link share/bookmark ho sakta hai --}}
+        {{-- GET form: the filters stay in the URL, so the link can be shared or bookmarked --}}
         <form method="GET" action="{{ route('courses') }}" class="row g-2 align-items-center mb-4">
             <div class="col-12 col-md-6">
                 <label for="q" class="visually-hidden">Search courses</label>

@@ -7,12 +7,12 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * config/session.php ka default 'database' hai, lekin sessions table kabhi
-     * bani hi nahi thi. Site sirf isliye chal rahi hai kyunki env me
-     * SESSION_DRIVER=file set hai — wo ek var hat jaaye to har request 500 ho.
+     * The default in config/session.php is 'database', but the sessions table was
+     * never created. The site only runs because SESSION_DRIVER=file is set in the
+     * env — remove that one variable and every request would 500.
      *
-     * Table bana dene se wo landmine hat jaata hai. Driver ABHI nahi badla ja
-     * raha — driver badalne se sab logged-out ho jaayenge, wo alag decision hai.
+     * Creating the table removes that landmine. The driver is NOT being changed
+     * right now — changing it would log everyone out, which is a separate decision.
      */
     public function up(): void
     {

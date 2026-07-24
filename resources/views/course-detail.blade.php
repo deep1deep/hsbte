@@ -148,7 +148,7 @@
                                 <p class="text-muted small mb-0">Log in as a student to enroll.</p>
                             @endif
                         @else
-                            {{-- GUEST: Enroll button dikhe, dabate hi login pe jaayega, login ke baad wapas isi course pe --}}
+                            {{-- GUEST: show the Enroll button; clicking it goes to login, and after login the user returns to this same course --}}
                             <form method="POST" action="{{ route('student.enroll', $course) }}">
                                 @csrf
                                 <button class="btn w-100 mb-2" style="background:#f0a500;color:#0d2a5c;font-weight:600;">

@@ -8,14 +8,14 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Ek enrollment = ek certificate. Pehle sirf application code me check tha
-     * (`if ($enrollment->certificate)`) — do request ek saath aayein to dono pass
-     * ho jaati thheen aur student ke do certificate ban jaate the.
+     * One enrollment = one certificate. Previously the check lived only in the
+     * application code (`if ($enrollment->certificate)`) — if two requests arrived
+     * at once both passed and the student ended up with two certificates.
      */
     public function up(): void
     {
-        // Agar purana duplicate data hai to pehle saaf karo — warna unique index
-        // banega hi nahi aur migrate fail hone se poora deploy ruk jaayega.
+        // Clean up any old duplicate data first — otherwise the unique index
+        // won't build and the failed migration will halt the whole deploy.
         $duplicates = DB::table('certificates')
             ->select('enrollment_id', DB::raw('MIN(id) as keep_id'))
             ->groupBy('enrollment_id')
@@ -26,7 +26,7 @@ return new class extends Migration
             DB::table('certificates')
                 ->where('enrollment_id', $duplicate->enrollment_id)
                 ->where('id', '!=', $duplicate->keep_id)
-                ->delete();   // sabse purana (MIN id) rakha jaata hai
+                ->delete();   // the oldest one (MIN id) is kept
         }
 
         Schema::table('certificates', function (Blueprint $table) {

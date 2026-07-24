@@ -128,8 +128,8 @@
             @if($pendingCerts->count())
                 <div class="alert alert-info py-2">
                     <i class="bi bi-info-circle me-1"></i>
-                    {{ $pendingCerts->count() == 1 ? 'Ek certificate' : $pendingCerts->count() . ' certificates' }}
-                    trainer ke paas approval ke liye hai. Issue hote hi download link yahin aa jaayega.
+                    {{ $pendingCerts->count() == 1 ? '1 certificate' : $pendingCerts->count() . ' certificates' }}
+                    awaiting approval from the trainer. The download link will appear here once it's issued.
                 </div>
             @endif
 

@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 /**
  * Static information pages — About, Contact, Privacy, Terms, Accessibility, Help.
  *
- * Ye sab GIGW (Guidelines for Indian Government Websites) ke under expected
- * hain. Content blade me hai; contact details config/portal.php se aati hain.
+ * These are all expected under GIGW (Guidelines for Indian Government Websites).
+ * The content lives in the blade views; contact details come from config/portal.php.
  */
 class PageController extends Controller
 {

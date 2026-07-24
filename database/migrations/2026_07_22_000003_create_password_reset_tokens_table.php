@@ -7,9 +7,9 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Laravel ka standard password-reset table. Project me kabhi bana hi nahi tha,
-     * isliye "forgot password" ka koi rasta nahi tha — password bhool gaya student
-     * hamesha ke liye locked out ho jaata tha.
+     * Laravel's standard password-reset table. It was never created in this project,
+     * so there was no "forgot password" path — a student who forgot their password
+     * was locked out permanently.
      */
     public function up(): void
     {

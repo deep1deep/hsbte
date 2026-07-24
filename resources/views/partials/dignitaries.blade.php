@@ -1,9 +1,9 @@
-{{-- Leadership / dignitaries strip — data config/portal.php se aata hai.
-     Photo missing ho to initials wala avatar dikhta hai, layout kabhi tootta nahi. --}}
+{{-- Leadership / dignitaries strip — data comes from config/portal.php.
+     If a photo is missing, an initials-based avatar is shown; the layout never breaks. --}}
 @php $dignitaries = config('portal.dignitaries', []); @endphp
 
-{{-- config/portal.php me 'show_dignitaries' => true karne se (ya Render me
-     PORTAL_SHOW_DIGNITARIES=true set karne se) ye section wapas aa jaayega. --}}
+{{-- Setting 'show_dignitaries' => true in config/portal.php (or setting
+     PORTAL_SHOW_DIGNITARIES=true on Render) will bring this section back. --}}
 @if(config('portal.show_dignitaries') && count($dignitaries))
 <section class="section-pad dignitary-section" aria-labelledby="dignitaries-heading">
     <div class="container">
@@ -19,12 +19,12 @@
                     $file      = $person['photo'] ?? null;
                     $photoPath = $file ? public_path('images/dignitaries/' . $file) : null;
                     $hasPhoto  = $photoPath && file_exists($photoPath);
-                    // photo replace hone pe browser purani wali na dikhaye
+                    // so the browser doesn't show the old one when the photo is replaced
                     $photoUrl  = $hasPhoto
                         ? asset('images/dignitaries/' . $file) . '?v=' . filemtime($photoPath)
                         : null;
 
-                    // "Sh. Nayab Singh Saini" -> "NS"  (honorific/suffix hata ke)
+                    // "Sh. Nayab Singh Saini" -> "NS"  (with the honorific/suffix removed)
                     $words = preg_split('/\s+/', preg_replace('/,.*$/', '', $person['name']));
                     $words = array_values(array_filter($words, fn ($w) => ! in_array(rtrim($w, '.'), ['Sh', 'Smt', 'Dr', 'Shri', 'Ms', 'Mr'], true)));
                     $initials = strtoupper(mb_substr($words[0] ?? '', 0, 1) . mb_substr($words[count($words) - 1] ?? '', 0, 1));

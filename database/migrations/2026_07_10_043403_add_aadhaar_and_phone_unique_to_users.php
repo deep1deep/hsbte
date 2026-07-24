@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            // Guard: local pe column already hai (skip), live pe nahi hai (create)
+            // Guard: the column already exists locally (skip), but not on live (create)
             if (! Schema::hasColumn('users', 'aadhaar_hash')) {
                 $table->string('aadhaar_hash')->nullable()->unique();
             }

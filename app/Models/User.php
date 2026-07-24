@@ -81,7 +81,7 @@ class User extends Authenticatable
         return $this->hasMany(Enrollment::class);
     }
 
-    // Trainer ka certificate HTML design (auto mode ke liye)
+    // The trainer's certificate HTML design (for auto mode)
     public function certificateTemplate(): HasOne
     {
         return $this->hasOne(CertificateTemplate::class, 'trainer_id')->where('is_active', true);

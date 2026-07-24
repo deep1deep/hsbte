@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('courses', function (Blueprint $table) {
-            // manual = trainer har student ka file upload karega
-            // auto   = HTML template se apne aap banega
+            // manual = the trainer uploads a file for each student
+            // auto   = generated automatically from the HTML template
             $table->enum('cert_mode', ['manual', 'auto'])->default('auto')->after('status');
         });
     }

@@ -21,10 +21,10 @@ class StudentController extends Controller
     {
         $enrollments = Enrollment::where('user_id', auth()->id())
             ->with([
-                // lessons_count → progressPercent() bina extra query ke chalega
+                // lessons_count → lets progressPercent() run without an extra query
                 'course' => fn ($q) => $q->withCount('lessons'),
                 'course.department',
-                // blob (base64 PDF, ~6.7MB) list page pe kabhi chahiye hi nahi
+                // blob (base64 PDF, ~6.7MB) is never needed on the list page
                 'certificate' => fn ($q) => $q->withoutBlob(),
             ])
             ->withCount([
@@ -33,14 +33,14 @@ class StudentController extends Controller
             ->latest()
             ->get();
 
-        // "Continue learning" — sabse recent in-progress course jisme thoda kaam ho chuka
+        // "Continue learning" — the most recent in-progress course with some work already done
         $continue = $enrollments->first(fn ($e) =>
             $e->status !== 'completed' && $e->progressPercent() > 0
         )
-        // koi bhi shuru nahi kiya to pehla active course "Start" ke liye
+        // if none have been started yet, the first active course for "Start"
         ?? $enrollments->first(fn ($e) => $e->status !== 'completed');
 
-        // "Courses you may like" — apne department ke published course jo enroll nahi kiye
+        // "Courses you may like" — published courses in the student's department that they haven't enrolled in
         $enrolledIds = $enrollments->pluck('course_id');
         $recommended = collect();
 
@@ -149,16 +149,16 @@ class StudentController extends Controller
     {
         $user = auth()->user();
 
-        // sirf student enroll kar sakta (trainer/admin nahi) — 403 ki jagah gently wapas
+        // only a student can enroll (not a trainer/admin) — gently redirect instead of a 403
         if (! $user->isStudent()) {
             return redirect()->route('course.detail', $course)
                 ->with('success', 'Only students can enroll in courses.');
         }
 
-        // sirf published course mein enroll
+        // enroll only in a published course
         abort_unless($course->status === 'published', 404);
 
-        // pehle se enrolled? to double na ho — bas player pe bhej do
+        // already enrolled? avoid a duplicate — just send them to the player
         $already = Enrollment::where('user_id', $user->id)
             ->where('course_id', $course->id)
             ->first();
@@ -182,7 +182,7 @@ class StudentController extends Controller
     // ---------- Course player (watch lessons) ----------
     public function showCourse(Course $course)
     {
-        // enrolled hai ya nahi — na ho to 403
+        // enrolled or not — if not, 403
         $enrollment = Enrollment::where('user_id', auth()->id())
             ->where('course_id', $course->id)
             ->with([
@@ -201,7 +201,7 @@ class StudentController extends Controller
             'modules.lessons' => fn ($q) => $q->orderBy('sort_order'),
         ]);
 
-        // is student ne kaun-kaun se lesson complete kiye
+        // which lessons this student has completed
         $completedLessonIds = LessonProgress::where('enrollment_id', $enrollment->id)
             ->where('status', 'completed')
             ->pluck('lesson_id')
@@ -311,14 +311,14 @@ class StudentController extends Controller
             ->where('course_id', $course->id)
             ->firstOrFail();
 
-        // progress row: pehle se ho to update, na ho to bana
+        // progress row: update if it exists, otherwise create it
         LessonProgress::updateOrCreate(
             ['enrollment_id' => $enrollment->id, 'lesson_id' => $lesson->id],
             ['status' => 'completed', 'completed_at' => now()]
         );
 
-        // saare lessons complete ho gaye? to course bhi completed + CERTIFICATE
-        // ek query — pehle har module fetch karke PHP me sum karta tha
+        // all lessons complete? then mark the course completed too + CERTIFICATE
+        // single query — previously fetched each module and summed in PHP
         $totalLessons = $course->lessons()->count();
         $doneLessons  = LessonProgress::where('enrollment_id', $enrollment->id)
             ->where('status', 'completed')->count();

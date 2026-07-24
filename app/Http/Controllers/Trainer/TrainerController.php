@@ -149,8 +149,8 @@ class TrainerController extends Controller
             'cert_mode'      => ['required', 'in:manual,auto'],
         ]);
 
-        // slug jaanbujhkar NAHI badla — purane links/bookmarks na tooten
-        // NOTE: cert_mode badalne se purane certificates par asar nahi — wo frozen hain
+        // slug is deliberately NOT changed — so old links/bookmarks don't break
+        // NOTE: changing cert_mode does not affect existing certificates — they are frozen
         $course->update([
             'title'          => $validated['title'],
             'description'    => $validated['description'] ?? null,
@@ -237,7 +237,7 @@ class TrainerController extends Controller
             'title'            => ['required', 'string', 'max:255'],
             'duration_minutes' => ['nullable', 'integer', 'min:0', 'max:1000'],
         ];
-        // file optional — ho to purane type ka hi hona chahiye
+        // file optional — if provided, it must match the existing type
         if ($request->hasFile('file')) {
             $rules['file'] = $lesson->type === 'pdf'
                 ? ['file', 'mimes:pdf']
@@ -250,7 +250,7 @@ class TrainerController extends Controller
         $lesson->duration_minutes = $validated['duration_minutes'] ?? null;
 
         if ($request->hasFile('file')) {
-            // purani file hatao
+            // remove the old file
             $old = $lesson->type === 'pdf' ? $lesson->file_path : $lesson->video_path;
             if ($old) {
                 Storage::disk('public')->delete($old);
@@ -286,7 +286,7 @@ class TrainerController extends Controller
         return back()->with('success', 'Lesson deleted.');
     }
 
-    // ---------- Module delete (+ uske sab lessons ki files) ----------
+    // ---------- Module delete (+ all its lessons' files) ----------
     public function destroyModule(Module $module)
     {
         abort_unless($module->course->trainer_id === auth()->id(), 403);
@@ -324,19 +324,19 @@ class TrainerController extends Controller
     // ==========================================================
 
     /**
-     * Pending + issued certificates — sirf mere courses ke.
+     * Pending + issued certificates — only for the trainer's own courses.
      */
     public function certificates()
     {
         $courseIds = Course::where('trainer_id', auth()->id())->pluck('id');
 
-        // withoutBlob() zaroori hai — warna har row ka base64 PDF (~6.7MB) memory me
-        // aata hai aur ~40 certificates pe hi page memory limit tod deta hai
+        // withoutBlob() is essential — otherwise each row's base64 PDF (~6.7MB) loads into
+        // memory and just ~40 certificates blow past the page memory limit
         $pending = Certificate::withoutBlob()
             ->where('status', 'pending')
             ->whereHas('enrollment', fn ($q) => $q->whereIn('course_id', $courseIds))
             ->with(['enrollment.user', 'enrollment.course'])
-            ->oldest('issued_at')          // sabse purana pehle — wahi sabse zyada wait kar raha hai
+            ->oldest('issued_at')          // oldest first — that one has been waiting the longest
             ->get();
 
         $issued = Certificate::withoutBlob()
@@ -350,17 +350,17 @@ class TrainerController extends Controller
     }
 
     /**
-     * Certificate file upload — DB me base64 (disk pe NAHI, Render disk ephemeral hai).
+     * Certificate file upload — base64 in the DB (NOT on disk, since Render's disk is ephemeral).
      */
     public function uploadCertificate(Request $request, Certificate $certificate)
     {
         $enrollment = $certificate->enrollment;
 
-        // security: sirf apne course ka certificate
+        // security: only a certificate belonging to the trainer's own course
         abort_unless($enrollment->course->trainer_id === auth()->id(), 403);
 
         $request->validate([
-            // SVG jaanbujhkar allowed nahi — usme script chhup sakti hai
+            // SVG is deliberately not allowed — it can hide a script
             'file' => ['required', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
         ], [
             'file.max'   => 'The file must be smaller than 5MB.',
@@ -382,14 +382,14 @@ class TrainerController extends Controller
     }
 
     // ==========================================================
-    //  CERTIFICATE DESIGN (auto mode ka HTML template)
+    //  CERTIFICATE DESIGN (HTML template for auto mode)
     // ==========================================================
 
     public function certificateDesign()
     {
         $template = CertificateTemplate::where('trainer_id', auth()->id())->first();
 
-        // is trainer ke kitne course auto mode pe hain
+        // how many of this trainer's courses are on auto mode
         $autoCourses = Course::where('trainer_id', auth()->id())
             ->where('cert_mode', 'auto')
             ->pluck('title');
@@ -411,7 +411,7 @@ class TrainerController extends Controller
             'html.required' => 'HTML cannot be empty.',
         ]);
 
-        // 🔒 sanitize — script/iframe/php sab nikal do
+        // 🔒 sanitize — strip out all script/iframe/php
         $clean = HtmlSanitizer::clean($validated['html']);
 
         abort_if($clean === '', 422, 'Nothing left after sanitizing the HTML.');

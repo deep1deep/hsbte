@@ -77,8 +77,8 @@ class Course extends Model
         return (int) ($this->reviews_count ?? $this->reviews()->count());
     }
 
-    // Saare lessons — modules ke through, ek hi query me.
-    // Isse total-lesson count nikalna 1 query hai, module-by-module loop nahi.
+    // All lessons — through the modules, in a single query.
+    // This makes getting the total-lesson count 1 query, not a module-by-module loop.
     public function lessons(): HasManyThrough
     {
         return $this->hasManyThrough(Lesson::class, Module::class);
@@ -86,13 +86,13 @@ class Course extends Model
 
     /* ---------------- CERTIFICATE MODE ---------------- */
 
-    // manual = trainer har student ka file upload karega
+    // manual = the trainer uploads a file for each student
     public function usesManualCertificates(): bool
     {
         return $this->cert_mode === 'manual';
     }
 
-    // auto = trainer ke HTML template se apne aap banega
+    // auto = generated automatically from the trainer's HTML template
     public function usesAutoCertificates(): bool
     {
         return $this->cert_mode === 'auto';

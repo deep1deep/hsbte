@@ -22,10 +22,10 @@
         <link href="bootstrap.css">
 
 {{-- ?v=<file modified time> — cache busting.
-     nginx CSS ko 30 din cache karta hai (performance ke liye sahi hai), lekin
-     bina version ke browser purani CSS pakde rehta hai aur naya design dikhta
-     hi nahi. File badalne pe ye number apne aap badal jaata hai, to browser
-     turant nayi copy le leta hai. --}}
+     nginx caches the CSS for 30 days (which is good for performance), but
+     without a version the browser holds on to the old CSS and never shows the
+     new design. When the file changes this number updates automatically, so the
+     browser fetches the fresh copy immediately. --}}
 @php
     $stylePath    = public_path('css/style.css');
     $styleVersion = file_exists($stylePath) ? filemtime($stylePath) : null;

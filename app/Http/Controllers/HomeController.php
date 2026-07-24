@@ -19,10 +19,10 @@ class HomeController extends Controller
             ->take(3)
             ->get();
 
-        // Announcements — marquee + notice board dono ke liye
+        // Announcements — for both the marquee and the notice board
         $announcements = Announcement::active()->take(6)->get();
 
-        // Real stats (jaisa data badhega, apne aap badhega)
+        // Real stats (these grow automatically as the data grows)
         $stats = [
             'students'    => User::where('role', 'student')->count(),
             'courses'     => Course::where('status', 'published')->count(),

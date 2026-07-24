@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('trainer_id')->constrained('users')->cascadeOnDelete();
             $table->string('name')->default('My Certificate Design');
-            $table->longText('html')->nullable();      // sanitized HTML — Blade se NEVER render
+            $table->longText('html')->nullable();      // sanitized HTML — NEVER render via Blade
             $table->boolean('is_active')->default(true);
             $table->timestamps();
 

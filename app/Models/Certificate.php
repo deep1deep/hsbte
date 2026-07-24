@@ -26,7 +26,7 @@ class Certificate extends Model
         'template_snapshot' => 'array',
     ];
 
-    // blob kabhi dump/serialize na ho — warna debug page 1MB+ string print karke memory kha jaata hai
+    // Never dump/serialize the blob — otherwise a debug page prints a 1MB+ string and eats up memory
     protected $hidden = [
         'file_blob',
     ];
@@ -34,11 +34,11 @@ class Certificate extends Model
     /* ---------------- QUERY SCOPES ---------------- */
 
     /**
-     * Har column CHHOD KE file_blob.
+     * Every column EXCEPT file_blob.
      *
-     * $hidden sirf serialize pe asar karta hai — SELECT me blob phir bhi aata hai
-     * aur memory kha jaata hai (ek blob ~6.7MB). Listing pages ke liye ye scope
-     * zaroori hai; download() poora model leta hai isliye wahan blob milega.
+     * $hidden only affects serialization — the blob is still fetched in the SELECT
+     * and eats up memory (each blob ~6.7MB). This scope is needed for listing
+     * pages; download() loads the full model, so the blob is available there.
      *
      * Usage: Certificate::withoutBlob()->get()
      */
@@ -68,7 +68,7 @@ class Certificate extends Model
         return $this->belongsTo(Enrollment::class);
     }
 
-    // Kis trainer ne upload kiya (manual mode)
+    // Which trainer uploaded it (manual mode)
     public function uploadedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'uploaded_by');

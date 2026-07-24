@@ -13,16 +13,16 @@ use App\Http\Controllers\CertificateController;
 Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/courses', [CourseController::class, 'index'])->name('courses');
 
-// dynamic course detail — koi bhi published course slug se khulega
+// dynamic course detail — any published course opens by its slug
 Route::get('/courses/{course:slug}', [CourseController::class, 'show'])->name('course.detail');
 
-// public certificate verify (bina login — employer/koi bhi number daal ke check kare)
+// public certificate verify (no login — an employer/anyone can enter a number to check)
 Route::get('/verify', [CertificateController::class, 'verify'])->name('certificate.verify');
 
 // public notices
 Route::get('/notices', [\App\Http\Controllers\NoticeController::class, 'index'])->name('notices');
 
-/* ---------------- INFORMATION PAGES (GIGW ke liye expected) ---------------- */
+/* ---------------- INFORMATION PAGES (expected for GIGW) ---------------- */
 Route::controller(\App\Http\Controllers\PageController::class)->group(function () {
     Route::get('/about',         'about')->name('about');
     Route::get('/contact',       'contact')->name('contact');
@@ -33,9 +33,9 @@ Route::controller(\App\Http\Controllers\PageController::class)->group(function (
 });
 
 /* ---------------- AUTH: REGISTER / LOGIN / LOGOUT ---------------- */
-// throttle sirf POST pe — page kholne pe koi limit nahi.
-// Limits jaanbujhkar dheeli hain: normal user kabhi nahi tokrayega,
-// automated password-guessing turant ruk jaayega.
+// throttle only on POST — no limit on opening the page.
+// The limits are intentionally loose: a normal user will never hit them,
+// automated password-guessing stops immediately.
 Route::get('/register',  [RegisterController::class, 'show'])->name('register');
 Route::post('/register', [RegisterController::class, 'register'])
     ->middleware('throttle:10,1')->name('register.attempt');
@@ -48,19 +48,19 @@ Route::post('/login',        [LoginController::class, 'login'])
 Route::post('/logout',       [LoginController::class, 'logout'])->name('logout');
 
 /* ---------------- PASSWORD RESET ---------------- */
-// Route names Laravel ke conventions se match karte hain — reset email ka link
-// route('password.reset') se banta hai, isliye naam badalna mat.
+// Route names match Laravel's conventions — the reset email link
+// is built from route('password.reset'), so don't change the names.
 Route::controller(\App\Http\Controllers\Auth\PasswordResetController::class)->group(function () {
     Route::get('/forgot-password',  'showLinkRequestForm')->name('password.request');
     Route::post('/forgot-password', 'sendResetLink')
-        ->middleware('throttle:6,1')->name('password.email');   // email bombing rokne ke liye
+        ->middleware('throttle:6,1')->name('password.email');   // to prevent email bombing
 
     Route::get('/reset-password/{token}', 'showResetForm')->name('password.reset');
     Route::post('/reset-password',        'reset')
         ->middleware('throttle:6,1')->name('password.update');
 });
 
-/* ---------------- ENROLL (auth only — guest ko login pe bhejta hai, wapas course pe laata hai) ---------------- */
+/* ---------------- ENROLL (auth only — sends a guest to login, then brings them back to the course) ---------------- */
 Route::post('/courses/{course}/enroll', [StudentController::class, 'enroll'])
     ->middleware('auth')->name('student.enroll');
 
@@ -77,7 +77,7 @@ Route::middleware(['auth', 'role:student'])->group(function () {
     Route::patch('/student/profile',        [StudentController::class, 'updateProfile'])->name('student.profile.update');
     Route::patch('/student/profile/password',[StudentController::class, 'updatePassword'])->name('student.profile.password');
 
-    // certificate download (sirf apna)
+    // certificate download (only their own)
     Route::get('/certificates/{certificate}/download', [CertificateController::class, 'download'])->name('certificate.download');
 });
 

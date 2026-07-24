@@ -1647,13 +1647,13 @@ font-size:20px;
 
 .process-section{
     position:relative;
-    /* deep navy band + two soft glows — cta-band flat navy hai, isliye ye
-       gradient version usse alag dikhta hai */
+    /* deep navy band + two soft glows — cta-band is flat navy, so this
+       gradient version looks distinct from it */
     background:
         radial-gradient(900px 420px at 12% -10%, rgba(240,165,0,.16), transparent 62%),
         radial-gradient(760px 420px at 88% 55%, rgba(70,135,235,.18), transparent 62%),
-        /* neeche cta-band (#0d2a5c) hai — gradient wahi rang pe khatam hota hai
-           taaki dono navy sections ke beech line na dikhe, ek hi flow lage */
+        /* below is cta-band (#0d2a5c) — the gradient ends on that same colour
+           so no line shows between the two navy sections, they read as one flow */
         linear-gradient(158deg,#0a2150 0%,#10306c 45%,#0d2a5c 100%);
     overflow:hidden;
 }
@@ -1710,7 +1710,7 @@ font-size:20px;
 }
 
 /* travelling glow along the line.
-   background-position animate hota hai, layout nahi — isliye smooth rehta hai */
+   background-position animates, not layout — so it stays smooth */
 .process-line::after{
     content:"";
     position:absolute;
@@ -1766,7 +1766,7 @@ font-size:20px;
     line-height:1;
 }
 
-/* radar pulse — har step alag time pe, taaki row ek saath na dhadke */
+/* radar pulse — each step on its own timing, so the row doesn't pulse all at once */
 .process-icon::before{
     content:"";
     position:absolute;
@@ -1843,7 +1843,7 @@ font-size:20px;
     transform:translateY(0);
 }
 
-/* navy band pe btn-navy invisible ho jaata — gold button chahiye */
+/* on a navy band btn-navy becomes invisible — a gold button is needed */
 .process-btn{
     display:inline-block;
     background:#f0a500;
@@ -1871,7 +1871,7 @@ font-size:20px;
 
 @media (max-width:991.98px){
     .process-track{grid-template-columns:repeat(2,1fr);gap:40px 20px;}
-    .process-line{display:none;}          /* wrapped rows me line align nahi hoti */
+    .process-line{display:none;}          /* the line doesn't align on wrapped rows */
     .process-head h3{font-size:1.8rem;}
 }
 
@@ -1897,8 +1897,8 @@ font-size:20px;
         INFO PAGES  (ABOUT / CONTACT)
 ====================================================*/
 
-/* navy hero band with emblem — page-hero se richer version,
-   sirf About / Contact pe use hota hai */
+/* navy hero band with emblem — a richer version of page-hero,
+   used only on About / Contact */
 .info-hero{
     position:relative;
     overflow:hidden;

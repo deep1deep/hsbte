@@ -1,5 +1,5 @@
-{{-- "How it works" — 4 step process. Scroll pe reveal hota hai (JS sirf ek class
-     add karta hai), baaki sab CSS animation hai. --}}
+{{-- "How it works" — 4-step process. It reveals on scroll (the JS only adds a
+     single class), everything else is CSS animation. --}}
 @php
     $steps = [
         ['icon' => 'bi-person-plus',   'title' => 'Register',      'text' => 'Create your free student account with your enrolment and department details.'],
@@ -9,9 +9,9 @@
     ];
 @endphp
 
-{{-- JS band ho to steps opacity:0 pe atke rehte — content hi gayab. Ye fallback
-     unhe seedha visible kar deta hai (animation ke bina), taaki koi bhi haal me
-     content padha ja sake. --}}
+{{-- If JS is disabled the steps stay stuck at opacity:0 — the content disappears.
+     This fallback makes them visible directly (without the animation), so the
+     content can always be read. --}}
 <noscript>
     <style>
         .process-step,
@@ -29,7 +29,7 @@
         </div>
 
         <ol class="process-track">
-            {{-- gold connector line behind the icons; scroll pe left se right fill hoti hai --}}
+            {{-- gold connector line behind the icons; it fills from left to right on scroll --}}
             <span class="process-line" aria-hidden="true"></span>
 
             @foreach($steps as $index => $step)
@@ -56,9 +56,9 @@
 </section>
 
 <script>
-/* Section screen pe aate hi .is-visible lag jaati hai — animation CSS me hai.
-   IntersectionObserver na ho to section turant visible ho jaata hai (no JS = no
-   hidden content, ye zaroori hai). */
+/* As soon as the section enters the screen .is-visible is added — the animation
+   lives in the CSS. If IntersectionObserver is unavailable the section becomes
+   visible immediately (no JS = no hidden content, which is essential). */
 (function () {
     var section = document.querySelector('.process-section');
     if (!section) return;
@@ -72,7 +72,7 @@
         entries.forEach(function (entry) {
             if (entry.isIntersecting) {
                 entry.target.classList.add('is-visible');
-                observer.unobserve(entry.target);   // ek hi baar chale
+                observer.unobserve(entry.target);   // run only once
             }
         });
     }, { threshold: 0.2 });
