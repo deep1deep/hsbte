@@ -2192,3 +2192,206 @@ font-size:20px;
     .about-step:hover,
     .contact-card:hover{transform:none;}
 }
+
+/*====================================================
+        STUDENT DASHBOARD EXTRAS
+====================================================*/
+
+/* --- Continue learning hero card --- */
+.continue-card{
+    display:flex;
+    align-items:center;
+    gap:24px;
+    flex-wrap:wrap;
+    border-radius:16px;
+    padding:26px 28px;
+    color:#fff;
+    position:relative;
+    overflow:hidden;
+    background:
+        radial-gradient(600px 300px at 90% -20%, rgba(240,165,0,.22), transparent 60%),
+        linear-gradient(135deg,#0d2a5c 0%,#1f3f7a 100%);
+    box-shadow:0 14px 34px rgba(13,42,92,.18);
+}
+
+.continue-body{flex:1 1 320px;min-width:0;}
+
+.continue-kicker{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    color:#ffb81f;
+    font-size:.74rem;
+    font-weight:700;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    margin-bottom:8px;
+}
+
+.continue-title{
+    font-size:1.35rem;
+    font-weight:700;
+    margin:0 0 10px;
+    letter-spacing:-.01em;
+}
+
+.continue-meta{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    flex-wrap:wrap;
+    color:#cdd6e8;
+    font-size:.86rem;
+    margin-bottom:14px;
+}
+
+.continue-meta .badge-dept{background:rgba(255,255,255,.16);color:#fff;}
+
+.continue-progress{
+    height:8px;
+    border-radius:20px;
+    background:rgba(255,255,255,.18);
+    overflow:hidden;
+    max-width:460px;
+}
+
+.continue-progress-bar{
+    height:100%;
+    border-radius:20px;
+    background:linear-gradient(90deg,#f0a500,#ffb81f);
+    transition:width .5s ease;
+}
+
+.continue-pct{
+    margin-top:7px;
+    font-size:.8rem;
+    color:#b9c7e2;
+}
+
+.continue-action{flex:0 0 auto;}
+
+.continue-btn{
+    background:#f0a500;
+    color:#0d2a5c;
+    font-weight:700;
+    border:none;
+    padding:12px 24px;
+    border-radius:10px;
+    white-space:nowrap;
+    transition:transform .2s ease, background .2s ease;
+}
+
+.continue-btn:hover{background:#ffb81f;color:#0d2a5c;transform:translateY(-2px);}
+
+/* --- Recommended course cards --- */
+.reco-card{
+    display:flex;
+    flex-direction:column;
+    height:100%;
+    background:#fff;
+    border:1px solid #e8edf5;
+    border-radius:14px;
+    padding:20px;
+    transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+
+.reco-card:hover{
+    transform:translateY(-4px);
+    border-color:rgba(240,165,0,.5);
+    box-shadow:0 14px 30px rgba(13,42,92,.10);
+}
+
+.reco-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:12px;
+}
+
+.reco-icon{
+    width:42px;
+    height:42px;
+    border-radius:11px;
+    background:#eef2fa;
+    color:#0d2a5c;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.1rem;
+}
+
+.reco-title{
+    font-size:1rem;
+    font-weight:700;
+    color:#1f2f4d;
+    margin:0 0 10px;
+    line-height:1.35;
+}
+
+.reco-meta{
+    display:flex;
+    gap:14px;
+    flex-wrap:wrap;
+    color:#7a8aa8;
+    font-size:.82rem;
+    margin-bottom:16px;
+}
+
+.reco-meta i{color:#0d2a5c;}
+
+.reco-btn{
+    align-self:flex-start;
+    background:#0d2a5c;
+    color:#fff;
+    font-weight:600;
+    border:none;
+}
+
+.reco-btn:hover{background:#09204a;color:#fff;}
+
+/* --- Profile page --- */
+.profile-avatar{
+    width:76px;
+    height:76px;
+    margin:0 auto;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.9rem;
+    font-weight:700;
+    color:#fff;
+    background:linear-gradient(145deg,#0d2a5c,#1f3f7a);
+    box-shadow:0 8px 20px rgba(13,42,92,.22);
+}
+
+.profile-facts{
+    list-style:none;
+    margin:0;
+    padding:0;
+    text-align:left;
+}
+
+.profile-facts li{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px 0;
+    border-top:1px solid #eef1f6;
+    font-size:.85rem;
+    color:#7a8aa8;
+}
+
+.profile-facts li strong{color:#1f2f4d;font-weight:600;}
+.profile-facts li i{color:#0d2a5c;margin-right:5px;}
+
+@media (max-width:576px){
+    .continue-card{padding:22px;}
+    .continue-action{width:100%;}
+    .continue-btn{width:100%;}
+}
+
+@media (prefers-reduced-motion:reduce){
+    .reco-card,.continue-btn{transition:none;}
+    .reco-card:hover,.continue-btn:hover{transform:none;}
+}

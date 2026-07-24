@@ -9,6 +9,8 @@ use App\Models\Lesson;
 use App\Models\Enrollment;
 use App\Models\LessonProgress;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
 
 class StudentController extends Controller
 {
@@ -29,7 +31,76 @@ class StudentController extends Controller
             ->latest()
             ->get();
 
-        return view('dashboards.student', compact('enrollments'));
+        // "Continue learning" — sabse recent in-progress course jisme thoda kaam ho chuka
+        $continue = $enrollments->first(fn ($e) =>
+            $e->status !== 'completed' && $e->progressPercent() > 0
+        )
+        // koi bhi shuru nahi kiya to pehla active course "Start" ke liye
+        ?? $enrollments->first(fn ($e) => $e->status !== 'completed');
+
+        // "Courses you may like" — apne department ke published course jo enroll nahi kiye
+        $enrolledIds = $enrollments->pluck('course_id');
+        $recommended = collect();
+
+        if ($user = auth()->user()) {
+            $recommended = Course::where('status', 'published')
+                ->whereNotIn('id', $enrolledIds)
+                ->when($user->department_id, fn ($q) =>
+                    $q->orderByRaw('department_id = ? DESC', [$user->department_id])
+                )
+                ->with('department')
+                ->withCount('enrollments')
+                ->latest()
+                ->take(3)
+                ->get();
+        }
+
+        return view('dashboards.student', compact('enrollments', 'continue', 'recommended'));
+    }
+
+    // ---------- Profile (view + edit own details) ----------
+    public function profile()
+    {
+        $user = auth()->user();
+        $user->loadCount('enrollments');
+
+        return view('student.profile', compact('user'));
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $user = auth()->user();
+
+        $validated = $request->validate([
+            'name'          => ['required', 'string', 'max:255'],
+            'phone'         => ['nullable', 'string', 'max:15', 'unique:users,phone,' . $user->id],
+            'institute'     => ['nullable', 'string', 'max:255'],
+            'semester'      => ['nullable', 'string', 'max:20'],
+        ], [
+            'phone.unique' => 'This phone number is already registered.',
+        ]);
+
+        $user->update($validated);
+
+        return redirect()->route('student.profile')
+            ->with('success', 'Profile updated successfully.');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => ['required', 'current_password'],
+            'password'         => ['required', 'confirmed', Password::min(8)],
+        ], [
+            'current_password.current_password' => 'Your current password is incorrect.',
+        ]);
+
+        auth()->user()->update([
+            'password' => $request->password,   // model cast auto-hashes
+        ]);
+
+        return redirect()->route('student.profile')
+            ->with('success', 'Password changed successfully.');
     }
 
     // ---------- Enroll into a course ----------

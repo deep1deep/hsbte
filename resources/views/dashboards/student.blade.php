@@ -13,6 +13,9 @@
                 <p class="text-muted mb-0">Welcome back, {{ auth()->user()->name }}</p>
             </div>
             <div class="d-flex gap-2">
+                <a href="{{ route('student.profile') }}" class="btn btn-outline-navy">
+                    <i class="bi bi-person-circle me-1"></i> Profile
+                </a>
                 <a href="{{ route('courses') }}" class="btn btn-outline-navy">
                     <i class="bi bi-search me-1"></i> Browse courses
                 </a>
@@ -51,6 +54,40 @@
                 </div>
             </div>
         </div>
+
+        {{-- ===== CONTINUE LEARNING ===== --}}
+        @if($continue)
+            @php $cpct = round($continue->progressPercent()); @endphp
+            <div class="continue-card mb-4">
+                <div class="continue-body">
+                    <span class="continue-kicker">
+                        <i class="bi bi-play-circle-fill"></i>
+                        {{ $cpct > 0 ? 'Continue learning' : 'Start learning' }}
+                    </span>
+                    <h3 class="continue-title">{{ $continue->course->title }}</h3>
+                    <div class="continue-meta">
+                        @if($continue->course->department)
+                            <span class="badge-dept">{{ $continue->course->department->code }}</span>
+                        @endif
+                        <span>{{ $continue->completed_lessons_count ?? 0 }} of
+                            {{ $continue->course->lessons_count ?? 0 }} lessons done</span>
+                    </div>
+                    <div class="continue-progress">
+                        <div class="continue-progress-bar" style="width:{{ $cpct }}%;"></div>
+                    </div>
+                    <div class="continue-pct">{{ $cpct }}% complete</div>
+                </div>
+                <div class="continue-action">
+                    <a href="{{ route('student.course.show', $continue->course) }}" class="btn continue-btn">
+                        @if($cpct > 0)
+                            <i class="bi bi-play-fill"></i> Resume course
+                        @else
+                            <i class="bi bi-play-fill"></i> Start course
+                        @endif
+                    </a>
+                </div>
+            </div>
+        @endif
 
         {{-- ===== MY CERTIFICATES ===== --}}
         @php
@@ -177,6 +214,44 @@
                     <p class="mt-2 mb-3">You haven't enrolled in any course yet.</p>
                     <a href="{{ route('courses') }}" class="btn btn-navy">Browse courses</a>
                 </div>
+            </div>
+        @endif
+
+        {{-- ===== RECOMMENDED COURSES ===== --}}
+        @if($recommended->isNotEmpty())
+            <div class="d-flex justify-content-between align-items-end flex-wrap gap-2 mt-5 mb-3">
+                <div>
+                    <h5 class="mb-1" style="color:#1f2f4d;">
+                        <i class="bi bi-stars" style="color:#f0a500;"></i> Courses you may like
+                    </h5>
+                    <p class="text-muted small mb-0">Published programmes you haven't enrolled in yet.</p>
+                </div>
+                <a href="{{ route('courses') }}" class="btn btn-sm btn-outline-navy">View all courses</a>
+            </div>
+
+            <div class="row g-3">
+                @foreach($recommended as $course)
+                    <div class="col-md-6 col-lg-4">
+                        <div class="reco-card">
+                            <div class="reco-top">
+                                <div class="reco-icon"><i class="bi bi-journal-bookmark-fill"></i></div>
+                                @if($course->department)
+                                    <span class="badge-dept">{{ $course->department->code }}</span>
+                                @endif
+                            </div>
+                            <h3 class="reco-title">{{ $course->title }}</h3>
+                            <div class="reco-meta">
+                                <span><i class="bi bi-people"></i> {{ $course->enrollments_count }} enrolled</span>
+                                @if($course->duration_weeks)
+                                    <span><i class="bi bi-clock"></i> {{ $course->duration_weeks }} wk</span>
+                                @endif
+                            </div>
+                            <a href="{{ route('course.detail', $course) }}" class="btn btn-sm reco-btn mt-auto">
+                                View course <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                @endforeach
             </div>
         @endif
 

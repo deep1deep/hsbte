@@ -70,6 +70,11 @@ Route::middleware(['auth', 'role:student'])->group(function () {
     Route::get('/student/courses/{course}',            [StudentController::class, 'showCourse'])->name('student.course.show');
     Route::post('/student/lessons/{lesson}/complete',  [StudentController::class, 'markComplete'])->name('student.lessons.complete');
 
+    // profile (own details + password)
+    Route::get('/student/profile',          [StudentController::class, 'profile'])->name('student.profile');
+    Route::patch('/student/profile',        [StudentController::class, 'updateProfile'])->name('student.profile.update');
+    Route::patch('/student/profile/password',[StudentController::class, 'updatePassword'])->name('student.profile.password');
+
     // certificate download (sirf apna)
     Route::get('/certificates/{certificate}/download', [CertificateController::class, 'download'])->name('certificate.download');
 });
