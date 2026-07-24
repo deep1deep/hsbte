@@ -1892,3 +1892,303 @@ font-size:20px;
     .process-section.is-visible .process-icon::before{animation:none;}
     .process-step:hover .process-icon{transform:none;}
 }
+
+/*====================================================
+        INFO PAGES  (ABOUT / CONTACT)
+====================================================*/
+
+/* navy hero band with emblem — page-hero se richer version,
+   sirf About / Contact pe use hota hai */
+.info-hero{
+    position:relative;
+    overflow:hidden;
+    color:#fff;
+    padding:64px 0 68px;
+    background:
+        radial-gradient(820px 380px at 10% -12%, rgba(240,165,0,.15), transparent 60%),
+        radial-gradient(700px 400px at 90% 60%, rgba(70,135,235,.16), transparent 62%),
+        linear-gradient(158deg,#0a2150 0%,#10306c 48%,#0d2a5c 100%);
+}
+
+.info-hero-inner{
+    display:flex;
+    align-items:center;
+    gap:26px;
+}
+
+/* emblem sits in a white disc so the red seal reads clearly on navy */
+.info-hero-emblem{
+    flex:0 0 auto;
+    width:104px;
+    height:104px;
+    border-radius:50%;
+    background:#ffffff;
+    border:3px solid rgba(240,165,0,.75);
+    box-shadow:0 10px 30px rgba(0,0,0,.28);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:14px;
+}
+
+.info-hero-emblem img{
+    max-width:100%;
+    max-height:100%;
+    object-fit:contain;
+}
+
+.info-hero-kicker{
+    display:inline-block;
+    color:#ffb81f;
+    font-size:.74rem;
+    font-weight:700;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    margin-bottom:8px;
+}
+
+.info-hero h1{
+    font-weight:700;
+    letter-spacing:-.02em;
+    margin:0 0 6px;
+}
+
+.info-hero-sub{
+    color:#b9c7e2;
+    margin:0;
+    max-width:560px;
+}
+
+/* thin gold baseline under the hero */
+.info-hero::after{
+    content:"";
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    height:3px;
+    background:linear-gradient(90deg,#f0a500,#ffb81f 40%,rgba(255,184,31,0) 85%);
+}
+
+/* small gold uppercase label above section headings */
+.info-eyebrow{
+    display:inline-block;
+    color:#c07f00;
+    font-size:.72rem;
+    font-weight:700;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    margin-bottom:6px;
+}
+
+.info-section-title{
+    color:#0d2a5c;
+    font-weight:700;
+    letter-spacing:-.015em;
+}
+
+/* board identity card on the About page */
+.board-card{
+    background:linear-gradient(145deg,#ffffff,#f2f6fd);
+    border:1px solid #e8edf5;
+    border-radius:16px;
+    padding:28px 24px;
+    text-align:center;
+    box-shadow:0 12px 34px rgba(13,42,92,.08);
+}
+
+.board-card img{
+    width:110px;
+    height:auto;
+    margin-bottom:14px;
+}
+
+.board-card h3{
+    color:#0d2a5c;
+    font-weight:700;
+    font-size:1.05rem;
+    margin-bottom:2px;
+}
+
+.board-card .board-tag{
+    color:#7a8aa8;
+    font-size:.85rem;
+    margin-bottom:16px;
+}
+
+.board-facts{
+    list-style:none;
+    margin:0;
+    padding:0;
+    text-align:left;
+}
+
+.board-facts li{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:9px 0;
+    border-top:1px solid #e8edf5;
+    color:#3d4f73;
+    font-size:.88rem;
+}
+
+.board-facts li i{
+    color:#c07f00;
+    font-size:1rem;
+}
+
+/* numbered step cards (About - how it works) */
+.about-step{
+    position:relative;
+    background:#fff;
+    border:1px solid #e8edf5;
+    border-radius:14px;
+    padding:22px 20px 20px;
+    height:100%;
+    transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+
+.about-step:hover{
+    transform:translateY(-4px);
+    border-color:rgba(240,165,0,.55);
+    box-shadow:0 14px 30px rgba(13,42,92,.10);
+}
+
+.about-step-num{
+    position:absolute;
+    top:16px;
+    right:18px;
+    font-size:1.7rem;
+    font-weight:800;
+    color:#eef2fa;
+    line-height:1;
+}
+
+.about-step-icon{
+    width:44px;
+    height:44px;
+    border-radius:12px;
+    background:#eef2fa;
+    color:#0d2a5c;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.15rem;
+    margin-bottom:12px;
+}
+
+.about-step h3{
+    font-size:.98rem;
+    font-weight:700;
+    color:#1f2f4d;
+    margin-bottom:4px;
+}
+
+.about-step p{
+    color:#7a8aa8;
+    font-size:.86rem;
+    margin:0;
+}
+
+/* contact cards */
+.contact-card{
+    background:#fff;
+    border:1px solid #e8edf5;
+    border-radius:14px;
+    padding:24px 22px;
+    height:100%;
+    transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+
+.contact-card:hover{
+    transform:translateY(-4px);
+    border-color:rgba(240,165,0,.55);
+    box-shadow:0 14px 30px rgba(13,42,92,.10);
+}
+
+.contact-card-icon{
+    width:46px;
+    height:46px;
+    border-radius:50%;
+    background:linear-gradient(145deg,#0d2a5c,#1f3f7a);
+    color:#ffb81f;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.15rem;
+    margin-bottom:14px;
+}
+
+.contact-card h2{
+    font-size:.98rem;
+    font-weight:700;
+    color:#1f2f4d;
+    margin-bottom:4px;
+}
+
+.contact-card p,
+.contact-card a{
+    color:#5d6f92;
+    font-size:.9rem;
+    margin:0;
+}
+
+.contact-card a{
+    text-decoration:none;
+    font-weight:600;
+    color:#0d2a5c;
+}
+
+.contact-card a:hover{
+    color:#c07f00;
+}
+
+/* checklist panel (Contact - before you write) */
+.contact-panel{
+    background:linear-gradient(145deg,#ffffff,#f2f6fd);
+    border:1px solid #e8edf5;
+    border-radius:16px;
+    padding:26px 24px;
+}
+
+.contact-panel h2{
+    color:#0d2a5c;
+    font-weight:700;
+    font-size:1.05rem;
+}
+
+.contact-checklist{
+    list-style:none;
+    margin:12px 0 0;
+    padding:0;
+}
+
+.contact-checklist li{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    padding:8px 0;
+    color:#3d4f73;
+    font-size:.9rem;
+}
+
+.contact-checklist li i{
+    color:#c07f00;
+    margin-top:2px;
+}
+
+/*================ INFO PAGES MOBILE =================*/
+@media (max-width:576px){
+    .info-hero{padding:44px 0 48px;}
+    .info-hero-inner{flex-direction:column;text-align:center;gap:18px;}
+    .info-hero-emblem{width:88px;height:88px;padding:12px;}
+    .info-hero-sub{margin:0 auto;}
+}
+
+@media (prefers-reduced-motion:reduce){
+    .about-step,
+    .contact-card{transition:none;}
+    .about-step:hover,
+    .contact-card:hover{transform:none;}
+}
