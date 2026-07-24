@@ -54,7 +54,7 @@
                                 <td>
                                     <div style="font-weight:600;color:#1f2f4d;">{{ $cert->enrollment->user->name }}</div>
                                     <div class="text-muted" style="font-size:.85rem;">
-                                        {{ $cert->enrollment->user->enrollment_no ?: 'Roll no. not set' }}
+                                        {{ $cert->enrollment->user->email }}
                                     </div>
                                 </td>
                                 <td>{{ $cert->enrollment->course->title }}</td>

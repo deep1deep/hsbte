@@ -32,7 +32,7 @@
                     <div class="col-md-6">
                         <label class="form-label small">Search</label>
                         <input type="text" name="q" value="{{ $search }}" class="form-control"
-                               placeholder="Name, email or enrolment number">
+                               placeholder="Name or email">
                     </div>
                     <div class="col-md-4">
                         <label class="form-label small">Department</label>
@@ -64,7 +64,6 @@
                             <tr>
                                 <th>Name</th>
                                 <th>Email</th>
-                                <th>Enrolment No</th>
                                 <th>Dept</th>
                                 <th>Sem</th>
                                 <th class="text-center">Courses</th>
@@ -75,7 +74,6 @@
                                 <tr>
                                     <td style="font-weight:600;color:#1f2f4d;">{{ $s->name }}</td>
                                     <td class="text-muted small">{{ $s->email }}</td>
-                                    <td class="text-muted small">{{ $s->enrollment_no ?? '—' }}</td>
                                     <td>
                                         @if($s->department)
                                             <span class="badge-dept">{{ $s->department->code }}</span>
@@ -88,7 +86,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="text-center text-muted py-5">
+                                    <td colspan="5" class="text-center text-muted py-5">
                                         <i class="bi bi-search" style="font-size:26px;color:#a5b0c6;"></i>
                                         <p class="mt-2 mb-0">No students match your filters.</p>
                                     </td>

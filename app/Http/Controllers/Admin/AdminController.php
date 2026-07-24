@@ -97,7 +97,6 @@ class AdminController extends Controller
             ->when($search, fn ($query) => $query->where(fn ($w) =>
                 $w->where('name', 'like', "%{$search}%")
                   ->orWhere('email', 'like', "%{$search}%")
-                  ->orWhere('enrollment_no', 'like', "%{$search}%")
             ))
             ->when($deptId, fn ($query) => $query->where('department_id', $deptId))
             ->latest()
@@ -120,7 +119,6 @@ class AdminController extends Controller
             ->when($search, fn ($query) => $query->where(fn ($w) =>
                 $w->where('name', 'like', "%{$search}%")
                   ->orWhere('email', 'like', "%{$search}%")
-                  ->orWhere('enrollment_no', 'like', "%{$search}%")
             ))
             ->when($deptId, fn ($query) => $query->where('department_id', $deptId))
             ->latest()
@@ -130,13 +128,12 @@ class AdminController extends Controller
 
         return response()->streamDownload(function () use ($students) {
             $out = fopen('php://output', 'w');
-            fputcsv($out, ['Name', 'Email', 'Phone', 'Enrolment No', 'Department', 'Semester', 'Institute', 'Courses', 'Registered']);
+            fputcsv($out, ['Name', 'Email', 'Phone', 'Department', 'Semester', 'Institute', 'Courses', 'Registered']);
             foreach ($students as $s) {
                 fputcsv($out, [
                     $s->name,
                     $s->email,
                     $s->phone,
-                    $s->enrollment_no,
                     $s->department->name ?? '',
                     $s->semester,
                     $s->institute,

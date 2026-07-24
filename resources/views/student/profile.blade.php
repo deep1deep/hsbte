@@ -33,10 +33,6 @@
 
                         <ul class="profile-facts">
                             <li>
-                                <span><i class="bi bi-hash"></i> Enrolment</span>
-                                <strong>{{ $user->enrollment_no ?? '—' }}</strong>
-                            </li>
-                            <li>
                                 <span><i class="bi bi-diagram-3"></i> Department</span>
                                 <strong>{{ $user->department->code ?? '—' }}</strong>
                             </li>

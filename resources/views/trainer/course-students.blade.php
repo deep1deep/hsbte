@@ -79,7 +79,7 @@
                                     <td>
                                         <div style="font-weight:600;color:#1f2f4d;">{{ $enrollment->user->name }}</div>
                                         <div class="text-muted small">
-                                            {{ $enrollment->user->enrollment_no ?? $enrollment->user->email }}
+                                            {{ $enrollment->user->email }}
                                         </div>
                                     </td>
                                     <td>

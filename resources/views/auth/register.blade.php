@@ -44,11 +44,6 @@
                             <input type="text" name="name" value="{{ old('name') }}"
                                    class="form-control" placeholder="Rahul Sharma" required>
                         </div>
-                   <!--     <div class="col-md-6">
-                            <label class="form-label">Enrollment number</label>
-                            <input type="text" name="enrollment_no" value="{{ old('enrollment_no') }}"
-                                   class="form-control" placeholder="210012345678" >
-                        </div> -->
                         <div class="col-md-6">
                             <label class="form-label">Email address</label>
                             <input type="email" name="email" value="{{ old('email') }}"

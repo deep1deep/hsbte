@@ -22,7 +22,6 @@ class RegisterController extends Controller
     {
         $validated = $request->validate([
             'name'          => ['required', 'string', 'max:255'],
-            'enrollment_no' => ['nullable', 'string', 'max:50', 'unique:users,enrollment_no'],
             'email'         => ['required', 'email:rfc', 'max:255', 'unique:users,email'],
             'phone'         => ['required', 'regex:/^[6-9]\d{9}$/', 'unique:users,phone'],
             'department_id' => ['required', 'exists:departments,id'],
@@ -31,7 +30,6 @@ class RegisterController extends Controller
             'aadhaar'       => ['required', 'digits:12', 'regex:/^[2-9]\d{11}$/'],
             'password'      => ['required', 'string', 'min:8', 'confirmed'],
         ], [
-            'enrollment_no.unique' => 'This enrollment number is already registered.',
             'email.unique'         => 'This email is already registered.',
             'email.email'          => 'Enter a valid email address.',
             'phone.required'       => 'Mobile number is required.',
@@ -59,7 +57,6 @@ class RegisterController extends Controller
 
         $user = User::create([
             'name'          => $validated['name'],
-            'enrollment_no' => $validated['enrollment_no'] ?? null,
             'email'         => strtolower($validated['email']),
             'phone'         => $validated['phone'],
             'department_id' => $validated['department_id'],
