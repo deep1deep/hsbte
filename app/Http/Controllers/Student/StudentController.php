@@ -166,7 +166,26 @@ class StudentController extends Controller
             ->pluck('lesson_id')
             ->all();
 
-        return view('student.course-player', compact('course', 'enrollment', 'completedLessonIds'));
+        // First lesson (in order) not yet completed — the "resume / next up" target.
+        $nextLessonId = $this->firstIncompleteLessonId($course, $completedLessonIds);
+
+        return view('student.course-player', compact(
+            'course', 'enrollment', 'completedLessonIds', 'nextLessonId'
+        ));
+    }
+
+    // Walk modules → lessons in order, return the first id not in $completedIds.
+    private function firstIncompleteLessonId(Course $course, array $completedIds): ?int
+    {
+        foreach ($course->modules as $module) {
+            foreach ($module->lessons as $lesson) {
+                if (! in_array($lesson->id, $completedIds, true)) {
+                    return $lesson->id;
+                }
+            }
+        }
+
+        return null;
     }
 
     // ---------- Mark a lesson complete ----------
@@ -203,6 +222,18 @@ class StudentController extends Controller
             return back()->with('success', $msg);
         }
 
-        return back()->with('success', 'Lesson marked complete.');
+        // Not finished yet — send them straight to the next incomplete lesson.
+        $completedIds = LessonProgress::where('enrollment_id', $enrollment->id)
+            ->where('status', 'completed')->pluck('lesson_id')->all();
+        $course->load([
+            'modules'         => fn ($q) => $q->orderBy('sort_order'),
+            'modules.lessons' => fn ($q) => $q->orderBy('sort_order'),
+        ]);
+        $nextId = $this->firstIncompleteLessonId($course, $completedIds);
+
+        return redirect()
+            ->route('student.course.show', $course)
+            ->withFragment($nextId ? 'lesson-' . $nextId : 'course-top')
+            ->with('success', 'Lesson marked complete. On to the next one!');
     }
 }

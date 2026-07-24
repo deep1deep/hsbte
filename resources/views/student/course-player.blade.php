@@ -7,7 +7,7 @@
     <div class="container" style="max-width:920px;">
 
         {{-- Header --}}
-        <div class="mb-4">
+        <div class="mb-4" id="course-top">
             <a href="{{ route('student.dashboard') }}" class="text-muted text-decoration-none small">
                 <i class="bi bi-arrow-left"></i> Back to my learning
             </a>
@@ -32,6 +32,18 @@
             <div class="alert alert-success py-2">{{ session('success') }}</div>
         @endif
 
+        {{-- Resume / next-up banner --}}
+        @if($pct < 100 && $nextLessonId)
+            <a href="#lesson-{{ $nextLessonId }}" class="resume-banner">
+                <div class="resume-icon"><i class="bi bi-play-fill"></i></div>
+                <div class="flex-grow-1">
+                    <div class="resume-kicker">{{ $pct > 0 ? 'Pick up where you left off' : 'Start learning' }}</div>
+                    <div class="resume-text">Jump to your next lesson</div>
+                </div>
+                <i class="bi bi-arrow-down-circle resume-arrow"></i>
+            </a>
+        @endif
+
         @if($pct == 100)
             <div class="alert alert-success d-flex justify-content-between align-items-center flex-wrap gap-2">
                 <span><i class="bi bi-trophy-fill"></i> Congratulations! You've completed this course. 🎉</span>
@@ -52,7 +64,9 @@
 
                     @forelse($module->lessons as $lesson)
                         @php($isDone = in_array($lesson->id, $completedLessonIds))
-                        <div class="py-3 {{ !$loop->last ? 'border-bottom' : '' }}">
+                        @php($isNext = $lesson->id === $nextLessonId)
+                        <div class="py-3 lesson-row {{ $isNext ? 'lesson-next' : '' }} {{ !$loop->last ? 'border-bottom' : '' }}"
+                             id="lesson-{{ $lesson->id }}">
 
                             {{-- lesson title row --}}
                             <div class="d-flex align-items-center gap-2 mb-2">
@@ -62,6 +76,9 @@
                                     <i class="bi {{ $lesson->isVideo() ? 'bi-play-circle' : 'bi-file-earmark-text' }}" style="color:#0d2a5c;"></i>
                                 @endif
                                 <span class="flex-grow-1" style="font-weight:500;color:#1f2f4d;">{{ $lesson->title }}</span>
+                                @if($isNext)
+                                    <span class="badge next-badge">Next up</span>
+                                @endif
                                 @if($lesson->duration_minutes)
                                     <span class="text-muted small">{{ $lesson->duration_minutes }} min</span>
                                 @endif
@@ -113,4 +130,27 @@
 
     </div>
 </section>
+
+@push('scripts')
+<script>
+    // Smooth-scroll to the lesson in the URL hash and give it a brief highlight.
+    (function () {
+        function focusLesson(hash) {
+            if (!hash) return;
+            var el = document.querySelector(hash);
+            if (!el || !el.classList.contains('lesson-row')) return;
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            el.classList.add('lesson-flash');
+            setTimeout(function () { el.classList.remove('lesson-flash'); }, 1600);
+        }
+        // on load (e.g. after "mark complete" redirect) and on in-page anchor clicks
+        window.addEventListener('load', function () { focusLesson(window.location.hash); });
+        document.querySelectorAll('a[href^="#lesson-"]').forEach(function (a) {
+            a.addEventListener('click', function () {
+                setTimeout(function () { focusLesson(a.getAttribute('href')); }, 10);
+            });
+        });
+    })();
+</script>
+@endpush
 @endsection

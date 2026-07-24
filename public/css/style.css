@@ -2455,3 +2455,86 @@ font-size:20px;
     white-space:nowrap;
     line-height:1;
 }
+
+/*================ COURSE PLAYER: RESUME / NEXT-UP =================*/
+.resume-banner{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    text-decoration:none;
+    border-radius:12px;
+    padding:14px 18px;
+    margin-bottom:18px;
+    color:#fff;
+    background:linear-gradient(135deg,#0d2a5c,#1f3f7a);
+    box-shadow:0 8px 22px rgba(13,42,92,.16);
+    transition:transform .2s ease, box-shadow .2s ease;
+}
+
+.resume-banner:hover{
+    color:#fff;
+    transform:translateY(-2px);
+    box-shadow:0 12px 28px rgba(13,42,92,.22);
+}
+
+.resume-icon{
+    flex:0 0 auto;
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    background:#f0a500;
+    color:#0d2a5c;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.3rem;
+}
+
+.resume-kicker{
+    font-size:.72rem;
+    font-weight:700;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:#ffb81f;
+}
+
+.resume-text{font-weight:600;}
+
+.resume-arrow{font-size:1.4rem;color:#b9c7e2;}
+
+/* the next lesson to do — subtle gold rail + tint */
+.lesson-row{
+    scroll-margin-top:20px;
+    border-left:3px solid transparent;
+    padding-left:12px;
+    margin-left:-12px;
+    border-radius:6px;
+    transition:background .3s ease;
+}
+
+.lesson-next{
+    border-left-color:#f0a500;
+    background:#fffaf0;
+}
+
+.next-badge{
+    background:#fff3d6;
+    color:#8a5a00;
+    font-weight:600;
+}
+
+/* brief flash when jumped to */
+.lesson-flash{
+    animation:lessonFlash 1.6s ease;
+}
+
+@keyframes lessonFlash{
+    0%   { background:#fff2cc; }
+    100% { background:transparent; }
+}
+
+@media (prefers-reduced-motion:reduce){
+    .resume-banner{transition:none;}
+    .resume-banner:hover{transform:none;}
+    .lesson-flash{animation:none;}
+}
