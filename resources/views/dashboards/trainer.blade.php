@@ -13,9 +13,8 @@
                 <p class="text-muted mb-0">Welcome back, {{ auth()->user()->name }}</p>
             </div>
             <div class="d-flex gap-2">
-                <a href="{{ route('trainer.certificate.design') }}" class="btn btn-outline-navy">
-                    <i class="bi bi-palette me-1"></i> Design
-                </a>
+                {{-- Certificate "Design" button hidden — feature is not wired up yet.
+                     Re-enable by restoring the link to route('trainer.certificate.design'). --}}
                 <a href="{{ route('trainer.certificates') }}" class="btn btn-outline-navy position-relative">
                     <i class="bi bi-award me-1"></i> Certificates
                     @if($stats['pending'] > 0)
@@ -115,7 +114,16 @@
                                     @endif
                                 </td>
                                 <td class="text-center">{{ $course->modules_count }}</td>
-                                <td class="text-center">{{ $course->enrollments_count }}</td>
+                                <td class="text-center">
+                                    @if($course->enrollments_count > 0)
+                                        <a href="{{ route('trainer.courses.students', $course) }}"
+                                           class="text-decoration-none" style="font-weight:600;color:#0d2a5c;">
+                                            {{ $course->enrollments_count }}
+                                        </a>
+                                    @else
+                                        <span class="text-muted">0</span>
+                                    @endif
+                                </td>
                                 <td>
                                     @if($course->status === 'published')
                                         <span class="badge text-bg-success">Published</span>
@@ -133,7 +141,15 @@
                                     @endif
                                 </td>
                                 <td class="text-end">
-                                    <a href="{{ route('trainer.courses.manage', $course) }}" class="btn btn-sm btn-outline-navy">Manage</a>
+                                    <div class="d-inline-flex gap-1">
+                                        @if($course->enrollments_count > 0)
+                                            <a href="{{ route('trainer.courses.students', $course) }}"
+                                               class="btn btn-sm btn-outline-navy" title="View enrolled students">
+                                                <i class="bi bi-people"></i>
+                                            </a>
+                                        @endif
+                                        <a href="{{ route('trainer.courses.manage', $course) }}" class="btn btn-sm btn-outline-navy">Manage</a>
+                                    </div>
                                 </td>
                             </tr>
                         @empty
@@ -145,6 +161,38 @@
                         @endforelse
                     </tbody>
                 </table>
+            </div>
+        </div>
+
+        {{-- RECENT ENROLLMENTS --}}
+        <div class="admin-card">
+            <div class="admin-card-head">Recent Enrollments</div>
+            <div class="admin-card-body">
+                @forelse($recentEnrollments as $enrollment)
+                    <div class="d-flex align-items-center gap-3 py-2 {{ ! $loop->last ? 'border-bottom' : '' }}">
+                        <div class="enroll-avatar">
+                            {{ strtoupper(mb_substr($enrollment->user->name, 0, 1)) }}
+                        </div>
+                        <div class="flex-grow-1" style="min-width:0;">
+                            <div style="font-weight:600;color:#1f2f4d;">
+                                {{ $enrollment->user->name }}
+                                @if($enrollment->user->department)
+                                    <span class="badge-dept ms-1">{{ $enrollment->user->department->code }}</span>
+                                @endif
+                            </div>
+                            <div class="text-muted small text-truncate">
+                                enrolled in <strong>{{ $enrollment->course->title }}</strong>
+                            </div>
+                        </div>
+                        <div class="text-muted small text-nowrap">
+                            {{ $enrollment->enrolled_at ? $enrollment->enrolled_at->diffForHumans() : '—' }}
+                        </div>
+                    </div>
+                @empty
+                    <p class="text-muted text-center py-4 mb-0">
+                        No enrollments yet. Publish a course to start receiving students.
+                    </p>
+                @endforelse
             </div>
         </div>
 

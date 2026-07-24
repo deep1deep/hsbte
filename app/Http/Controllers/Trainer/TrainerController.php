@@ -39,7 +39,32 @@ class TrainerController extends Controller
                                 ->count(),
         ];
 
-        return view('dashboards.trainer', compact('courses', 'stats'));
+        // Recent enrollments across all my courses (activity feed)
+        $recentEnrollments = Enrollment::whereIn('course_id', $courseIds)
+            ->with(['user.department', 'course:id,title,slug'])
+            ->latest('enrolled_at')
+            ->take(8)
+            ->get();
+
+        return view('dashboards.trainer', compact('courses', 'stats', 'recentEnrollments'));
+    }
+
+    // ---------- Students enrolled in a course (with progress) ----------
+    public function courseStudents(Course $course)
+    {
+        abort_unless($course->trainer_id === auth()->id(), 403);
+
+        $totalLessons = $course->lessons()->count();
+
+        $enrollments = $course->enrollments()
+            ->with(['user.department', 'certificate' => fn ($q) => $q->withoutBlob()])
+            ->withCount([
+                'lessonProgress as completed_lessons_count' => fn ($q) => $q->where('status', 'completed'),
+            ])
+            ->latest('enrolled_at')
+            ->get();
+
+        return view('trainer.course-students', compact('course', 'enrollments', 'totalLessons'));
     }
 
     public function createCourse()

@@ -99,6 +99,7 @@ Route::middleware(['auth','role:trainer'])->group(function () {
     Route::get('/trainer/courses/create',            [TrainerController::class, 'createCourse'])->name('trainer.courses.create');
     Route::post('/trainer/courses',                  [TrainerController::class, 'storeCourse'])->name('trainer.courses.store');
     Route::get('/trainer/courses/{course}/manage',   [TrainerController::class, 'manageCourse'])->name('trainer.courses.manage');
+    Route::get('/trainer/courses/{course}/students', [TrainerController::class, 'courseStudents'])->name('trainer.courses.students');
     Route::get('/trainer/courses/{course}/edit',     [TrainerController::class, 'editCourse'])->name('trainer.courses.edit');
     Route::patch('/trainer/courses/{course}',        [TrainerController::class, 'updateCourse'])->name('trainer.courses.update');
     Route::patch('/trainer/courses/{course}/publish',[TrainerController::class, 'togglePublish'])->name('trainer.courses.publish');
