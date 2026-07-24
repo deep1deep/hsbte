@@ -29,7 +29,8 @@ Route::controller(\App\Http\Controllers\PageController::class)->group(function (
     Route::get('/privacy',       'privacy')->name('privacy');
     Route::get('/terms',         'terms')->name('terms');
     Route::get('/accessibility', 'accessibility')->name('accessibility');
-    Route::get('/help',          'help')->name('help');
+    // Help page hidden — content is covered by the Contact Us page.
+    // Route::get('/help',          'help')->name('help');
 });
 
 /* ---------------- AUTH: REGISTER / LOGIN / LOGOUT ---------------- */

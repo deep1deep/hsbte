@@ -35,9 +35,7 @@
 
                     <li><a href="{{ route('about') }}" class="text-white text-decoration-none">About</a></li>
 
-                    <li><a href="{{ route('contact') }}" class="text-white text-decoration-none">Contact</a></li>
-
-                    <li><a href="{{ route('help') }}" class="text-white text-decoration-none">Help &amp; FAQ</a></li>
+                    <li><a href="{{ route('contact') }}" class="text-white text-decoration-none">Contact Us</a></li>
 
                 </ul>
 

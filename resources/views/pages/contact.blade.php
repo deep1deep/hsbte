@@ -69,21 +69,7 @@
 
         <div class="row g-3 mt-4 align-items-stretch">
 
-            <div class="col-lg-6">
-                <div class="contact-panel h-100">
-                    <span class="info-eyebrow">Quick Answers</span>
-                    <h2>Before you write to us</h2>
-                    <p class="text-muted mb-3" style="font-size:.9rem;">
-                        Many common questions — enrolling in a course, video playback problems,
-                        certificates and password resets — are already answered on the help page.
-                    </p>
-                    <a href="{{ route('help') }}" class="btn btn-navy btn-sm">
-                        <i class="bi bi-question-circle me-1"></i> Visit the help page
-                    </a>
-                </div>
-            </div>
-
-            <div class="col-lg-6">
+            <div class="col-lg-12">
                 <div class="contact-panel h-100">
                     <span class="info-eyebrow">Faster Support</span>
                     <h2>When contacting us, please include</h2>

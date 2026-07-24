@@ -55,7 +55,7 @@
                 <div class="auth-links">
                     Remembered it? <a href="{{ route('login') }}">Back to login</a>
                     <span class="mx-1">·</span>
-                    <a href="{{ route('help') }}">Need help?</a>
+                    <a href="{{ route('contact') }}">Need help?</a>
                 </div>
             </div>
 
