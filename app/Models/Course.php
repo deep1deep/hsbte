@@ -54,6 +54,29 @@ class Course extends Model
         return $this->hasMany(Enrollment::class);
     }
 
+    // Course has many student reviews
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(CourseReview::class);
+    }
+
+    /* ---------------- RATINGS ---------------- */
+
+    // Average star rating. Uses withAvg('reviews','rating') if preloaded (no query),
+    // else falls back to a direct query — safe to call anywhere.
+    public function averageRating(): float
+    {
+        $avg = $this->reviews_avg_rating ?? $this->reviews()->avg('rating');
+
+        return round((float) $avg, 1);
+    }
+
+    // How many reviews. Uses withCount('reviews') if preloaded.
+    public function reviewsCount(): int
+    {
+        return (int) ($this->reviews_count ?? $this->reviews()->count());
+    }
+
     // Saare lessons — modules ke through, ek hi query me.
     // Isse total-lesson count nikalna 1 query hai, module-by-module loop nahi.
     public function lessons(): HasManyThrough

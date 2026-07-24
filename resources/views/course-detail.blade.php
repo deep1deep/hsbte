@@ -21,6 +21,9 @@
             @endif
         </div>
         <h1 class="mb-2" style="font-weight:700;">{{ $course->title }}</h1>
+        <div class="mb-2 stars-on-navy">
+            @include('partials.stars', ['avg' => $course->averageRating(), 'count' => $course->reviewsCount()])
+        </div>
         <p class="mb-3" style="color:#cdd6e8;max-width:680px;">{{ $course->description }}</p>
         <div class="d-flex gap-4 flex-wrap" style="color:#a5b0c6;font-size:14px;">
             <span><i class="bi bi-collection-play"></i> {{ $lessonCount }} {{ $lessonCount === 1 ? 'lesson' : 'lessons' }}</span>
@@ -78,6 +81,41 @@
                         </div>
                     </div>
                 @endforelse
+
+                {{-- ===== STUDENT REVIEWS ===== --}}
+                <div class="mt-4">
+                    <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
+                        <h2 class="h5 mb-0" style="color:#1f2f4d;">Student reviews</h2>
+                        @if($course->reviewsCount() > 0)
+                            @include('partials.stars', ['avg' => $course->averageRating(), 'count' => $course->reviewsCount()])
+                        @endif
+                    </div>
+
+                    @forelse($reviews as $review)
+                        <div class="admin-card mb-2">
+                            <div class="admin-card-body">
+                                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-1">
+                                    <span style="font-weight:600;color:#1f2f4d;">{{ $review->user->name ?? 'Student' }}</span>
+                                    <span class="stars-static">
+                                        @for($i = 1; $i <= 5; $i++)
+                                            <i class="bi {{ $i <= $review->rating ? 'bi-star-fill' : 'bi-star' }}"></i>
+                                        @endfor
+                                    </span>
+                                </div>
+                                @if($review->comment)
+                                    <p class="text-muted small mb-0">{{ $review->comment }}</p>
+                                @endif
+                            </div>
+                        </div>
+                    @empty
+                        <div class="admin-card">
+                            <div class="admin-card-body text-center text-muted py-4">
+                                <i class="bi bi-chat-square-heart" style="font-size:24px;color:#a5b0c6;"></i>
+                                <p class="mt-2 mb-0">No reviews yet — be the first to complete this course and review it.</p>
+                            </div>
+                        </div>
+                    @endforelse
+                </div>
             </div>
 
             {{-- RIGHT: sticky enroll card --}}

@@ -2550,3 +2550,57 @@ font-size:20px;
     vertical-align:middle;
 }
 .lesson-note textarea{font-size:.9rem;}
+
+/*================ COURSE REVIEWS =================*/
+/* interactive star input — radios in reverse DOM order, hover/checked fill leftward */
+.star-rate{
+    display:inline-flex;
+    flex-direction:row-reverse;
+    gap:4px;
+    font-size:1.6rem;
+}
+.star-rate input{
+    position:absolute;
+    opacity:0;
+    width:0;
+    height:0;
+}
+.star-rate label{
+    color:#d5dce8;
+    cursor:pointer;
+    line-height:1;
+    transition:color .15s ease;
+}
+.star-rate input:checked ~ label,
+.star-rate label:hover,
+.star-rate label:hover ~ label{
+    color:#f0a500;
+}
+.star-rate input:focus-visible + label{
+    outline:2px solid #0d2a5c;
+    outline-offset:2px;
+    border-radius:3px;
+}
+
+/* read-only stars shown on course cards */
+.stars-static{
+    display:inline-flex;
+    align-items:center;
+    gap:1px;
+    color:#f0a500;
+    font-size:.8rem;
+}
+.stars-static .bi-star{color:#d5dce8;}
+.rating-meta{
+    color:#7a8aa8;
+    font-size:.8rem;
+    margin-left:4px;
+}
+
+@media (prefers-reduced-motion:reduce){
+    .star-rate label{transition:none;}
+}
+
+/* rating meta text needs to be legible on the navy course-detail hero */
+.stars-on-navy .rating-meta{color:#cdd6e8;}
+.stars-on-navy .stars-static .bi-star{color:#5a6b8c;}

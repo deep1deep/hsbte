@@ -240,6 +240,9 @@
                                 @endif
                             </div>
                             <h3 class="reco-title">{{ $course->title }}</h3>
+                            <div class="mb-2">
+                                @include('partials.stars', ['avg' => $course->averageRating(), 'count' => $course->reviewsCount()])
+                            </div>
                             <div class="reco-meta">
                                 <span><i class="bi bi-people"></i> {{ $course->enrollments_count }} enrolled</span>
                                 @if($course->duration_weeks)

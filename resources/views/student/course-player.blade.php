@@ -54,6 +54,41 @@
                     </a>
                 @endif
             </div>
+
+            {{-- rate & review --}}
+            <div class="admin-card review-card mb-4">
+                <div class="admin-card-body">
+                    <h3 class="h6 mb-1" style="color:#1f2f4d;">
+                        <i class="bi bi-star-fill" style="color:#f0a500;"></i>
+                        {{ $myReview ? 'Your feedback' : 'Rate this course' }}
+                    </h3>
+                    <p class="text-muted small mb-3">
+                        {{ $myReview ? 'You can update your rating any time.' : 'Help other students by sharing how it was.' }}
+                    </p>
+
+                    <form method="POST" action="{{ route('student.course.review', $course) }}">
+                        @csrf
+                        @error('rating') <div class="alert alert-danger py-2 small">{{ $message }}</div> @enderror
+
+                        <div class="star-rate mb-3">
+                            @for($i = 5; $i >= 1; $i--)
+                                <input type="radio" id="star{{ $i }}" name="rating" value="{{ $i }}"
+                                       @checked($myReview && $myReview->rating === $i) required>
+                                <label for="star{{ $i }}" title="{{ $i }} star{{ $i > 1 ? 's' : '' }}">
+                                    <i class="bi bi-star-fill"></i>
+                                </label>
+                            @endfor
+                        </div>
+
+                        <textarea name="comment" rows="2" class="form-control mb-2"
+                                  placeholder="Add a short review (optional)…">{{ $myReview->comment ?? '' }}</textarea>
+
+                        <button type="submit" class="btn btn-sm btn-navy">
+                            <i class="bi bi-send"></i> {{ $myReview ? 'Update feedback' : 'Submit feedback' }}
+                        </button>
+                    </form>
+                </div>
+            </div>
         @endif
 
         {{-- MODULES + LESSONS --}}

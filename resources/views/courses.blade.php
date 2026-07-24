@@ -77,6 +77,10 @@
                             </span>
                             <h5>{{ $course->title }}</h5>
 
+                            <div class="mb-2">
+                                @include('partials.stars', ['avg' => $course->averageRating(), 'count' => $course->reviewsCount()])
+                            </div>
+
                             <p class="text-muted small flex-grow-1">
                                 {{ Str::limit($course->description, 80) ?: 'No description yet.' }}
                             </p>

@@ -9,6 +9,7 @@ use App\Models\Lesson;
 use App\Models\Enrollment;
 use App\Models\LessonProgress;
 use App\Models\LessonNote;
+use App\Models\CourseReview;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
@@ -51,6 +52,8 @@ class StudentController extends Controller
                 )
                 ->with('department')
                 ->withCount('enrollments')
+                ->withCount('reviews')
+                ->withAvg('reviews', 'rating')
                 ->latest()
                 ->take(3)
                 ->get();
@@ -176,9 +179,40 @@ class StudentController extends Controller
             ->whereIn('lesson_id', $lessonIds)
             ->pluck('body', 'lesson_id');
 
+        // Student's own review (to prefill the feedback form after completion).
+        $myReview = CourseReview::where('user_id', auth()->id())
+            ->where('course_id', $course->id)
+            ->first();
+
         return view('student.course-player', compact(
-            'course', 'enrollment', 'completedLessonIds', 'nextLessonId', 'notes'
+            'course', 'enrollment', 'completedLessonIds', 'nextLessonId', 'notes', 'myReview'
         ));
+    }
+
+    // ---------- Rate / review a completed course ----------
+    public function storeReview(Request $request, Course $course)
+    {
+        $enrollment = Enrollment::where('user_id', auth()->id())
+            ->where('course_id', $course->id)
+            ->first();
+
+        // only students who finished the course can review it
+        abort_unless($enrollment && $enrollment->status === 'completed', 403,
+            'You can review a course only after completing it.');
+
+        $validated = $request->validate([
+            'rating'  => ['required', 'integer', 'min:1', 'max:5'],
+            'comment' => ['nullable', 'string', 'max:1000'],
+        ]);
+
+        CourseReview::updateOrCreate(
+            ['user_id' => auth()->id(), 'course_id' => $course->id],
+            ['rating' => $validated['rating'], 'comment' => $validated['comment'] ?? null]
+        );
+
+        return redirect()
+            ->route('student.course.show', $course)
+            ->with('success', 'Thanks for your feedback!');
     }
 
     // ---------- Save a personal note on a lesson ----------
