@@ -84,6 +84,19 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::post('/admin/trainers', [AdminController::class, 'storeTrainer'])->name('admin.trainers.store');
 
+    // trainer management (edit / enable-disable / reset password)
+    Route::patch('/admin/trainers/{trainer}',          [AdminController::class, 'updateTrainer'])->name('admin.trainers.update');
+    Route::patch('/admin/trainers/{trainer}/toggle',   [AdminController::class, 'toggleTrainer'])->name('admin.trainers.toggle');
+    Route::patch('/admin/trainers/{trainer}/password', [AdminController::class, 'resetTrainerPassword'])->name('admin.trainers.password');
+
+    // students (search / filter / export)
+    Route::get('/admin/students',        [AdminController::class, 'students'])->name('admin.students');
+    Route::get('/admin/students/export', [AdminController::class, 'exportStudents'])->name('admin.students.export');
+
+    // course oversight
+    Route::get('/admin/courses',                 [AdminController::class, 'courses'])->name('admin.courses');
+    Route::patch('/admin/courses/{course}/status',[AdminController::class, 'updateCourseStatus'])->name('admin.courses.status');
+
     // notices / announcements CRUD — ADMIN ONLY
     Route::get('/admin/announcements',                  [\App\Http\Controllers\Admin\AnnouncementController::class, 'index'])->name('admin.announcements');
     Route::post('/admin/announcements',                 [\App\Http\Controllers\Admin\AnnouncementController::class, 'store'])->name('admin.announcements.store');

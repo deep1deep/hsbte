@@ -2410,3 +2410,48 @@ font-size:20px;
     color:#fff;
     background:linear-gradient(145deg,#0d2a5c,#1f3f7a);
 }
+
+/*================ ADMIN: ENROLLMENT TREND CHART =================*/
+.trend-chart{
+    display:flex;
+    align-items:flex-end;
+    gap:4px;
+    height:150px;
+    padding-top:8px;
+}
+
+.trend-col{
+    flex:1 1 0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    height:100%;
+    min-width:0;
+}
+
+.trend-bar-wrap{
+    flex:1 1 auto;
+    width:100%;
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+}
+
+.trend-bar{
+    width:100%;
+    max-width:22px;
+    min-height:2px;
+    border-radius:4px 4px 0 0;
+    background:linear-gradient(180deg,#1f3f7a,#0d2a5c);
+    transition:filter .15s ease;
+}
+
+.trend-bar:hover{filter:brightness(1.25);}
+
+.trend-tick{
+    margin-top:6px;
+    font-size:.62rem;
+    color:#a5b0c6;
+    white-space:nowrap;
+    line-height:1;
+}
