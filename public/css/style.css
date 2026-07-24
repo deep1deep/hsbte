@@ -2604,3 +2604,59 @@ font-size:20px;
 /* rating meta text needs to be legible on the navy course-detail hero */
 .stars-on-navy .rating-meta{color:#cdd6e8;}
 .stars-on-navy .stars-static .bi-star{color:#5a6b8c;}
+
+/*================ STUDENT: LEARNING STREAK =================*/
+.streak-strip{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    border-radius:14px;
+    padding:16px 20px;
+    background:#fff;
+    border:1px solid #e8edf5;
+}
+
+/* active streak → warm gradient */
+.streak-strip.streak-on{
+    background:linear-gradient(135deg,#fff6e8,#ffffff);
+    border-color:rgba(240,165,0,.4);
+}
+
+.streak-flame{
+    flex:0 0 auto;
+    width:48px;
+    height:48px;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.5rem;
+    background:#eef2fa;
+    color:#7a8aa8;
+}
+
+.streak-on .streak-flame{
+    background:linear-gradient(145deg,#f0a500,#ff7a18);
+    color:#fff;
+    box-shadow:0 6px 16px rgba(240,120,20,.30);
+}
+
+.streak-num{
+    font-weight:700;
+    color:#1f2f4d;
+    font-size:1.05rem;
+}
+
+.streak-sub{
+    color:#7a8aa8;
+    font-size:.85rem;
+}
+
+.streak-btn{
+    background:#0d2a5c;
+    color:#fff;
+    font-weight:600;
+    border:none;
+    white-space:nowrap;
+}
+.streak-btn:hover{background:#09204a;color:#fff;}

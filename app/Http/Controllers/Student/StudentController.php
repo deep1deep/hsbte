@@ -59,7 +59,44 @@ class StudentController extends Controller
                 ->get();
         }
 
-        return view('dashboards.student', compact('enrollments', 'continue', 'recommended'));
+        // Learning streak — consecutive days with at least one completed lesson.
+        [$streak, $studiedToday] = $this->learningStreak();
+
+        return view('dashboards.student', compact(
+            'enrollments', 'continue', 'recommended', 'streak', 'studiedToday'
+        ));
+    }
+
+    /**
+     * Count consecutive days (ending today or yesterday) on which this student
+     * completed at least one lesson. Returns [streakDays, studiedToday].
+     */
+    private function learningStreak(): array
+    {
+        $days = LessonProgress::whereHas('enrollment', fn ($q) => $q->where('user_id', auth()->id()))
+            ->where('status', 'completed')
+            ->whereNotNull('completed_at')
+            ->get(['completed_at'])
+            ->map(fn ($p) => $p->completed_at->format('Y-m-d'))
+            ->unique()
+            ->flip();   // date string => _, for O(1) lookup
+
+        $today        = now()->startOfDay();
+        $studiedToday = $days->has($today->format('Y-m-d'));
+
+        // start from today if active today, else yesterday (so a gap of one day
+        // during the current day doesn't break yesterday's streak yet)
+        $cursor = $studiedToday
+            ? $today->copy()
+            : ($days->has($today->copy()->subDay()->format('Y-m-d')) ? $today->copy()->subDay() : null);
+
+        $streak = 0;
+        while ($cursor && $days->has($cursor->format('Y-m-d'))) {
+            $streak++;
+            $cursor->subDay();
+        }
+
+        return [$streak, $studiedToday];
     }
 
     // ---------- Profile (view + edit own details) ----------

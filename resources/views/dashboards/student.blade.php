@@ -55,6 +55,33 @@
             </div>
         </div>
 
+        {{-- ===== LEARNING STREAK ===== --}}
+        <div class="streak-strip mb-4 {{ $streak > 0 ? 'streak-on' : '' }}">
+            <div class="streak-flame">
+                <i class="bi {{ $streak > 0 ? 'bi-fire' : 'bi-emoji-smile' }}"></i>
+            </div>
+            <div class="flex-grow-1">
+                @if($streak > 0)
+                    <div class="streak-num">{{ $streak }}-day streak</div>
+                    <div class="streak-sub">
+                        @if($studiedToday)
+                            Nice work — you've studied today. Keep it going tomorrow!
+                        @else
+                            You're on a roll. Complete a lesson today to keep your streak alive.
+                        @endif
+                    </div>
+                @else
+                    <div class="streak-num">Start your streak</div>
+                    <div class="streak-sub">Complete a lesson today and build a daily learning habit. 🔥</div>
+                @endif
+            </div>
+            @if($streak == 0 && $continue)
+                <a href="{{ route('student.course.show', $continue->course) }}" class="btn btn-sm streak-btn">
+                    <i class="bi bi-play-fill"></i> Learn now
+                </a>
+            @endif
+        </div>
+
         {{-- ===== CONTINUE LEARNING ===== --}}
         @if($continue)
             @php $cpct = round($continue->progressPercent()); @endphp
