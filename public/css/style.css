@@ -2538,3 +2538,15 @@ font-size:20px;
     .resume-banner:hover{transform:none;}
     .lesson-flash{animation:none;}
 }
+
+/*================ COURSE PLAYER: LESSON NOTES =================*/
+.note-dot{
+    display:inline-block;
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:#f0a500;
+    margin-left:4px;
+    vertical-align:middle;
+}
+.lesson-note textarea{font-size:.9rem;}

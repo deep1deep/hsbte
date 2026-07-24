@@ -8,6 +8,7 @@ use App\Models\Course;
 use App\Models\Lesson;
 use App\Models\Enrollment;
 use App\Models\LessonProgress;
+use App\Models\LessonNote;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
@@ -169,9 +170,51 @@ class StudentController extends Controller
         // First lesson (in order) not yet completed — the "resume / next up" target.
         $nextLessonId = $this->firstIncompleteLessonId($course, $completedLessonIds);
 
+        // This student's saved notes, keyed by lesson id, for inline editing.
+        $lessonIds = $course->modules->flatMap->lessons->pluck('id');
+        $notes = LessonNote::where('user_id', auth()->id())
+            ->whereIn('lesson_id', $lessonIds)
+            ->pluck('body', 'lesson_id');
+
         return view('student.course-player', compact(
-            'course', 'enrollment', 'completedLessonIds', 'nextLessonId'
+            'course', 'enrollment', 'completedLessonIds', 'nextLessonId', 'notes'
         ));
+    }
+
+    // ---------- Save a personal note on a lesson ----------
+    public function saveNote(Request $request, Lesson $lesson)
+    {
+        // must be enrolled in the course this lesson belongs to
+        $course = $lesson->module->course;
+        $enrolled = Enrollment::where('user_id', auth()->id())
+            ->where('course_id', $course->id)
+            ->exists();
+        abort_unless($enrolled, 403);
+
+        $validated = $request->validate([
+            'body' => ['nullable', 'string', 'max:5000'],
+        ]);
+
+        $body = trim((string) $validated['body']);
+
+        if ($body === '') {
+            // empty note → remove it
+            LessonNote::where('user_id', auth()->id())
+                ->where('lesson_id', $lesson->id)
+                ->delete();
+            $msg = 'Note cleared.';
+        } else {
+            LessonNote::updateOrCreate(
+                ['user_id' => auth()->id(), 'lesson_id' => $lesson->id],
+                ['body' => $body]
+            );
+            $msg = 'Note saved.';
+        }
+
+        return redirect()
+            ->route('student.course.show', $course)
+            ->withFragment('lesson-' . $lesson->id)
+            ->with('success', $msg);
     }
 
     // Walk modules → lessons in order, return the first id not in $completedIds.

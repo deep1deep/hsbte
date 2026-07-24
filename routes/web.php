@@ -69,6 +69,7 @@ Route::middleware(['auth', 'role:student'])->group(function () {
     Route::get('/student/dashboard',                   [StudentController::class, 'dashboard'])->name('student.dashboard');
     Route::get('/student/courses/{course}',            [StudentController::class, 'showCourse'])->name('student.course.show');
     Route::post('/student/lessons/{lesson}/complete',  [StudentController::class, 'markComplete'])->name('student.lessons.complete');
+    Route::post('/student/lessons/{lesson}/note',       [StudentController::class, 'saveNote'])->name('student.lessons.note');
 
     // profile (own details + password)
     Route::get('/student/profile',          [StudentController::class, 'profile'])->name('student.profile');

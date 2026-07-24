@@ -99,8 +99,9 @@
                                 <p class="text-muted small mb-0">Content not available.</p>
                             @endif
 
-                            {{-- mark complete --}}
-                            <div class="mt-2">
+                            {{-- mark complete + notes toggle --}}
+                            @php($noteBody = $notes[$lesson->id] ?? '')
+                            <div class="mt-2 d-flex align-items-center gap-3 flex-wrap">
                                 @if($isDone)
                                     <span class="text-success small"><i class="bi bi-check-circle"></i> Completed</span>
                                 @else
@@ -111,6 +112,29 @@
                                         </button>
                                     </form>
                                 @endif
+
+                                <button class="btn btn-sm btn-outline-navy" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#note-{{ $lesson->id }}">
+                                    <i class="bi bi-pencil-square"></i>
+                                    {{ $noteBody !== '' ? 'My note' : 'Add note' }}
+                                    @if($noteBody !== '')
+                                        <span class="note-dot" title="You have a saved note"></span>
+                                    @endif
+                                </button>
+                            </div>
+
+                            {{-- personal note --}}
+                            <div class="collapse {{ $noteBody !== '' ? 'show' : '' }} mt-2" id="note-{{ $lesson->id }}">
+                                <form method="POST" action="{{ route('student.lessons.note', $lesson) }}" class="lesson-note">
+                                    @csrf
+                                    <textarea name="body" rows="3" class="form-control"
+                                              placeholder="Write your own notes for this lesson… (only you can see these)">{{ $noteBody }}</textarea>
+                                    <div class="mt-2">
+                                        <button class="btn btn-sm btn-navy" type="submit">
+                                            <i class="bi bi-save"></i> Save note
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
 
                         </div>
